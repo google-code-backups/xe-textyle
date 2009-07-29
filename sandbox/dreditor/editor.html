@@ -1,0 +1,549 @@
+<!--// 스킨 css 로드 -->
+<!--%import("css/dreditor.css")-->
+<!--%import("css/style@content.css")-->
+
+<!--// 기본 JS 로드 -->
+<!--%import("../../tpl/js/editor_common.js")-->
+
+<!--// 에디터 JS 로드 -->
+<!--%import("js/Xpress_Editor.js")-->
+<!--%import("js/DrEditor.js",optimized=false)-->
+<!--%import("js/xe_interface.js",optimized=false)-->
+
+<!-- 자동저장용 폼 -->
+<!--@if($enable_autosave)-->
+<input type="hidden" name="_saved_doc_title" value="{htmlspecialchars($saved_doc->title)}" />
+<input type="hidden" name="_saved_doc_content" value="{htmlspecialchars($saved_doc->content)}" />
+<input type="hidden" name="_saved_doc_message" value="{$lang->msg_load_saved_doc}" />
+<span style="display:none"><p class="editor_autosaved_message" id="editor_autosaved_message_{$editor_sequence}" style="display:none"></p></span>
+<!--@end-->
+<!-- 폼을 알아내기 위한 더미 -->
+<input type="hidden" id="dreditor_dummy_{$editor_sequence}" value="" />
+
+<!-- 에디터 -->
+<div id="DrEditor{$editor_sequence}" class="textyleEditor">
+<!-- class="textyleEditor" | class="textyleEditor keepClose" -->
+	<div class="editorContainer">
+		<!-- Editor Area -->
+		<div class="editorArea textyleContent"></div>
+
+		<!-- Writer Area -->
+		<div class="writeArea textyleContent">
+
+			<div class="wArea hx">
+			<!-- class="wArea hx" | class="wArea hx open" -->
+				<fieldset>
+					<legend>{$lang->edit->title}</legend>
+					<ul>
+						<li class="h3"><input name="hx" type="radio" value="h3" id="h3" class="inputRadio" checked="checked" /><label for="h3">{$lang->edit->title1}</label></li>
+						<li class="h4"><input name="hx" type="radio" value="h4" id="h4" class="inputRadio" /><label for="h4">{$lang->edit->title2}</label></li>
+						<li class="h5"><input name="hx" type="radio" value="h5" id="h5" class="inputRadio" /><label for="h5">{$lang->edit->title3}</label></li>
+					</ul>
+					<input name="" type="text" class="inputTitle h3" value="{$lang->edit->insert_dr_title}" title="{$lang->edit->insert_dr_title}" />
+					<!-- class="inputTitle h3" | class="inputTitle h4" | class="inputTitle h5" -->
+					<div class="buttonArea">
+						<span class="buttonGray medium strong"><button type="button"><img src="img/iconCheckSmall.gif" width="12" height="8" alt="" class="icon" />{$lang->cmd_confirm}</button></span>
+						<span class="buttonGray medium"><button type="button"><img src="img/buttonCloseLayerX.gif" width="7" height="7" alt="" class="icon" />{$lang->cmd_cancel}</button></span>
+					</div>
+					<ul class="eTool">
+						<li class="edit"><button type="button">{$lang->cmd_edit}</button></li>
+						<li class="move"><button type="button"><span>{$lang->cmd_move}</span></button></li>
+						<li class="delete"><button type="button"><span>{$lang->cmd_delete}</span></button></li>
+					</ul>
+					<span class="cap capTL"></span>
+					<span class="cap capTR"></span>
+					<span class="cap capBL"></span>
+					<span class="cap capBR"></span>
+				</fieldset>
+			</div>
+
+			<div class="wArea txt">
+			<!-- class="wArea txt" | class="wArea txt open" -->
+				<fieldset>
+					<legend>텍스트</legend>
+					<input type="hidden" />
+					<div class="txEditor">
+						<ul class="toolbar tool">
+							<li class="strong xpress_xeditor_ui_bold"><button type="button"><span>{$lang->edit->bold}</span></button></li>
+							<li class="em xpress_xeditor_ui_italic"><button type="button"><span>{$lang->edit->italic}</span></button></li>
+							<li class="underline xpress_xeditor_ui_underline"><button type="button"><span>{$lang->edit->underline}</span></button></li>
+							<li class="del xpress_xeditor_ui_lineThrough"><button type="button"><span>{$lang->edit->strike}</span></button></li>
+							<li class="aHref vRule xpress_xeditor_ui_hyperlink">
+								<button type="button" title="{$lang->edit->url}"><span>{$lang->edit->url}</span></button>
+								<!-- URL 레이어 -->
+								<div class="uri xpress_xeditor_hyperlink_layer" style="display:none;">
+									<fieldset>
+										<h3>{$lang->edit->hyperlink}</h3>
+										<input name="" class="link" type="text" value="http://" title="URL" />
+										<p><input name="" id="target" type="checkbox" value="" /><label for="target">{$lang->edit->target_blank}</label></p>
+										<div class="btn_area">
+											<span class="buttonGray small"><button type="button" class="confirm" title="{$lang->cmd_confirm}">{$lang->cmd_confirm}</button></span>
+											<span class="buttonGray small"><button type="button" class="cancel" title="{$lang->cmd_cancel}">{$lang->cmd_cancel}</button></span>
+										</div>
+									</fieldset>
+
+								</div>
+								<!-- /URL 레이어 -->
+							</li>
+							<li class="fSize xpress_xeditor_ui_fontSize">
+								<select class="xpress_xeditor_ui_fontSize_select">
+									<option>{$lang->edit->fontsize}</option>
+									<option value="9px" class="font9px">9px</option>
+									<option value="10px" class="font10px">10px</option>
+									<option value="11px" class="font11px">11px</option>
+									<option value="12px" class="font12px">12px</option>
+									<option value="14px" class="font14px">14px</option>
+									<option value="16px" class="font16px">16px</option>
+									<option value="18px" class="font18px">18px</option>
+									<option value="20px" class="font20px">20px</option>
+									<option value="24px" class="font24px">24px</option>
+									<option value="28px" class="font28px">28px</option>
+									<option value="32px" class="font32px">32px</option>
+									<option value="36px" class="font36px">36px</option>
+								</select>
+							</li>
+							<li class="fColor xpress_xeditor_ui_fontColor">
+								<button type="button" title="{$lang->edit->help_fontcolor}"><span>{$lang->edit->fontcolor}</span></button>
+								<!-- 팔레트 레이어 -->
+								<div class="xpress_xeditor_fontcolor_layer" style="display:none;">
+									<ul class="palette xpress_xeditor_color_palette">
+										<li><button type="button" title="#ff0000" style="background:#ff0000"><span>#ff0000</span></button></li>
+										<li><button type="button" title="#ff6c00" style="background:#ff6c00"><span>#ff6c00</span></button></li>
+										<li><button type="button" title="#ffaa00" style="background:#ffaa00"><span>#ffaa00</span></button></li>
+										<li><button type="button" title="#ffef00" style="background:#ffef00"><span>#ffef00</span></button></li>
+										<li><button type="button" title="#a6cf00" style="background:#a6cf00"><span>#a6cf00</span></button></li>
+										<li><button type="button" title="#009e25" style="background:#009e25"><span>#009e25</span></button></li>
+										<li><button type="button" title="#00b0a2" style="background:#00b0a2"><span>#00b0a2</span></button></li>
+										<li><button type="button" title="#0075c8" style="background:#0075c8"><span>#0075c8</span></button></li>
+										<li><button type="button" title="#3a32c3" style="background:#3a32c3"><span>#3a32c3</span></button></li>
+										<li><button type="button" title="#7820b9" style="background:#7820b9"><span>#7820b9</span></button></li>
+										<li><button type="button" title="#ef007c" style="background:#ef007c"><span>#ef007c</span></button></li>
+										<li><button type="button" title="#000000" style="background:#000000"><span>#000000</span></button></li>
+										<li><button type="button" title="#252525" style="background:#252525"><span>#252525</span></button></li>
+										<li><button type="button" title="#464646" style="background:#464646"><span>#464646</span></button></li>
+										<li><button type="button" title="#636363" style="background:#636363"><span>#636363</span></button></li>
+										<li><button type="button" title="#7d7d7d" style="background:#7d7d7d"><span>#7d7d7d</span></button></li>
+										<li><button type="button" title="#9a9a9a" style="background:#9a9a9a"><span>#9a9a9a</span></button></li>
+										<li><button type="button" title="#ffe8e8" style="background:#ffe8e8"><span>#ffe8e8</span></button></li>
+										<li><button type="button" title="#f7e2d2" style="background:#f7e2d2"><span>#f7e2d2</span></button></li>
+										<li><button type="button" title="#f5eddc" style="background:#f5eddc"><span>#f5eddc</span></button></li>
+										<li><button type="button" title="#f5f4e0" style="background:#f5f4e0"><span>#f5f4e0</span></button></li>
+										<li><button type="button" title="#edf2c2" style="background:#edf2c2"><span>#edf2c2</span></button></li>
+										<li><button type="button" title="#def7e5" style="background:#def7e5"><span>#def7e5</span></button></li>
+										<li><button type="button" title="#d9eeec" style="background:#d9eeec"><span>#d9eeec</span></button></li>
+										<li><button type="button" title="#c9e0f0" style="background:#c9e0f0"><span>#c9e0f0</span></button></li>
+										<li><button type="button" title="#d6d4eb" style="background:#d6d4eb"><span>#d6d4eb</span></button></li>
+										<li><button type="button" title="#e7dbed" style="background:#e7dbed"><span>#e7dbed</span></button></li>
+										<li><button type="button" title="#f1e2ea" style="background:#f1e2ea"><span>#f1e2ea</span></button></li>
+										<li><button type="button" title="#acacac" style="background:#acacac"><span>#acacac</span></button></li>
+										<li><button type="button" title="#c2c2c2" style="background:#c2c2c2"><span>#c2c2c2</span></button></li>
+										<li><button type="button" title="#cccccc" style="background:#cccccc"><span>#cccccc</span></button></li>
+										<li><button type="button" title="#e1e1e1" style="background:#e1e1e1"><span>#e1e1e1</span></button></li>
+										<li><button type="button" title="#ebebeb" style="background:#ebebeb"><span>#ebebeb</span></button></li>
+										<li><button type="button" title="#ffffff" style="background:#ffffff"><span>#ffffff</span></button></li>
+										<li><button type="button" title="#e97d81" style="background:#e97d81"><span>#e97d81</span></button></li>
+										<li><button type="button" title="#e19b73" style="background:#e19b73"><span>#e19b73</span></button></li>
+										<li><button type="button" title="#d1b274" style="background:#d1b274"><span>#d1b274</span></button></li>
+										<li><button type="button" title="#cfcca2" style="background:#cfcca2"><span>#cfcca2</span></button></li>
+										<li><button type="button" title="#cfcca2" style="background:#cfcca2"><span>#cfcca2</span></button></li>
+										<li><button type="button" title="#61b977" style="background:#61b977"><span>#61b977</span></button></li>
+										<li><button type="button" title="#53aea8" style="background:#53aea8"><span>#53aea8</span></button></li>
+										<li><button type="button" title="#518fbb" style="background:#518fbb"><span>#518fbb</span></button></li>
+										<li><button type="button" title="#6a65bb" style="background:#6a65bb"><span>#6a65bb</span></button></li>
+										<li><button type="button" title="#9a54ce" style="background:#9a54ce"><span>#9a54ce</span></button></li>
+										<li><button type="button" title="#e573ae" style="background:#e573ae"><span>#e573ae</span></button></li>
+										<li><button type="button" title="#5a504b" style="background:#5a504b"><span>#5a504b</span></button></li>
+										<li><button type="button" title="#767b86" style="background:#767b86"><span>#767b86</span></button></li>
+										<li><button type="button" title="#00ffff" style="background:#00ffff"><span>#00ffff</span></button></li>
+										<li><button type="button" title="#00ff00" style="background:#00ff00"><span>#00ff00</span></button></li>
+										<li><button type="button" title="#a0f000" style="background:#a0f000"><span>#a0f000</span></button></li>
+										<li><button type="button" title="#ffff00" style="background:#ffff00"><span>#ffff00</span></button></li>
+										<li><button type="button" title="#951015" style="background:#951015"><span>#951015</span></button></li>
+										<li><button type="button" title="#6e391a" style="background:#6e391a"><span>#6e391a</span></button></li>
+										<li><button type="button" title="#785c25" style="background:#785c25"><span>#785c25</span></button></li>
+										<li><button type="button" title="#5f5b25" style="background:#5f5b25"><span>#5f5b25</span></button></li>
+										<li><button type="button" title="#4c511f" style="background:#4c511f"><span>#4c511f</span></button></li>
+										<li><button type="button" title="#1c4827" style="background:#1c4827"><span>#1c4827</span></button></li>
+										<li><button type="button" title="#0d514c" style="background:#0d514c"><span>#0d514c</span></button></li>
+										<li><button type="button" title="#1b496a" style="background:#1b496a"><span>#1b496a</span></button></li>
+										<li><button type="button" title="#2b285f" style="background:#2b285f"><span>#2b285f</span></button></li>
+										<li><button type="button" title="#45245b" style="background:#45245b"><span>#45245b</span></button></li>
+										<li><button type="button" title="#721947" style="background:#721947"><span>#721947</span></button></li>
+										<li><button type="button" title="#352e2c" style="background:#352e2c"><span>#352e2c</span></button></li>
+										<li><button type="button" title="#3c3f45" style="background:#3c3f45"><span>#3c3f45</span></button></li>
+										<li><button type="button" title="#00aaff" style="background:#00aaff"><span>#00aaff</span></button></li>
+										<li><button type="button" title="#0000ff" style="background:#0000ff"><span>#0000ff</span></button></li>
+										<li><button type="button" title="#a800ff" style="background:#a800ff"><span>#a800ff</span></button></li>
+										<li><button type="button" title="#ff00ff" style="background:#ff00ff"><span>#ff00ff</span></button></li>
+									</ul>
+								</div>
+								<!-- /팔레트 레이어 -->
+							</li>
+							<li class="bgColor xpress_xeditor_ui_bgColor">
+								<button type="button" title="{$lang->edit->help_fontbgcolor}"><span>{$lang->edit->fontbgcolor}</span></button>
+								<div class="xpress_xeditor_bgcolor_layer" style="display:none;"></div>
+							</li>
+						</ul>
+						<div class="inputRichText xpress_xeditor_editing_area_container">
+							<iframe src="{$editor_path}blank.html" frameborder="0" scrolling="yes" title="{$lang->edit->richtext_area}"></iframe>
+						</div>
+						<div class="resizeVertical xpress_xeditor_editingArea_verticalResizer">
+							<button type="button"><span>{$lang->edit->edit_height_control}</span></button>
+						</div>
+					</div>
+					<div class="buttonArea">
+						<span class="buttonGray medium strong"><button type="button"><img src="img/iconCheckSmall.gif" width="12" height="8" alt="" class="icon" />{$lang->cmd_confirm}</button></span>
+						<span class="buttonGray medium"><button type="button"><img src="img/buttonCloseLayerX.gif" width="7" height="7" alt="" class="icon" />{$lang->cmd_cancel}</button></span>
+						<p class="info">{$lang->edit->text_explain}</p>
+					</div>
+					<span class="cap capTL"></span>
+					<span class="cap capTR"></span>
+					<span class="cap capBL"></span>
+					<span class="cap capBR"></span>
+				</fieldset>
+			</div>
+
+			<div class="wArea link">
+			<!-- class="wArea link" | class="wArea link open" -->
+				<fieldset>
+					<legend>{$lang->edit->link}</legend>
+					<input name="" type="text" class="inputText" value="" title="{$lang->edit->insert_site_name}" />
+					<input name="" type="text" class="inputLink" value="" title="http://" />
+					<input name="" type="text" class="inputText" value="" title="{$lang->edit->insert_explain}" />
+					<div class="buttonArea">
+						<span class="buttonGray medium strong"><button type="button"><img src="img/iconCheckSmall.gif" width="12" height="8" alt="" class="icon" />{$lang->cmd_confirm}</button></span>
+						<span class="buttonGray medium"><button type="button"><img src="img/buttonCloseLayerX.gif" width="7" height="7" alt="" class="icon" />{$lang->cmd_cancel}</button></span>
+					</div>
+					<span class="cap capTL"></span>
+					<span class="cap capTR"></span>
+					<span class="cap capBL"></span>
+					<span class="cap capBR"></span>
+				</fieldset>
+			</div>
+
+			<div class="wArea list">
+			<!-- class="wArea list" | class="wArea list open" -->
+				<fieldset>
+					<legend>{$lang->cmd_list}</legend>
+					<ul class="toolbar">
+						<li><button type="button" class="type_disc"><span>disc</span></button></li>
+						<li><button type="button" class="type_circle"><span>circle</span></button></li>
+						<li><button type="button" class="type_square"><span>square</span></button></li>
+						<li><button type="button" class="type_decimal"><span>decimal</span></button></li>
+						<li><button type="button" class="type_lower-alpha"><span>lower alpha</span></button></li>
+						<li><button type="button" class="type_upper-alpha"><span>upper alpha</span></button></li>
+						<li><button type="button" class="type_lower-roman"><span>lower roman</span></button></li>
+						<li><button type="button" class="type_upper-roman"><span>upper roman</span></button></li>
+					</ul>
+					<div class="listArea"></div>
+					<div class="buttonArea">
+						<span class="buttonGray medium strong"><button type="button"><img src="img/iconCheckSmall.gif" width="12" height="8" alt="" class="icon" />{$lang->cmd_confirm}</button></span>
+						<span class="buttonGray medium"><button type="button"><img src="img/buttonCloseLayerX.gif" width="7" height="7" alt="" class="icon" />{$lang->cmd_cancel}</button></span>
+						<p class="info">{$lang->edit->list_explain}</p>
+					</div>
+					<span class="cap capTL"></span>
+					<span class="cap capTR"></span>
+					<span class="cap capBL"></span>
+					<span class="cap capBR"></span>
+				</fieldset>
+			</div>
+
+			<div class="wArea blockquote">
+			<!-- class="wArea blockquote" | class="wArea blockquote open" -->
+				<fieldset>
+					<legend>{$lang->edit->blockquote}</legend>
+					<textarea name="" cols="50" rows="5" class="inputTextarea" title="{$lang->edit->insert_blockquote}"></textarea>
+					<input name="" type="text" class="inputText" value="" title="{$lang->edit->insert_cite}" />
+					<div class="buttonArea">
+						<span class="buttonGray medium strong"><button type="button"><img src="img/iconCheckSmall.gif" width="12" height="8" alt="" class="icon" />{$lang->cmd_confirm}</button></span>
+						<span class="buttonGray medium"><button type="button"><img src="img/buttonCloseLayerX.gif" width="7" height="7" alt="" class="icon" />{$lang->cmd_cancel}</button></span>
+					</div>
+					<span class="cap capTL"></span>
+					<span class="cap capTR"></span>
+					<span class="cap capBL"></span>
+					<span class="cap capBR"></span>
+				</fieldset>
+			</div>
+
+			<div class="wArea img">
+			<!-- class="wArea img" | class="wArea img open" -->
+				<fieldset>
+					<legend>{$lang->edit->image}</legend>
+					<input name="Filedata" type="file" class="inputFile" title="{$lang->edit->find_image}" />
+					<p class="uploading">{$lang->edit->uploading}<span></span></p>
+					<p class="info">{sprintf($lang->edit->uploading_info,($file_config->allowed_filesize/(1024*1024)))}</p>
+					<div class="hr"></div>
+					<div class="image">
+						<img src="" alt="{$lang->edit->uploaded_image}" />
+					</div>
+					<div class="resize">
+						<dl>
+							<dt>{$lang->edit->image_width} :</dt>
+							<dd><em></em> px → <input name="" type="text" class="width copy" value="" title="" /> px <span class="buttonGray medium"><button type="button" class="btn_resize">{$lang->edit->resize}</button></span> <span class="resizeInfo">{$lang->edit->resize_info}</span></dd>
+						</dl>
+						<p class="resizeError">{$lang->edit->resize_error}</p>
+					</div>
+					<input name="" type="text" class="inputText desc" value="" title="{$lang->edit->insert_image_explain}" />
+					<input name="" type="text" class="inputText cite" value="" title="{$lang->edit->insert_cite}" />
+					<div class="buttonArea">
+						<span class="buttonGray medium strong"><button type="button"><img src="img/iconCheckSmall.gif" width="12" height="8" alt="" class="icon" />{$lang->cmd_confirm}</button></span>
+						<span class="buttonGray medium"><button type="button"><img src="img/buttonCloseLayerX.gif" width="7" height="7" alt="" class="icon" />{$lang->cmd_cancel}</button></span>
+					</div>
+					<span class="cap capTL"></span>
+					<span class="cap capTR"></span>
+					<span class="cap capBL"></span>
+					<span class="cap capBR"></span>
+				</fieldset>
+			</div>
+
+			<div class="wArea mov">
+			<!-- class="wArea mov" | class="wArea mov open" -->
+				<fieldset>
+					<legend>동영상</legend>
+					<legend>{$lang->edit->mov}</legend>
+					<textarea name="" cols="50" rows="5" class="inputTextarea" title="{$lang->edit->insert_mov}"></textarea>
+					<textarea name="" cols="50" rows="5" class="inputTextarea" title="{$lang->edit->insert_mov_explain}"></textarea>
+					<input name="" type="text" class="inputText" value="" title="{$lang->edit->insert_cite}" />
+					<div class="buttonArea">
+						<span class="buttonGray medium strong"><button type="button"><img src="img/iconCheckSmall.gif" width="12" height="8" alt="" class="icon" />{$lang->cmd_confirm}</button></span>
+						<span class="buttonGray medium"><button type="button"><img src="img/buttonCloseLayerX.gif" width="7" height="7" alt="" class="icon" />{$lang->cmd_cancel}</button></span>
+					</div>
+					<span class="cap capTL"></span>
+					<span class="cap capTR"></span>
+					<span class="cap capBL"></span>
+					<span class="cap capBR"></span>
+				</fieldset>
+			</div>
+
+			<!--@if($allow_fileupload)-->
+			<!--%import("js/uploader.js",optimized=false)-->
+			<!--%import("../../tpl/js/swfupload.js",optimized=false)-->
+			<script type="text/javascript">//<![CDATA[
+                uploaderSettings=
+                    {
+					"editorSequence" : {$editor_sequence},
+					"sessionName" : "{session_name()}",
+					"allowedFileSize" : "{$file_config->allowed_filesize}",
+					"allowedFileTypes" : "{$file_config->allowed_filetypes}",
+					"allowedFileTypesDescription" : "{$file_config->allowed_filetypes}",
+					"insertedFiles" : {(int)$files_count},
+					"replaceButtonID" : "swfUploadButton{$editor_sequence}",
+					"fileListAreaID" : "uploaded_file_list_{$editor_sequence}",
+					"previewAreaID" : "preview_uploaded_{$editor_sequence}",
+					"uploaderStatusID" : "uploader_status_{$editor_sequence}"
+				};
+				//reloadFileList(editorUploadSettings);
+			//]]></script>
+			<div class="wArea file">
+			<!-- class="wArea file" | class="wArea file open" -->
+				<fieldset>
+                 <span id="swfUploadButton{$editor_sequence}" class="buttonFileUpload"><button type="button">{$lang->edit->file_select}</button></span>
+					<p class="info">{sprintf($lang->edit->file_uploadinfo,($file_config->allowed_filesize/(1024*1024)),($file_config->allowed_attach_size/(1024*1024)))} <!--button type="button" class="help">파일 업로드에 문제가 발생하는 경우 클릭.</button--></p>
+					<!--input name="" type="file" class="inputFile" title="파일 찾기" /-->
+					<!-- class="inputFile" | class="inputFile open" -->
+					<div class="hr"></div>
+					<dl class="attachedFile">
+						<dd style="display:none"><strong>{filename}</strong> <em>{filesize}</em> <button type="button" class="buttonDelete"><span>{$lang->cmd_delete}</span></button></dd>
+					</dl>
+					<p class="summary">{$lang->edit->file_total} <em class="filesize">{total_filesize}</em></p>
+					<div class="hr"></div>
+					<input name="" type="text" class="inputText" value="" title="{$lang->edit->insert_file_explain}" />
+					<input name="" type="text" class="inputText" value="" title="{$lang->edit->insert_cite}" />
+					<div class="buttonArea">
+				<span class="buttonGray medium strong"><button type="button"><img src="img/iconCheckSmall.gif" width="12" height="8" alt="" class="icon" />{$lang->cmd_confirm}</button></span>
+						<span class="buttonGray medium"><button type="button"><img src="img/buttonCloseLayerX.gif" width="7" height="7" alt="" class="icon" />{$lang->cmd_cancel}</button></span>
+					</div>
+					<span class="cap capTL"></span>
+					<span class="cap capTR"></span>
+					<span class="cap capBL"></span>
+					<span class="cap capBR"></span>
+				</fieldset>
+			</div>
+			<!--@end-->
+
+			<div class="wArea hr">
+			<!-- class="wArea hr" | class="wArea hr open" -->
+				<fieldset>
+					<legend>{$lang->edit->hr}</legend>
+					<ul>
+						<li><span class="hRule"></span><input name="hr" type="radio" value="hline" id="hr1" class="inputRadio" checked="checked" /> <label for="hr1">{$lang->edit->hr_simple}</label></li>
+					</ul>
+					<div class="buttonArea">
+						<span class="buttonGray medium strong"><button type="button"><img src="img/iconCheckSmall.gif" width="12" height="8" alt="" class="icon" />{$lang->cmd_confirm}</button></span>
+						<span class="buttonGray medium"><button type="button"><img src="img/buttonCloseLayerX.gif" width="7" height="7" alt="" class="icon" />{$lang->cmd_cancel}</button></span>
+					</div>
+					<span class="cap capTL"></span>
+					<span class="cap capTR"></span>
+					<span class="cap capBL"></span>
+					<span class="cap capBR"></span>
+				</fieldset>
+			</div>
+
+			<div class="wArea index">
+			<!-- class="wArea index" | class="wArea index open" -->
+				<fieldset>
+					<legend>{$lang->edit->toc}</legend>
+					<div class="buttonArea">
+						<span class="buttonGray medium strong"><button type="button"><img src="img/iconCheckSmall.gif" width="12" height="8" alt="" class="icon" />{$lang->cmd_confirm}</button></span>
+						<span class="buttonGray medium"><button type="button"><img src="img/buttonCloseLayerX.gif" width="7" height="7" alt="" class="icon" />{$lang->cmd_cancel}</button></span>
+						<p class="info">{$lang->edit->toc_explain}</p>
+					</div>
+					<span class="cap capTL"></span>
+					<span class="cap capTR"></span>
+					<span class="cap capBL"></span>
+					<span class="cap capBR"></span>
+				</fieldset>
+			</div>
+
+			<!-- wArea blank-->
+			<div class="wArea blank open">
+			<!-- class="wArea blank" | class="wArea blank open" -->
+				<p class="writeHere">{$lang->edit->drag_here}</p>
+				<span class="cap capTL"></span>
+				<span class="cap capTR"></span>
+				<span class="cap capBL"></span>
+				<span class="cap capBR"></span>
+			</div>
+			<!-- /wArea blank-->
+
+			<!-- wToolbar -->
+			<div class="wToolbarContainer">
+			<!-- class="wToolbarContainer" | class="wToolbarContainer more" -->
+				<div class="wToolbar">
+				<!-- class="wToolbar" | class="wToolbar hx | txt | link | list | blockquote | img | mov | file | hr | index" -->
+					<ul>
+						<!--@if($_COOKIE['DrEditorToolbar'])-->
+							{@$_DrEditorToolbar=$_COOKIE['DrEditorToolbar'];}
+						<!--@else-->
+							{@$_DrEditorToolbar='hx,txt,link,list,blockquote,img,mov,file,hr,index';}
+						<!--@end-->
+						<!--@foreach(explode(',',$_DrEditorToolbar) as $k => $v)-->
+							<!--@if($v=='hx')-->
+							<li class="hx"><button type="button"><span>{$lang->edit->title_title}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<!--@elseif($v=='txt')-->
+							<li class="txt"><button type="button"><span>{$lang->edit->text}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<!--@elseif($v=='link')-->
+							<li class="link"><button type="button"><span>{$lang->edit->link}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<!--@elseif($v=='list')-->
+							<li class="list"><button type="button"><span>{$lang->edit->list}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<!--@elseif($v=='blockquote')-->
+							<li class="blockquote"><button type="button"><span>{$lang->edit->blockquote}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<!--@elseif($v=='img')-->
+							<li class="img"><button type="button"><span>{$lang->edit->image}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<!--@elseif($v=='mov')-->
+							<li class="mov"><button type="button"><span>{$lang->edit->mov}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<!--@elseif($v=='file')-->
+							<!--@if($allow_fileupload)-->
+							<li class="file"><button type="button"><span>{$lang->edit->file}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<!--@end-->
+							<!--@elseif($v=='hr')-->
+							<li class="hr"><button type="button"><span>{$lang->edit->hr}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<!--@elseif($v=='index')-->
+							<li class="index"><button type="button"><span>{$lang->edit->toc}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<!--@end-->
+						<!--@end-->
+						<li class="more"><button type="button"><span>{$lang->edit->more}</span></button></li>
+					</ul>
+					<span class="cap capLeft"></span>
+					<span class="cap capRight"></span>
+					<span class="arrow"></span>
+				</div>
+			</div>
+			<!-- /wToolbar -->
+
+		</div>
+		<!-- /Editor Area -->
+	</div>
+
+	<!-- Extension -->
+	<div class="keepingArea">
+
+		<div class="section keep collection open">
+		<!-- class="section keep collection" | class="section keep collection open" -->
+			<div class="header">
+				<h3>{$lang->edit->materials}</h3>
+				<button type="button" class="toggle"><span>{$lang->edit->toggle_list}</span></button>
+				<span class="controls">
+					<button type="button" class="reload"><span>{$lang->edit->refresh}</span></button>
+					<button type="button" class="collapse"><span>{$lang->edit->minimize_list}</span></button>
+				</span>
+			</div>
+
+			<p class="keepList noData">{$lang->edit->no_materials}</p>
+
+			<!-- Keeping List -->
+			<div class="keepList">
+				<!-- class="item" | class="item hover" -->
+				<div class="item">
+					<dl>
+						<dt>{regdate}</dt>
+						<dd>{content}</dd>
+					</dl>
+					<button type="button" class="movable"><span>{$lang->edit->move}</span></button>
+					<span class="mask"></span>
+					<span class="arrow"></span>
+				</div>
+				<!-- pagenate -->
+				<div class="paginate">
+					<button type="button" class="prev" title="{$lang->edit->paging_prev_help}"><span>{$lang->edit->paging_prev}</span></button>
+					<button type="button" class="next" title="{$lang->edit->paging_next_help}"><span>{$lang->edit->paging_next}</span></button>
+					<span>{current}/{total}</span>
+				</div>
+				<!-- pagenate -->
+			</div>
+			<!-- /Keeping List -->
+		</div>
+
+		<!--
+		<div class="section keep temp open">
+		<< class="section keep temp" | class="section keep temp open" >>
+			<div class="header">
+				<h3>{$lang->edit->temporary_savings}</h3>
+				<button type="button" class="toggle"><span>{$lang->edit->toggle_list}</span></button>
+			</div>
+
+			<< <p class="keepList noData">임시 저장된 글이 없습니다.</p> >>
+
+			< Keeping List >
+			<div class="keepList">
+				<div class="item">
+					<dl>
+						<dt>{regdate} <span class="time">{regtime}</span></dt>
+						<dd>
+							<h3>{title}</h3>
+							<p>{content}</p>
+						</dd>
+					</dl>
+					<button type="button" class="movable"><span>{$lang->edit->move}</span></button>
+					<span class="mask"></span>
+					<span class="arrow"></span>
+				</div>
+
+				<< pagenate >>
+				<div class="paginate">
+					<button type="button" class="prev" title="{$lang->edit->paging_prev_help}"><span>{$lang->edit->paging_prev}</span></button>
+					<button type="button" class="next" title="{$lang->edit->paging_next_help}"><span>{$lang->edit->paging_next}</span></button>
+					<span>{current}/{total}</span>
+				</div>
+				<< pagenate >>
+
+			</div>
+			<< /Keeping List >>
+		</div>
+		-->
+
+	</div>
+	<!-- /Extension -->
+</div>
+<!-- /에디터 -->
+
+<!-- 에디터 활성화 -->
+<script type="text/javascript">//<![CDATA[
+	var editor_path = "{$editor_path}";
+	var auto_saved_msg = "{$lang->msg_auto_saved}";
+	var delete_dr_confirm_msg = "{$lang->edit->msg_dr_delete_confirm}";
+	var no_selected_object_msg = "{$lang->edit->msg_no_selected_object}";
+	var insert_value_msg = "{$lang->edit->msg_insert_value}";
+	var oEditor = null;
+	jQuery(function() { oEditor = editorStart_xe("{$editor_sequence}", "{$editor_primary_key_name}", "{$editor_content_key_name}", "{$editor_height}", "{$colorset}", "{$content_style}",'{$content_font}','{$content_font_size}'); } );
+//]]></script>

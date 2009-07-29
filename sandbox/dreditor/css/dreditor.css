@@ -1,0 +1,394 @@
+@charset "utf-8"; 
+/* NHN > UIT Center > Open UI Platform Team > Jeong Chan Myeong(dece24@nhncorp.com) */
+
+/* Textyle Editor */
+.textyleEditor{ position:relative; *zoom:1; padding-right:250px; margin:0 0 1em 0;}
+.textyleEditor:after{ content:""; display:block; clear:both;} 
+.textyleEditor .editorContainer{ position:relative; float:left; width:100%; margin-right:-100%; display:table; table-layout:fixed;}
+.textyleEditor .editorContainer .editArea{}
+.textyleEditor .editorContainer .writeArea{ position:relative; *zoom:1;}
+.textyleEditor .keepingArea{ position:absolute; top:0; right:0; float:right; width:230px; z-index:10; word-break:break-all;}
+
+/* Keep Toggle Layout */
+.textyleEditor.keepClose{ padding-right:60px;}
+.textyleEditor.keepClose .keepingArea{ width:40px;}
+.keepClose .keepList{ display:none !important;}
+.keepClose .keep .header{ padding:10px 0 10px 38px; width:0; height:15px;}
+.keepClose .keep.collection .header{ background-position:11px 11px;}
+.keepClose .keep.temp .header{ background-position:11px -41px;}
+.keepClose .keep .header h3{ display:none;}
+.keepClose .keep .header:hover h3{ display:block; position:absolute; top:-1px; right:100%; white-space:nowrap; border:1px solid #dcdee2; padding:10px 20px 10px 35px; height:15px; background:#fff url(../img/buttonToggleLeftRight.gif) no-repeat 20px center;}
+* html .keepClose .keep .header.hover h3{ display:block; position:absolute; top:-1px; right:100%; white-space:nowrap; border:1px solid #dcdee2; padding:10px 20px 10px 35px; height:15px; background:#fff url(../img/buttonToggleLeftRight.gif) no-repeat 20px center;}/* IE6 Only */
+.keepClose .keep .header .reload{ display:none;}
+.keepClose .keep .header .toggle{ width:38px;}
+.keepClose .keep .header .collapse{ display:none;}
+
+/* Writing Toolbar */
+.wToolbarContainer{ position:relative; margin:-7px 0 40px 0; height:72px; overflow:hidden;}
+.wToolbarContainer.more{ height:141px;}
+.wToolbar{ position:relative; height:72px; margin:0 10px; *zoom:1; background-image:url(../img/bgWritingToolbarCenter.gif); background-repeat:repeat-x;}
+.wToolbarContainer.more .wToolbar{ height:141px; background-position:0 -100px;}
+.wToolbar .cap{ position:absolute; top:0; width:10px; height:72px; background-repeat:no-repeat; font-size:0; line-height:0; overflow:hidden; background:url(../img/bgWritingToolbar.gif) no-repeat;}
+.wToolbarContainer.more .cap{ height:141px; background:url(../img/bgWritingToolbarMore.gif) no-repeat;}
+.wToolbar .cap.capLeft{ left:-10px; background-position:left top;}
+.wToolbar .cap.capRight{ right:-10px; background-position:right top;}
+/* 
+.wToolbar.hx,
+.wToolbar.txt,
+.wToolbar.link,
+.wToolbar.list,
+.wToolbar.blockquote,
+.wToolbar.img,
+.wToolbar.mov,
+.wToolbar.file,
+.wToolbar.hr,
+.wToolbar.index{ margin-top:-1em;} 
+*/
+.wToolbar.hx .cap.capLeft,
+.wToolbar.txt .cap.capLeft,
+.wToolbar.link .cap.capLeft,
+.wToolbar.list .cap.capLeft,
+.wToolbar.blockquote .cap.capLeft,
+.wToolbar.img .cap.capLeft,
+.wToolbar.mov .cap.capLeft,
+.wToolbar.file .cap.capLeft,
+.wToolbar.hr .cap.capLeft,
+.wToolbar.index .cap.capLeft{ background-position:left -200px;}
+.wToolbar.hx .cap.capRight,
+.wToolbar.txt .cap.capRight,
+.wToolbar.link .cap.capRight,
+.wToolbar.list .cap.capRight,
+.wToolbar.blockquote .cap.capRight,
+.wToolbar.img .cap.capRight,
+.wToolbar.mov .cap.capRight,
+.wToolbar.file .cap.capRight,
+.wToolbar.hr .cap.capRight,
+.wToolbar.index .cap.capRight{ background-position:right -200px;}
+
+.wToolbar ul{ position:relative; margin:0 70px 0 0; padding:1px 0 0 0; *zoom:1; height:68px;}
+.wToolbarContainer.more ul{ height:135px; background:url(../img/hrToolbarMore.gif) repeat-x left center;}
+.wToolbar ul:after{ content:""; display:block; clear:both;}
+.wToolbar li{ position:relative; float:left; list-style:none; width:11.1%; *width:11%; _margin-top:0; _margin-right:-1px;}
+.wToolbar li.more{ float:none; position:absolute; top:1px; right:-70px; width:60px; height:auto; background:url(../img/vrToolbarMore.gif) repeat-y;}
+.wToolbar li button{ position:relative; padding:0; width:100%; height:67px; border:0; background:transparent; cursor:pointer; font-size:11px; color:#44506a; background-image:url(../img/iconWritingToolbar.gif); background-repeat:no-repeat;}
+.wToolbar li button span{ display:inline-block; padding-top:40px; height:27px;}
+.wToolbar li.more button{ width:60px;}
+.wToolbarContainer.more li.more button{ height:136px;}
+.wToolbarContainer.more li.more button span{ padding-bottom:59px; _padding-bottom:55px;}
+
+.wToolbar.hx button,
+.wToolbar.txt button,
+.wToolbar.link button,
+.wToolbar.list button,
+.wToolbar.blockquote button,
+.wToolbar.img button,
+.wToolbar.mov button,
+.wToolbar.file button,
+.wToolbar.hr button,
+.wToolbar.index button{ opacity:.5; filter:alpha(opacity=50);}
+
+.wToolbar.hx li.hx button,
+.wToolbar.txt li.txt button,
+.wToolbar.link li.link button,
+.wToolbar.list li.list button,
+.wToolbar.blockquote li.blockquote button,
+.wToolbar.img li.img button,
+.wToolbar.mov li.mov button,
+.wToolbar.file li.file button,
+.wToolbar.hr li.hr button,
+.wToolbar.index li.index button,
+.wToolbar li button:hover,
+.wToolbar li button:active,
+.wToolbar li button:focus{ opacity:1; filter:alpha(opacity=100);}
+
+.wToolbar li.hx button{ background-position:center top;}
+.wToolbar li.txt button{ background-position:center -100px;}
+.wToolbar li.link button{ background-position:center -200px;}
+.wToolbar li.list button{ background-position:center -300px;}
+.wToolbar li.blockquote button{ background-position:center -400px;}
+.wToolbar li.img button{ background-position:center -500px;}
+.wToolbar li.mov button{ background-position:center -600px;}
+.wToolbar li.file button{ background-position:center -700px;}
+.wToolbar li.hr button{ background-position:center -800px;}
+.wToolbar li.index button{ background-position:center -1000px;}
+.wToolbar li.more button{ background-position:center -1970px;}
+.wToolbarContainer.more li.more button{ background-position:center -1770px;}
+
+/* 
+.wToolbar.hx li.hx,
+.wToolbar.txt li.txt,
+.wToolbar.link li.link,
+.wToolbar.list li.list,
+.wToolbar.blockquote li.blockquote,
+.wToolbar.img li.img,
+.wToolbar.mov li.mov,
+.wToolbar.file li.file,
+.wToolbar.hr li.hr,
+.wToolbar.index li.index{ top:-7px; padding-top:7px; background:url(../img/arrowToolbar.gif) no-repeat center top;} 
+*/
+
+.wToolbar li .dragable{ position:absolute; display:none; bottom:48px; right:0; padding:0; border:0; width:20px; height:20px; overflow:hidden; background:url(../img/iconMovable.gif) no-repeat center center !important; cursor:move; font-size:0; line-height:0;}
+.wToolbarContainer.more li.hover .dragable{ _display:block;}
+.wToolbarContainer.more li:hover .dragable{ display:block;}
+
+/* Writing Area */
+.wArea{ display:none; position:relative; *zoom:1; padding:20px; margin:0; background:#f5f5f5; border:1px solid #e9e9e9;}
+.wArea.open{ display:block;}
+.wArea .cap{ position:absolute; width:10px; height:10px; background-image:url(../img/bgRouningF5.gif); background-repeat:no-repeat; font-size:0; line-height:0; overflow:hidden;}
+.wArea .cap.capTL{ top:-1px; left:-1px; background-position:left top;}
+.wArea .cap.capTR{ top:-1px; right:-1px; background-position:right top;}
+.wArea .cap.capBL{ bottom:-1px; left:-1px; background-position:left bottom;}
+.wArea .cap.capBR{ bottom:-1px; right:-1px; background-position:right bottom;}
+.wArea .h4{ color:#555; font-size:14px; margin:0 0 10px 0;}
+.wArea .buttonArea{ position:relative; text-align:left; *zoom:1;}
+.wArea .buttonArea .buttonGray button{ _top:0;}
+.wArea .buttonArea .info{ display:inline; padding:0 0 0 15px; color:#777;}
+.wArea .inputTitle{ width:98%; border:1px solid #ddd; background:#fff url(../img/bgInputText.gif) no-repeat; color:#767676; padding:6px 0 0 10px; height:21px; font-size:14px; margin-bottom:10px;}
+.wArea .inputLink{ width:98%; border:1px solid #ddd; background:#fff url(../img/bgInputText.gif) no-repeat; color:#767676; padding:6px 0 0 10px; height:21px; font-size:11px; margin-bottom:10px;}
+.wArea .inputText{ width:98%; border:1px solid #ddd; background:#fff url(../img/bgInputText.gif) no-repeat; color:#767676; padding:6px 0 0 10px; height:21px; font-size:12px; margin-bottom:10px;}
+.wArea .inputFile{ width:100%; border:1px solid #ddd; background:#fff url(../img/bgInputText.gif) no-repeat; color:#767676; padding:6px 0 0 10px; height:29px; font-size:12px; margin-bottom:10px;}
+.wArea .inputTextarea{ width:98%; border:1px solid #ddd; background:#fff url(../img/bgInputText.gif) no-repeat; color:#767676; padding:10px 0 0 10px; height:150px; font-size:12px; line-height:1.5; margin-bottom:10px;}
+.wArea .inputRadio{ width:13px; height:13px; vertical-align:middle;}
+.wArea .hr{ border-top:1px solid #e6e6e6; border-bottom:1px solid #fff; font-size:0; line-height:0; overflow:hidden; height:0; margin:15px -20px;}
+
+/* Writing Area Blank */
+.editorArea .wArea { display:block; margin:-2em 0 2em 0;}
+.wArea.blank{ text-align:center; padding:100px 0; margin:0 0 -2em 0;}
+.wArea.blank .writeHere{ display:inline; color:#ababab; font-weight:bold;}
+
+/* Writing Area Hx */
+.wArea.hx ul{ margin:0 0 5px 0; padding:0; list-style:none;}
+.wArea.hx li{ display:inline !important; font-weight:bold !important; color:#333 !important;}
+.wArea.hx li label{ margin-right:30px;}
+.wArea.hx .inputTitle{ font-weight:bold !important;}
+.wArea.hx li.h3,
+.wArea.hx .inputTitle.h3{ font-size:18px !important; height:28px;}
+.wArea.hx li.h4,
+.wArea.hx .inputTitle.h4{ font-size:16px !important; height:26px;}
+.wArea.hx li.h5,
+.wArea.hx .inputTitle.h5{ font-size:13px !important; height:23px;}
+
+/* Writing Area List */
+.wArea.list .toolbar{ border:1px solid #ddd; list-style:none; margin:0 0 -1px 0; padding:0; background:#fafafa; padding:6px 20px;}
+.wArea.list .toolbar li{ display:inline; margin-right:5px;}
+.wArea.list .toolbar li button{ position:relative; width:23px; height:22px; padding:0; border:0; cursor:pointer; background-image:url(../img/buttonListToolbar.gif); background-repeat:no-repeat;}
+.wArea.list .toolbar li button:hover,
+.wArea.list .toolbar li button:active,
+.wArea.list .toolbar li button:focus{ border:1px solid #ddd;}
+.wArea.list .toolbar li button.type_disc{ background-position:center 0;}
+.wArea.list .toolbar li button.type_circle{ background-position:center -30px;}
+.wArea.list .toolbar li button.type_square{ background-position:center -60px;}
+.wArea.list .toolbar li button.type_decimal{ background-position:center -90px;}
+.wArea.list .toolbar li button.type_lower-alpha{ background-position:center -120px;}
+.wArea.list .toolbar li button.type_upper-alpha{ background-position:center -150px;}
+.wArea.list .toolbar li button.type_lower-roman{ background-position:center -180px;}
+.wArea.list .toolbar li button.type_upper-roman{ background-position:center -210px;}
+.wArea.list .toolbar li button span{ position:absolute; width:0; height:0; font-size:0; line-height:0; overflow:hidden; visibility:hidden;}
+
+.wArea.list .listArea{ padding:1em 0; margin-bottom:1em; background:#fff url(../img/bgInputText.gif) no-repeat; border:1px solid #ddd;}
+.wArea.list .listArea ul{ border:0;}
+.wArea.list .listArea input{ border:0; border-bottom:1px solid #ddd; background:transparent; width:96%; padding:3px 4px;}
+
+/* Writing Area Image */
+.wArea.img .image{ position:relative; width:100%; margin-bottom:10px; background:#fff; padding:0; overflow:hidden; display:table; table-layout:fixed;}
+.wArea.img .uploading{ display:none;}
+.wArea.img .info{ font-size:11px; color:#737fa1; margin:0;}
+.wArea.img .resize{ display:none;}
+.wArea.img .resize.open{ display:block;}
+.wArea.img .resize dl *{ vertical-align:middle;}
+.wArea.img .resize dt{ display:inline; font-weight:bold;}
+.wArea.img .resize dd{ display:inline; margin:0;}
+.wArea.img .resize .width{ width:60px; text-align:right; padding:1px 4px; height:16px;}
+.wArea.img .resize .width.original{ background:#d4d0c8;}
+.wArea.img .resize .resizeInfo{ margin:0 0 0 1em;}
+.wArea.img .resize .resizeError{ display:none; padding:.5em 3.5em; margin:1em 6px 1em 0; color:#ff6633; background:#fff url(../img/iconCheckSmall.gif) no-repeat 2em center;; border:1px solid #ddd;}
+.wArea.img .resize .resizeError.open{ display:block;}
+
+/* Writing Area File */
+.wArea.file .buttonFileUpload,
+.wArea.file .buttonFileUpload button{ position:relative; display:inline-block; height:39px; background-color:transparent; background-image:url(../img/buttonUpload.gif); background-repeat:no-repeat; cursor:pointer;}
+.wArea.file .buttonFileUpload{ background-position:left top;}
+.wArea.file .buttonFileUpload button{ left:7px; border:0; padding:0 15px 0 25px; background-position:right top; font-size:12px; font-weight:bold; color:#fff; line-height:39px; overflow:visible;}
+.wArea.file .buttonFileUpload .swfupload{ margin:0 !important; cursor:pointer;}
+.wArea.file .info{ font-size:11px; color:#737fa1;}
+.wArea.file .info .help{ position:relative; font-size:11px; border:0; background:none; padding:0; cursor:pointer; *zoom:1; color:#f66; overflow:visible;}
+.wArea.file .inputFile{ display:none;}
+.wArea.file .inputFile.open{ display:block;}
+.wArea.file dl{ margin:0; padding:0;}
+.wArea.file dd{ font-size:11px; margin-bottom:3px; margin:0;}
+.wArea.file dd strong{ margin-right:15px; color:#555; font-weight:normal;}
+.wArea.file dd em{ color:#767676; font-style:normal; margin-right:15px;}
+.wArea.file dd .buttonDelete{ border:0; padding:0; width:17px; height:17px; vertical-align:middle; cursor:pointer; background:url(../img/buttonTableDataX.gif) no-repeat center center;}
+.wArea.file dd .buttonDelete span{ position:absolute; width:0; height:0; overflow:hidden; font-size:0; line-height:0; z-index:-1; visibility:hidden;}
+.wArea.file .summary{ text-align:right; font-size:11px;}
+.wArea.file .summary{ color:#555;}
+.wArea.file .summary em{ color:#767676; font-style:normal; margin-left:10px;}
+
+/* Writing Area Hr */
+.wArea.hr ul{ margin:0 0 20px 0; padding:0; list-style:none; font-size:12px; color:#555; *zoom:1;}
+.wArea.hr li{ position:relative; margin-bottom:10px; *zoom:1;}
+.wArea.hr li label{ position:relative; background:#f5f5f5; padding:0 15px 0 30px; margin-left:-30px; z-index:1; display:none;}
+.wArea.hr li .inputRadio{ position:relative; z-index:10; display:none;}
+.wArea.hr .inputToggle,
+.wArea.hr .inputContinue{ position:absolute; top:0; border:1px solid #ddd; font-size:12px; color:#767676; width:150px; padding:3px 4px; height:14px; text-align:right; background-image:url(../img/bgInputText.gif); background-repeat:no-repeat;}
+.wArea.hr .inputShow{ right:170px;}
+.wArea.hr .inputHide,
+.wArea.hr .inputContinue{ right:0;}
+.wArea.hr .hRule{ position:absolute; width:100%; top:50%; left:0; display:block; border-top:1px solid #e6e6e6; border-bottom:1px solid #fff; font-size:0; line-height:0; overflow:hidden; height:0;}
+
+/* Edit Area */
+.eArea{ position:relative; padding:0 20px; margin:-2em 0 2em 0; font-size:12px; border:1px solid #fff; overflow:visible !important;}
+.eArea.xe_dr_hr{ padding-top:1em; padding-bottom:1em;}
+.eArea a{ color:#648AB9;}
+.eArea .eTool{ display:none;}
+.eArea .eFocusTrigger{ position:absolute; top:0; left:0; font-size:0; line-height:0; border:0; background:transparent; width:1px; height:1px; overflow:hidden; opacity:0; filter:alpha(opacity=0);}
+.eArea .eFocusTrigger:focus{ border:1px solid;}
+
+.eArea.xe_dr_img p{ overflow:hidden; width:100%;}
+.eArea.xe_dr_img p img{ *padding:1em 0;}
+
+.eFocus{ border:1px solid #d8d8de; z-index:999; background:#f9f9f9;}
+.eArea .cap{ display:none;}
+.eFocus .cap{ display:none; *display:block; position:absolute; width:10px; height:10px; /* background-image:url(); */ background-repeat:no-repeat; font-size:0; line-height:0; overflow:hidden;}
+.eFocus .cap.capTL{ top:-1px; left:-1px; background-position:left top;}
+.eFocus .cap.capTR{ top:-1px; right:-1px; background-position:right top;}
+.eFocus .cap.capBL{ bottom:-1px; left:-1px; background-position:left bottom;}
+.eFocus .cap.capBR{ bottom:-1px; right:-1px; background-position:right bottom;}
+
+.eFocus .eTool{ display:block; height:24px; position:absolute !important; z-index:99; top:-24px !important; left:-1px !important; white-space:nowrap; margin:0 0 0 2px !important; padding:0 5px 0 0 !important; border:0 !important; background:url(../img/bgEtool.gif) no-repeat right top !important;}
+.eFocus .eTool li{ position:relative; left:-2px; display:block; float:left; height:22px; padding:2px 3px 0 5px; background:url(../img/vrContentNavigation.gif) no-repeat left center;}
+.eFocus .eTool li.edit{ background:url(../img/bgEtool.gif) no-repeat left top;}
+.eFocus .eTool li button{ border:0; padding:0; overflow:visible; cursor:pointer; background-color:transparent; font-size:11px; vertical-align:middle;}
+.eFocus .eTool li.move button,
+.eFocus .eTool li.delete button{ overflow:hidden; width:17px; height:17px; background-position:center center; background-repeat:no-repeat;}
+.eFocus .eTool li.move button{ background-image:url(../img/iconMovable.gif); cursor:move;}
+.eFocus .eTool li.delete button{ background-image:url(../img/buttonWasteBox.gif);}
+.eFocus .eTool li.move button span,
+.eFocus .eTool li.delete button span{ position:absolute; width:0; height:0; overflow:hidden; font-size:0; line-height:0; z-index:-1; visibility:hidden;}
+
+/* txEditor */
+.txEditor{ position:relative; width:98%; padding-right:10px; margin-bottom:10px; border:1px solid #ddd; *zoom:1; background:#fff;}
+.txEditor .toolbar{ position:relative; z-index:10; margin:0 -10px 0 0; padding:6px 10px; list-style:none; *zoom:1; background:#fafafa; border-bottom:1px solid #ddd;}
+.txEditor .toolbar:after{ content:""; display:block; clear:both;}
+.txEditor .toolbar li{ position:relative; float:left; margin-right:5px;}
+.txEditor .toolbar li button{ border:0; padding:0; height:22px; background-color:transparent; background-image:url(../img/buttonEditorToolbar.gif); background-repeat:no-repeat; cursor:pointer; vertical-align:middle;}
+.txEditor .toolbar li button:hover,
+.txEditor .toolbar li button:active,
+.txEditor .toolbar li button:focus,
+.txEditor .toolbar li button.active{ border:1px solid #ddd;}
+.txEditor .toolbar li button span{ position:absolute; width:0; height:0; overflow:hidden; font-size:0; line-height:0; z-index:-1; visibility:hidden;}
+.txEditor .toolbar li.strong button{ width:23px; background-position:center 0;}
+.txEditor .toolbar li.em button{ width:23px; background-position:center -30px;}
+.txEditor .toolbar li.underline button{ width:23px; background-position:center -60px;}
+.txEditor .toolbar li.del button{ width:23px; background-position:center -90px;}
+.txEditor .toolbar li.vRule{ padding-left:10px; margin:0 5px; background:url(../img/vrEditorToolbar.gif) no-repeat left center;}
+.txEditor .toolbar li.aHref button{ width:23px; background-position:center -120px;}
+.txEditor .toolbar li.fSize{ margin-right:5px;}
+.txEditor .toolbar li.fSize select{ font-size:12px; vertical-align:middle;}
+.txEditor .toolbar li.fColor{ margin-right:5px; z-index:2;}
+.txEditor .toolbar li.fColor button{ width:28px; background-position:center -150px;}
+.txEditor .toolbar li.bgColor{ margin-right:5px; z-index:1;}
+.txEditor .toolbar li.bgColor button{ width:28px; background-position:center -180px;}
+.txEditor .toolbar li.list button{ width:23px; background-image:url(../img/buttonListToolbar.gif); background-repeat:no-repeat;}
+.txEditor .toolbar li.disc button{ background-position:center 0;}
+.txEditor .toolbar li.circle button{ background-position:center -30px;}
+.txEditor .toolbar li.square button{ background-position:center -60px;}
+.txEditor .toolbar li.decimal button{ background-position:center -90px;}
+.txEditor .toolbar li.alphaLower button{ background-position:center -120px;}
+.txEditor .toolbar li.alphaUpper button{ background-position:center -150px;}
+.txEditor .toolbar li.romanLower button{ background-position:center -180px;}
+.txEditor .toolbar li.romanUpper button{ background-position:center -210px;}
+.txEditor .toolbar li.indent button{ background-position:center -240px;}
+.txEditor .toolbar li.outdent button{ background-position:center -270px;}
+.txEditor .toolbar li .uri{ display:none; position:absolute; left:10px; top:25px; padding:15px 20px; border:1px solid #ddd; background:#fff; *zoom:1;}
+.txEditor .toolbar li .uri h3{ font-size:12px; margin:0 0 .5em 0;}
+.txEditor .toolbar li .uri .link{ border:1px solid #ccc; padding:3px 4px; height:14px; font-size:12px; width:200px; font-size:11px; color:#666;}
+.txEditor .toolbar li .uri p{ margin:.5em 0;}
+.txEditor .toolbar li .uri p input{ width:13px; height:13px; margin:0 3px 0 0; vertical-align:middle;}
+.txEditor .toolbar li .uri .btn_area{ text-align:center;}
+.txEditor .toolbar li .uri .btn_area .buttonGray,
+.txEditor .toolbar li .uri .btn_area .buttonGray button{ background-image:url(../img/buttonGray.gif);}
+.txEditor .toolbar li .uri .btn_area .buttonGray{ background-position:left top;}
+.txEditor .toolbar li .uri .btn_area .buttonGray button{ background-position:right top; line-height:18px; border:0 !important; width:auto; padding:0 6px 0 4px;}
+.txEditor .toolbar li .palette{ display:none; width:211px; position:absolute; left:0; top:25px; padding:8px 0 7px 8px; margin:0; list-style:none; border:1px solid #ddd; background:#fff; *zoom:1;}
+.txEditor .toolbar li .palette:after{ content:""; display:block; clear:both;}
+.txEditor .toolbar li .palette.open{ display:block;}
+.txEditor .toolbar li .palette li{ float:left; margin:0 1px 1px 0; font-size:0; line-height:0;}
+.txEditor .toolbar li .palette button{ position:relative; overflow:hidden; width:11px; height:11px;}
+.txEditor .toolbar li .palette button span{ position:absolute; width:0; height:0; overflow:hidden; font-size:0; line-height:0; z-index:-1; visibility:hidden;}
+.txEditor .inputRichText{ position:relative; margin-right:-10px; position:relative; *zoom:1; z-index:1; padding:10px; background-image:url(../img/bgInputText.gif); background-repeat:no-repeat; background-position:0 0;}
+.txEditor .inputRichText iframe{ width:100%; height:136px; border:0; overflow-x:hidden;}
+.txEditor .resizeVertical{ position:relative; margin-right:-10px; border-top:1px solid #ddd; height:10px; background:url(../img/buttonResizeVertical.gif) no-repeat center center; *zoom:1; font-size:0; line-height:0;}
+.txEditor .resizeVertical button{ width:100%; height:10px; border:0; margin:0; padding:0; background:transparent; cursor:n-resize; vertical-align:middle;}
+.txEditor .resizeVertical button span{ position:absolute; width:0; height:0; font-size:0; line-height:0; overflow:hidden; visibility:hidden; z-index:-1;}
+
+.txEditor .toolbar .fSize select { height:21px }
+.txEditor .toolbar .font9px { font-size:9px }
+.txEditor .toolbar .font10px { font-size:10px }
+.txEditor .toolbar .font11px { font-size:11px }
+.txEditor .toolbar .font12px { font-size:12px }
+.txEditor .toolbar .font14px { font-size:14px }
+.txEditor .toolbar .font16px { font-size:16px }
+.txEditor .toolbar .font18px { font-size:18px }
+.txEditor .toolbar .font20px { font-size:20px }
+.txEditor .toolbar .font24px { font-size:24px }
+.txEditor .toolbar .font28px { font-size:28px }
+.txEditor .toolbar .font32px { font-size:32px }
+.txEditor .toolbar .font36px { font-size:36px }
+
+/* keep List */
+.keep{ font-size:12px; margin:0 0 5px 0;}
+.keep .header{ position:relative; padding:10px 0 10px 40px; margin:0; font-size:12px; color:#616872; border:1px solid #dcdee2; background-color:#eff0f2; background-image:url(../img/iconKeepingHeader.gif); background-repeat:no-repeat; *zoom:1;}
+.keep.collection .header{ background-position:20px 11px;}
+.keep.temp .header{ background-position:20px -41px;}
+.keep .header h3{ position:relative; font-size:12px; margin:0 5px 0 0; z-index:1; display:inline; vertical-align:middle;}
+.keep .header .toggle{ position:absolute; width:228px; height:35px; left:0; top:0; border:0; cursor:pointer; padding:0; background:transparent; *zoom:1;}
+.keep .header .toggle span{ position:absolute; width:0; height:0; font-size:0; line-height:0; overflow:hidden; z-index:-1; visibility:hidden;}
+.keep .header .controls{ position:absolute; top:10px; right:10px; white-space:nowrap;}
+.keep .header .reload{ width:15px; height:16px; padding:0; cursor:pointer; border:0; *margin:0 5px 0 0; background:transparent url(../img/buttonRefresh.gif) no-repeat; vertical-align:middle; vertical-align:middle;}
+.keep .header .reload span{ position:absolute; width:0; height:0; font-size:0; line-height:0; overflow:hidden; z-index:-1; visibility:hidden;}
+.keep .header .collapse{ border:0; cursor:pointer; padding:0; background:transparent; text-align:right; z-index:3; overflow:visible; vertical-align:middle;}
+.keep .header .collapse span{ background:url(../img/buttonToggleLeftRight.gif) no-repeat right center; font-size:11px; padding-right:10px; color:#868d95;}
+.keep .keepList{ display:none; margin:0; border:1px solid #edeff1; border-top:0; border-bottom:0; background:#f9f9f9;}
+.keep.open .keepList{ display:block;}
+.keep .keepList.noData{ padding:30px 20px; text-align:center; color:#868d95;}
+.keep .keepList.noData a{ color:#648AB9;}
+.keep .keepList .item{ position:relative; padding:10px 20px 15px 20px; border-bottom:1px solid #edeff1; *zoom:1;}
+.keep .keepList .item.hover{ border:1px solid #666f8a; margin:-1px -1px 0 -1px; background:#fff;}
+.keep .keepList .item a{ color:#648AB9;}
+.keep .keepList .item dl{ position:relative; margin:0; *zoom:1; width:188px; max-height:175px; _height:175px; overflow:hidden;}
+.keep .keepList .item dt{ font-size:10px; color:#ea3f22;}
+.keep .keepList .item dt .time{ color:#767676; margin-left:3px;}
+.keep .keepList .item dd{ color:#868d95; margin:0;}
+.keep .keepList .item dd *{ font-size:12px; margin:5px 0; padding:0;}
+.keep .keepList .item dd .eArea{ border:0;}
+.keep .keepList .item .mask{ display:block; position:absolute; left:0; bottom:0; background:url(../img/maskKeeingList.png) repeat-x; font-size:0; line-height:0; width:100%; height:40px; overflow:hidden;}
+.keep .keepList .item.hover .mask{ background:url(../img/maskKeeingListHover.png) repeat-x;}
+.keep .keepList .item .mask{ _width:228px; _height:10px; _background:#f9f9f9; _filter:progid:DXImageTransform.Microsoft.Shadow(color=#f9f9f9,direction=0,strength=10);}
+.keep .keepList .item.hover .mask{ _width:228px; _height:10px; _background:#ffffff; _filter:progid:DXImageTransform.Microsoft.Shadow(color=#ffffff,direction=0,strength=10);}
+.keep .keepList .item .arrow{ display:none; position:absolute; width:7px; height:12px; background:url(../img/arrowKeepingBubble.gif) no-repeat 0 0; top:10px; left:-7px;}
+.keep .keepList .item.hover .arrow{ display:block;}
+.keep .keepList .item .movable{ position:absolute; top:8px; right:5px; padding:0; border:0; background:transparent url(../img/iconMovable.gif) no-repeat center center; cursor:move; width:17px; height:0; cursor:move;}
+.keep .keepList .item.hover .movable,
+.keep .keepList .item .movable:hover,
+.keep .keepList .item .movable:active,
+.keep .keepList .item .movable:focus{ height:17px;}
+.keep .keepList .item .movable span{ position:absolute; width:0; height:0; overflow:hidden; font-size:0; line-height:0;}
+.keep .paginate{ position:absolute; top:100%; left:0; width:192px; border:1px solid #edeff1; border-top:0; background:#f9f9f9; text-align:center; padding:6px 18px; font-size:10px; color:#9096a9; *zoom:1;}
+.keep .paginate:after{ content:""; display:block; clear:both;}
+.keep .paginate button{ width:17px; height:18px; padding:0; background:transparent url(../img/buttonPaginate.gif) no-repeat 0 0; cursor:pointer; border:0; vertical-align:middle;}
+.keep .paginate button span{ position:absolute; width:0; height:0; font-size:0; line-height:0; overflow:hidden; visibility:hidden; z-index:-1;}
+.keep .paginate .prev{ float:left; background-position:left top;}
+.keep .paginate .next{ float:right; background-position:right top;}
+
+/* dreditor Layout */
+.dreditor .keepingArea{ margin-top:-114px;}
+.dreditor .wTitle,
+.dreditor .wOption{ margin-right:60px;}
+.dreditorKeepOn .wTitle,
+.dreditorKeepOn .wOption{ margin-right:250px;}
+.dreditorKeepOn .toggle{ display:none;}
+
+/* Drag and Drop */
+.xe_dr_placeholder { background-color:#F8F4CE; padding:10px 0; z-index:0; -moz-border-radius:5px; -webkit-border-radius:5px; z-index:1; opacity:.5; filter:alpha(opacity=50);}
+.editorContainer .ui-draggable{ margin:0 0 3em 0 !important;}

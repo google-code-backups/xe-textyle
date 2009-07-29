@@ -1,0 +1,18 @@
+@charset "utf-8"; 
+/* NHN > UIT Center > Open UI Platform Team > Jeong Chan Myeong(dece24@nhncorp.com) */
+
+/* -- Button Gray Style -- */
+.buttonGray,
+.buttonGray button{ position:relative; border:0; margin:0; display:inline-block; color:#000; font-family:Tahoma, Sans-serif; cursor:pointer; text-decoration:none !important; white-space:nowrap; vertical-align:middle; background-color:transparent; background-image:url(../img/buttonGray.gif) !important; background-repeat:no-repeat;}
+.buttonGray{ margin-right:2px;}
+.buttonGray button{ left:2px; overflow:visible;}
+
+/* Medium Size */
+.buttonGray.medium { background-position:left -30px;}
+.buttonGray.medium button{ height:24px; padding:0 10px 0 8px; *padding:0 5px 0 3px; font:12px/25px Sans-serif; background-position:right -30px; _top:-1px;}
+
+/* Strong Button */
+.buttonGray.strong * { font-weight:bold !important;}
+
+/* Icon Add */
+.buttonGray .icon { position:relative; margin-right:5px; vertical-align:middle;}
