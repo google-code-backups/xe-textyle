@@ -322,6 +322,7 @@ xe.DrEditor = $.Class({
 		this.dummyArea.append(this.tools);
 
 		this.editArea.find('> div.eArea').each(function(){
+            if(!/(^|\s)xe_dr_[a-z]+(\s|$)/.test(this.className)) return;
 			var t,html='', type = $.trim(this.className.match(/(^|\s)xe_dr_[a-z]+(\s|$)/)[0]);
 			if((t=$(this)).is('div.xe_dr_img')){
 				t=t.find('img');
