@@ -269,7 +269,7 @@ xe.DrEditor = $.Class({
 			self.loaded =true;
 		}
 
-		$.exec_json('material.dispMaterialList',{page:page, list_count:4},callback);
+		if(jQuery('.keepingArea').length) $.exec_json('material.dispMaterialList',{page:page, list_count:4},callback);
 	},
 
 	// 임시저장 목록 불러오기

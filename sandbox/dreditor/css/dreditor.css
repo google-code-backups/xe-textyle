@@ -3,6 +3,7 @@
 
 /* Textyle Editor */
 .textyleEditor{ position:relative; *zoom:1; padding-right:250px; margin:0 0 1em 0;}
+.textyleEditor.wide { padding-right:0; }
 .textyleEditor:after{ content:""; display:block; clear:both;} 
 .textyleEditor .editorContainer{ position:relative; float:left; width:100%; margin-right:-100%; display:table; table-layout:fixed;}
 .textyleEditor .editorContainer .editArea{}

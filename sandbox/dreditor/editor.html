@@ -10,6 +10,13 @@
 <!--%import("js/DrEditor.js",optimized=false)-->
 <!--%import("js/xe_interface.js",optimized=false)-->
 
+<!--// 글감 모듈 유무 판단 -->
+<!--@if(file_exists(_XE_PATH_.'modules/material/material.class.php'))-->
+    {@$material_exists = true}
+<!--@else-->
+    {@$material_exists = false}
+<!--@end-->
+
 <!-- 자동저장용 폼 -->
 <!--@if($enable_autosave)-->
 <input type="hidden" name="_saved_doc_title" value="{htmlspecialchars($saved_doc->title)}" />
@@ -21,7 +28,7 @@
 <input type="hidden" id="dreditor_dummy_{$editor_sequence}" value="" />
 
 <!-- 에디터 -->
-<div id="DrEditor{$editor_sequence}" class="textyleEditor">
+<div id="DrEditor{$editor_sequence}" class="textyleEditor<!--@if(!$material_exists)--> wide<!--@end-->">
 <!-- class="textyleEditor" | class="textyleEditor keepClose" -->
 	<div class="editorContainer">
 		<!-- Editor Area -->
@@ -60,7 +67,7 @@
 			<div class="wArea txt">
 			<!-- class="wArea txt" | class="wArea txt open" -->
 				<fieldset>
-					<legend>텍스트</legend>
+					<legend>Text</legend>
 					<input type="hidden" />
 					<div class="txEditor">
 						<ul class="toolbar tool">
@@ -456,6 +463,7 @@
 	</div>
 
 	<!-- Extension -->
+    <!--@if($material_exists)-->
 	<div class="keepingArea">
 
 		<div class="section keep collection open">
@@ -533,6 +541,7 @@
 		-->
 
 	</div>
+    <!--@end-->
 	<!-- /Extension -->
 </div>
 <!-- /에디터 -->
