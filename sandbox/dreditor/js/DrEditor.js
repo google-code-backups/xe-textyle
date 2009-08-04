@@ -1765,7 +1765,7 @@ var table = {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'};
 function translate(str) {
 	var s = str.replace(/<(\/)?([abi]|em|strong)(.*?)>|<|>|&|"/ig, function(m0,m1,m2,m3) { //"
 		m1 = m1 || '';
-		m2 = m2.toLowerCase();
+		m2 = m2 ? m2.toLowerCase() : '';
 		m3 = m3 || '';
 
 		if (table[m0]) return table[m0];
