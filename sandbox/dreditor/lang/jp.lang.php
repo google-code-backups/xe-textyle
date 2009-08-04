@@ -10,7 +10,7 @@
 	$lang->edit->insert_dr_title = '段落のタイトルを入力して下さい。';
 	$lang->edit->richtext_area = 'リッチテキストの入力スペース';
 	$lang->edit->insert_site_name = 'サイト名を入力します。';
-	$lang->edit->insert_explain = '説明の追加入力が出来ます';
+	$lang->edit->insert_explain = '説明の追加入力が出来ます。';
 
 
 	$lang->edit->text='テキスト';
@@ -33,7 +33,7 @@
 	$lang->edit->insert_image_explain = 'イメージの説明を入力します。 <a>, <strong>, <em> タグの入力も可能です。';
 
 	$lang->edit->mov ='動画';
-	$lang->edit->insert_mov = '<object> または <embed>に始まるマルチメディアのコードを挿入して下さい。';
+	$lang->edit->insert_mov = '<object> または <embed>で始まるマルチメディアのコードを挿入して下さい。';
 	$lang->edit->insert_mov_explain = '動画の説明を入力します。 <a>, <strong>, <em> タグの入力も可能です。';
 
 	$lang->edit->file='ファイル';

@@ -34,7 +34,6 @@
     $lang->msg_fail_image_save  = '이미지 저장시 오류가 발생하였습니다.';
     $lang->msg_not_select_image  = '이미지가 선택되지 않았습니다.';
     $lang->material->select_image  = '이미지 선택';
-    $lang->material->select_image  = '이미지 선택';
     $lang->material->about_imagedescription  = '이미지의 설명을 입력할 수 있습니다.';
 
     $lang->material->code  = '삽입코드';

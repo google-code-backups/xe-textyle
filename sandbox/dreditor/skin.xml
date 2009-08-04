@@ -2,10 +2,14 @@
 <skin version="0.2">
     <title xml:lang="ko">Dr.Editor Skin</title>
 	<title xml:lang="en">Dr.Editor Skin</title>
+	<title xml:lang="jp">Dr.Editor Skin</title>
     <description xml:lang="ko">
         Dr.Editor 
     </description>
 	<description xml:lang="en">
+        Dr.Editor 
+    </description>
+	<description xml:lang="jp">
         Dr.Editor 
     </description>
     <version>0.1</version>
@@ -13,6 +17,7 @@
     <author email_address="" link="http://textyle.xpressengine.net">
         <name xml:lang="ko">NHN</name>
 		<name xml:lang="en">NHN</name>
+		<name xml:lang="jp">NHN</name>
     </author>
     <colorset>
         <color name="white">
