@@ -7,13 +7,13 @@
 
     $lang->material->popup_title   = 'テキスタイル - 文材収集機';
     $lang->material->text   = 'テキスト';
-    $lang->material->images = 'イメージ';
+    $lang->material->images = '画像';
     $lang->material->link   = 'リンク';
     $lang->material->list   = 'リスト';
     $lang->material->cite   = '引用文';
     $lang->material->movie  = '動画';
 
-	$lang->material->cmd_deposit = '文材保存箱に保管する';
+	$lang->material->cmd_deposit = '文材保存箱に保管';
 
     $lang->material->subject  = 'タイトル';
     $lang->material->about_subject  = '段落のタイトルを入力して下さい。';
@@ -21,7 +21,7 @@
     $lang->material->content  = '本文';
     $lang->material->about_content  = '段落の本文を入力して下さい。';
 
-    $lang->material->about_linksubject  = 'リンクするページののタイトルを入力して下さい。';
+    $lang->material->about_linksubject  = 'リンクするページのタイトルを入力して下さい。';
     $lang->material->about_linkdescription  = '説明の追加入力が出来ます。';
     $lang->material->description  = '説明';
     $lang->material->about_list  = 'リストを入力して下さい。';
@@ -31,10 +31,10 @@
     $lang->material->citefrom  = '出所';
     $lang->material->about_citefrom  = '出所を入力します。';
 
-    $lang->msg_fail_image_save  = 'サーバーへイメージ保存エラーが発生しました。';
-    $lang->msg_not_select_image  = 'イメージを選択して下さい。';
-    $lang->material->select_image  = 'イメージ選択';
-    $lang->material->about_imagedescription  = 'イメージの説明を入力します。';
+    $lang->msg_fail_image_save  = 'サーバーへ画像保存するのにエラーが発生しました。';
+    $lang->msg_not_select_image  = '画像を選択して下さい。';
+    $lang->material->select_image  = '画像選択';
+    $lang->material->about_imagedescription  = '画像の説明を入力します。';
 
     $lang->material->code  = '挿入コード';
     $lang->material->about_code  = '<object> または <embed>始まるマルチメディアのコードを挿入して下さい。';
