@@ -59,7 +59,7 @@
 	$lang->edit->more = 'もっと見る';
 	$lang->edit->move_button = 'ボタン移動';
 
-    $lang->edit->no_materials = '保存されている文材はありません。';
+    $lang->edit->no_materials = '保存されているネタはありません。';
     $lang->edit->msg_no_selected_object = '選択されたものがありません。';
     $lang->edit->msg_insert_value = '値を入力して下さい。';
 ?>

@@ -2,10 +2,10 @@
     /**
      * @file   jp.lang.php
      * @author sol(sol@ngleader.com) 翻訳：ミニミ
-     * @brief  文材収集機のの日本語言語パッケージ
+     * @brief  ネタ収集機のの日本語言語パッケージ
      **/
 
-    $lang->material->popup_title   = 'テキスタイル - 文材収集機';
+    $lang->material->popup_title   = 'テキスタイル - ネタ収集機';
     $lang->material->text   = 'テキスト';
     $lang->material->images = '画像';
     $lang->material->link   = 'リンク';
@@ -13,7 +13,7 @@
     $lang->material->cite   = '引用文';
     $lang->material->movie  = '動画';
 
-	$lang->material->cmd_deposit = '文材保存箱に保管';
+	$lang->material->cmd_deposit = 'ネタ保存箱に保管';
 
     $lang->material->subject  = 'タイトル';
     $lang->material->about_subject  = '段落のタイトルを入力して下さい。';

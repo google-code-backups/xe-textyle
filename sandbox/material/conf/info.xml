@@ -2,10 +2,10 @@
 <module version="0.2">
     <title xml:lang="ko">글감</title>
     <title xml:lang="en">Material</title>
-	<title xml:lang="jp">文材</title>
+	<title xml:lang="jp">ネタ</title>
     <description xml:lang="ko">글감을 수집할 수 있는 모듈입니다.</description>
     <description xml:lang="en">글감을 수집할 수 있는 모듈입니다.</description>
-	<description xml:lang="jp">文材を収集するモジュールです。</description>
+	<description xml:lang="jp">ネタを収集するモジュールです。</description>
     <version>0.1</version>
     <date>2009-07-28</date>
     <category>package</category>
