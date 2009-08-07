@@ -20,17 +20,17 @@
 	$lang->edit->insert_blockquote = '引用文を入力して下さい。';
 	$lang->edit->insert_cite = '出所を入力します。 <a>, <strong>, <em> タグの入力も可能です。';
 
-	$lang->edit->image = 'イメージ';
-	$lang->edit->find_image = 'イメージ選択';
+	$lang->edit->image = '画像';
+	$lang->edit->find_image = '画像選択';
 	$lang->edit->uploading = 'アップロード中です。';
-	$lang->edit->uploading_info = '%s MBまでアップロード出来ます。';
-	$lang->edit->uploaded_image = 'ユーザーアップロードイメージ';
+	$lang->edit->uploading_info = '%sMBまでアップロード出来ます。';
+	$lang->edit->uploaded_image = 'ユーザーアップロード画像';
 
-	$lang->edit->image_width = 'イメージ幅';
+	$lang->edit->image_width = '画像幅';
 	$lang->edit->resize = '縮小する';
-	$lang->edit->resize_info = '指定したサイズのコピーを生成し、元のイメージは維持されます。';
-	$lang->edit->resize_error = 'オリジナルイメージより小さいサイズの値を入力して下さい。';
-	$lang->edit->insert_image_explain = 'イメージの説明を入力します。 <a>, <strong>, <em> タグの入力も可能です。';
+	$lang->edit->resize_info = '指定したサイズのコピーを生成し、元の画像は維持されます。';
+	$lang->edit->resize_error = 'オリジナル画像より小さいサイズを入力して下さい。';
+	$lang->edit->insert_image_explain = '画像の説明を入力します。 <a>, <strong>, <em> タグの入力も可能です。';
 
 	$lang->edit->mov ='動画';
 	$lang->edit->insert_mov = '<object> または <embed>で始まるマルチメディアのコードを挿入して下さい。';
@@ -47,19 +47,19 @@
 
 	$lang->edit->title_title='サブタイトル';
 	$lang->edit->title='タイトル';
-	$lang->edit->title1='タイトル（大サイズ）';
-	$lang->edit->title2='タイトル';
-	$lang->edit->title3='タイトル（小サイズ）';
+	$lang->edit->title1='サブタイトル（大サイズ）';
+	$lang->edit->title2='サブタイトル';
+	$lang->edit->title3='サブタイトル（小サイズ）';
 
 	$lang->edit->list = 'リスト';
 	$lang->edit->list_explain = '「CTRL+矢印」を押して、項目の位置や段階を変えることが出来ます。';
 	$lang->edit->toc = '目次';
-	$lang->edit->toc_explain ='文書内のサブタイトルをまとめて目次を生成し、自動更新されます。';
+	$lang->edit->toc_explain ='文書内のサブタイトルをまとめて目次を生成し、自動更新します。';
 
 	$lang->edit->more = 'もっと見る';
 	$lang->edit->move_button = 'ボタン移動';
 
-    $lang->edit->no_materials = '保存された文材はありません。の説明を入力します。';
+    $lang->edit->no_materials = '保存された文材はありません。';
     $lang->edit->msg_no_selected_object = '選択されたものがありません。';
     $lang->edit->msg_insert_value = '値を入力して下さい。';
 ?>

@@ -37,7 +37,7 @@
     $lang->material->about_imagedescription  = '画像の説明を入力します。';
 
     $lang->material->code  = '挿入コード';
-    $lang->material->about_code  = '<object> または <embed>始まるマルチメディアのコードを挿入して下さい。';
+    $lang->material->about_code  = '<object>、または<embed>始まるマルチメディアのコードを挿入して下さい。';
     $lang->material->codedescription  = '字幕、または説明';
     $lang->material->about_codedescription  = '動画の説明を入力します。';
 
