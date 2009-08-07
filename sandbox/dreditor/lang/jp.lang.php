@@ -18,7 +18,7 @@
 	$lang->edit->link = 'リンク';
 	$lang->edit->blockquote = '引用';
 	$lang->edit->insert_blockquote = '引用文を入力して下さい。';
-	$lang->edit->insert_cite = '出所を入力します。 <a>, <strong>, <em> タグの入力も可能です。';
+	$lang->edit->insert_cite = '出所を入力します。 <a>、<strong>、<em> タグの入力も可能です。';
 
 	$lang->edit->image = '画像';
 	$lang->edit->find_image = '画像選択';
@@ -47,19 +47,19 @@
 
 	$lang->edit->title_title='サブタイトル';
 	$lang->edit->title='タイトル';
-	$lang->edit->title1='サブタイトル（大サイズ）';
-	$lang->edit->title2='サブタイトル';
-	$lang->edit->title3='サブタイトル（小サイズ）';
+	$lang->edit->title1='サブタイトル（大）';
+	$lang->edit->title2='サブタイトル（中）';
+	$lang->edit->title3='サブタイトル（小）';
 
 	$lang->edit->list = 'リスト';
 	$lang->edit->list_explain = '「CTRL+矢印」を押して、項目の位置や段階を変えることが出来ます。';
 	$lang->edit->toc = '目次';
-	$lang->edit->toc_explain ='文書内のサブタイトルをまとめて目次を生成し、自動更新します。';
+	$lang->edit->toc_explain ='文書内のサブタイトルをまとめて、目次を自動作成します。';
 
 	$lang->edit->more = 'もっと見る';
 	$lang->edit->move_button = 'ボタン移動';
 
-    $lang->edit->no_materials = '保存された文材はありません。';
+    $lang->edit->no_materials = '保存されている文材はありません。';
     $lang->edit->msg_no_selected_object = '選択されたものがありません。';
     $lang->edit->msg_insert_value = '値を入力して下さい。';
 ?>
