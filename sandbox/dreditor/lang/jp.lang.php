@@ -42,7 +42,7 @@
 	$lang->edit->file_total ='総<strong class="filecount">{total_filecount}</strong>個';
 	$lang->edit->insert_file_explain ='ファイルの説明を入力します。';
 
-	$lang->edit->hr = '水平線';
+	$lang->edit->hr = '区分線';
 	$lang->edit->hr_simple= '基本水平線';
 
 	$lang->edit->title_title='サブタイトル';
