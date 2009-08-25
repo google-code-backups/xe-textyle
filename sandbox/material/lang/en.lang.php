@@ -2,10 +2,10 @@
     /**
      * @file   en.lang.php
      * @author nicetwo
-     * @brief  글감 수집기의 기본 언어팩(한국어)
+     * @brief  default language pack of ingredients collector (english)
      **/
 
-    $lang->material->popup_title   = 'Textyle Writing Ingredients Collector';
+    $lang->material->popup_title   = 'Textyle writting Ingredients Collector';
     $lang->material->text   = 'Text';
     $lang->material->images = 'Image';
     $lang->material->link   = 'Link';
@@ -13,13 +13,13 @@
     $lang->material->cite   = 'Quote';
     $lang->material->movie  = 'Movie Clip';
 
-	$lang->material->cmd_deposit = 'Store into Ingredients Storage';
+	$lang->material->cmd_deposit = 'Collect';
 
     $lang->material->subject  = 'Subject';
     $lang->material->about_subject  = 'Please input title of paragraph.';
     $lang->material->about_page_subject  = 'Please input title of link.';
     $lang->material->content  = 'Content';
-    $lang->material->about_content  = 'Input content.';
+    $lang->material->about_content  = 'Please input content.';
 
     $lang->material->about_linksubject  = 'Input title of the page to link.';
     $lang->material->about_linkdescription  = 'You may input additional description.';
