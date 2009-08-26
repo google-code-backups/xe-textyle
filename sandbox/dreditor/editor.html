@@ -277,7 +277,7 @@
 				<fieldset>
 					<legend>{$lang->edit->image}</legend>
 					<input name="Filedata" type="file" class="inputFile" title="{$lang->edit->find_image}" />
-					<p class="uploading">{$lang->edit->uploading}<span></span></p>
+					<p class="uploading">{$lang->edit->uploading} <button type="button">{$lang->cmd_cancel}</button> <span></span></p>
 					<p class="info">{sprintf($lang->edit->uploading_info,($file_config->allowed_filesize/(1024*1024)))}</p>
 					<div class="hr"></div>
 					<div class="image">

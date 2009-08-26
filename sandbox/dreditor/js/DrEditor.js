@@ -1302,28 +1302,31 @@ dr.blockquoteWriter = $.Class({
 
 
 dr.imgWriter = $.Class({
-	name   : 'img',
-	oForm  : null,
-	oFrame : null,
-	oFile  : null,
-	oDesc  : null,
-	oImg   : null,
-	oMsg   : null,
-	timer  : null,
-	cbID   : '',
+	name    : 'img',
+	oForm   : null,
+	oFrame  : null,
+	oFile   : null,
+	oDesc   : null,
+	oImg    : null,
+	oMsg    : null,
+	oCancel : null,
+	timer   : null,
+	cbID    : '',
 	srl	: '',
 
 	$init : function() {
+		var self = this;
+
 		this.oFile = this.obj.find('input[type=file]');
 		this.oDesc = this.obj.find('input[type=text].desc');
 		this.oCite = this.obj.find('input[type=text].cite');
 		this.oImg  = this.obj.find('div.image > img').eq(0);
 		this.oResize  = this.obj.find('div.resize');
 		this.oResizeError  = this.obj.find('div.resize .resizeError');
-		this.oMsg  = this.obj.find('p.uploading');
+		this.oMsg    = this.obj.find('p.uploading');
+		this.oCancel = this.oMsg.find('>button').click(function(){ self.reset(); });
 		this.src = null;
 		this.resized = false;
-		var self = this;
 		this.oResize.find('button.btn_resize').click(function(e){
 			var w = self.oResize.find('input.width.copy').val();	
 			if(!self.src) self.src = self.oImg.attr('src');
@@ -1347,11 +1350,14 @@ dr.imgWriter = $.Class({
 		});
 		this.oFrame = $('<iframe name="xe_dr_imgframe_'+(new Date).getTime()+'" style="position:absolute;width:1px;height:1px">').css('opacity',0).appendTo(this.obj);
 
+		var strForm = '<form action="" target="'+this.oFrame.attr('name')+'" method="POST" enctype="multipart/form-data"><input type="hidden" name="editor_sequence" value="'+this.editor.seq+'" /><input type="hidden" name="callback" /><input type="hidden" name="file_srl" /><input type="hidden" name="mid" value="'+current_mid+'" /><input type="module" value="file" /><input type="hidden" name="act" value="procFileIframeUpload" /><input type="hidden" name="uploadTargetSrl" value="" />';
+
 		if(typeof(xeVid)=='undefined') {
-			this.oForm  = $('<form action="" target="'+this.oFrame.attr('name')+'" method="POST" enctype="multipart/form-data"><input type="hidden" name="editor_sequence" value="'+this.editor.seq+'" /><input type="hidden" name="file_srl" /><input type="hidden" name="callback" /><input type="hidden" name="mid" value="'+current_mid+'" /><input type="hidden" name="module" value="file" /><input type="hidden" name="act" value="procFileIframeUpload" /><input type="hidden" name="uploadTargetSrl" value="" /></form>').prependTo(document.body); 
+			this.oForm = $(strForm+'</form>');
 		} else {
-			this.oForm  = $('<form action="" target="'+this.oFrame.attr('name')+'" method="POST" enctype="multipart/form-data"><input type="hidden" name="editor_sequence" value="'+this.editor.seq+'" /><input type="hidden" name="callback" /><input type="hidden" name="file_srl" /><input type="hidden" name="vid" value="'+xeVid+'" /><input type="hidden" name="mid" value="'+current_mid+'" /><input type="hidden" name="module" value="file" /><input type="hidden" name="act" value="procFileIframeUpload" /><input type="hidden" name="uploadTargetSrl" value="" /></form>').prependTo(document.body); 
+			this.oForm  = $(strForm+'<input type="hidden" name="vid" value="'+xeVid+'" /></form>');
 		}
+		this.oForm.prependTo(document.body);
 		this.oFile.change($.fnBind(this.onFileChange, this));
 		this.oImg.parent().hide();
 	},
@@ -1399,6 +1405,9 @@ dr.imgWriter = $.Class({
 		this.oResize.removeClass('open');
 		this.oResizeError.removeClass('open');
 		this.oImg.parent().hide();
+		this.oMsg.hide();
+
+		this.oFrame.attr('src', 'about:blank');
 	},
 	/**
 	 * @brief 파일을 선택한 직후
