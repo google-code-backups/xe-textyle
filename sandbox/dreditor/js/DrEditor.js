@@ -1072,7 +1072,11 @@ dr.listWriter = $.Class({
 			
 			if ($.trim(o.val()) == '') {
 				if (par.parent('ul,ol').children('li').length == 1) {
-					par.parent().remove();
+					if (par.find('ul,ol').length) {
+						o.replaceWith($('<span>&nbsp;</span>'));
+					} else {
+						par.parent().remove();
+					}
 				} else {
 					par.remove();
 				}
@@ -1350,7 +1354,7 @@ dr.imgWriter = $.Class({
 		});
 		this.oFrame = $('<iframe name="xe_dr_imgframe_'+(new Date).getTime()+'" style="position:absolute;width:1px;height:1px">').css('opacity',0).appendTo(this.obj);
 
-		var strForm = '<form action="" target="'+this.oFrame.attr('name')+'" method="POST" enctype="multipart/form-data"><input type="hidden" name="editor_sequence" value="'+this.editor.seq+'" /><input type="hidden" name="callback" /><input type="hidden" name="file_srl" /><input type="hidden" name="mid" value="'+current_mid+'" /><input type="module" value="file" /><input type="hidden" name="act" value="procFileIframeUpload" /><input type="hidden" name="uploadTargetSrl" value="" />';
+		var strForm = '<form action="" target="'+this.oFrame.attr('name')+'" method="POST" enctype="multipart/form-data"><input type="hidden" name="editor_sequence" value="'+this.editor.seq+'" /><input type="hidden" name="callback" /><input type="hidden" name="file_srl" /><input type="hidden" name="mid" value="'+current_mid+'" /><input type="hidden" name="module" value="file" /><input type="hidden" name="act" value="procFileIframeUpload" /><input type="hidden" name="uploadTargetSrl" value="" />';
 
 		if(typeof(xeVid)=='undefined') {
 			this.oForm = $(strForm+'</form>');
