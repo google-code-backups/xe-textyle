@@ -42,11 +42,15 @@
 
 						$oFileController = &getController('file');
 						$output = $oFileController->insertFile($file_info, $member_srl,$material_srl,0,true);
-						$uploaded_filename = $output->get('uploaded_filename');
+						if(!$output->toBool()) return $output;
+
+						//set File valid
+						$oFileController->setFilesValid($output->get('upload_target_srl'));
 
 						// delete temp file
 						FileHandler::removeFile($filename);
 
+						$uploaded_filename = $output->get('uploaded_filename');
 						$_filename = sprintf("%s%s.%%s.%s",preg_replace("/\/[^\/]*$/","/",$uploaded_filename),$material_srl,$ext);
 						$s_filename = sprintf($_filename,'S');
 

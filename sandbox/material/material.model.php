@@ -72,8 +72,9 @@
 		function getBookmarkUrl($vid, $member_srl) {
 			if(!$member_srl) return '';
 
-			$html_url = getSiteUrl($vid,'','module','material','act','dispMaterialPopup');
+			$html_url = str_replace('&amp;','&',getFullSiteUrl($vid,'','module','material','act','dispMaterialPopup'));
 			$js_url = Context::getRequestUri().'modules/material/tpl/js/material_grabber.js';
+
 			$auth = $this->getAuthByMemberSrl($member_srl);
 
 			if(!$auth){
