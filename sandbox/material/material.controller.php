@@ -148,7 +148,7 @@
 			$args->member_srl = $member_srl;
 			$output = executeQuery('material.deleteMaterialAuth',$args);
 
-			$args->auth = md5($member_srl . microtime() .rand());
+			$args->auth = substr(md5($member_srl . microtime() .rand()),0,32);
 			$output = executeQuery('material.insertMaterialAuth',$args);
 			return $output;
 		}
