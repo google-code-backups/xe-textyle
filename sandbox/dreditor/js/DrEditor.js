@@ -192,6 +192,13 @@ xe.DrEditor = $.Class({
 			}
 		}
 
+		// submit 체크
+		/*
+		var frm = ctn.parents('form');
+		var fn  = frm[0].onsubmit;
+
+		frm.submit(function(e){ return self.onFormSubmit(e, fn) });
+		*/
 	},
 
 	loadMaterialNext : function(){
@@ -742,30 +749,36 @@ dr.baseWriter = $.Class({
 	save : function(e) {
 		var self = this;
 		this.inputs.each(function(){ self.onInputSave(e,this); });
-		var data = $.trim(this.getData());
-		if (data && ((data=$(data)).find('img').size()>0 || data.text() || data.is('hr,ol,object,embed'))) {
 
-			var newElem = $('<div class="here eArea xe_content xe_dr_'+this.name+'">'+this.getData()+'</div>');
+		var strData = $.trim(this.getData()), oTmp = null;
 
-			if (this.eArea) {
-				var idx = this.eArea.prevAll('div.eArea').length;
-				this.editor.dummyArea.append(this.editor.tools);
-				this.eArea.before(newElem);
-				this.eArea.remove();
-				this.editor.cur_focus = this.editor.editArea.find('>div.eArea.here').removeClass('here');
-			} else {
-				if(this.obj.is('.here')){
-					this.obj.after(newElem);
-					this.editor.cur_focus = this.obj.removeClass('here').next();
-				}else{
-					this.editor.editArea.append(newElem);
-					this.editor.cur_focus = this.editor.editArea.find('>div.eArea:last').eq(0);
+		if (strData) {
+			oTmp    = $(strData);
+
+			if (oTmp.find('img').length || oTmp.text() || oTmp.is('hr,ol,object,embed')) {
+				var newElem = $('<div class="here eArea xe_content xe_dr_'+this.name+'">'+strData+'</div>');
+
+				if (this.eArea) {
+					var idx = this.eArea.prevAll('div.eArea').length;
+					this.editor.dummyArea.append(this.editor.tools);
+					this.eArea.before(newElem);
+					this.eArea.remove();
+					this.editor.cur_focus = this.editor.editArea.find('>div.eArea.here').removeClass('here');
+				} else {
+					if(this.obj.is('.here')){
+						this.obj.after(newElem);
+						this.editor.cur_focus = this.obj.removeClass('here').next();
+					}else{
+						this.editor.editArea.append(newElem);
+						this.editor.cur_focus = this.editor.editArea.find('>div.eArea:last').eq(0);
+					}
 				}
+				this.editor.notify('ADD_CONTENT', [this.name]);
 			}
-			this.editor.notify('ADD_CONTENT', [this.name]);
 		}
 
 		this.hide();
+
 		return false;
 	},
 	cancel  : function(e){
@@ -1777,22 +1790,14 @@ dr.indexWriter = $.Class({
 // Utility function
 var table = {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'};
 function translate(str) {
-	var s = str.replace(/<(\/)?([abi]|em|strong)(.*?)>|<|>|&|"/ig, function(m0,m1,m2,m3) { //"
-		m1 = m1 || '';
-		m2 = m2 ? m2.toLowerCase() : '';
-		m3 = m3 || '';
-
+	var s = str.replace(/<|>|&|"/ig, function(m0) {
 		if (table[m0]) return table[m0];
-		if (m3 && m3.substr(0,1) != ' ') return '&lt;'+m1+m2+m3+'&gt;';
-		if (m2 == 'em' || m2 == 'strong' || m2 == 'a') return '<'+m1+m2+'>';
-		if (m2 == 'b') return '<'+m1+'strong>';
-		if (m2 == 'i') return '<'+m1+'em>';
 	});
 
 	return s;
 }
 function translateCite(str) {
-	var s = str.replace(/<(\/)?([abi]|em|strong|cite)(.*?)>|<|>|&|"/ig, function(m0,m1,m2,m3) { //"
+	var s = str.replace(/<(\/)?([abi]|em|strong|cite)(.*?)>|<|>|&|"/ig, function(m0,m1,m2,m3) {
 		m1 = m1 || '';
 		m2 = m2.toLowerCase();
 		m3 = m3 || '';
