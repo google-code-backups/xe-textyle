@@ -193,12 +193,10 @@ xe.DrEditor = $.Class({
 		}
 
 		// submit 체크
-		/*
 		var frm = ctn.parents('form');
 		var fn  = frm[0].onsubmit;
 
-		frm.submit(function(e){ return self.onFormSubmit(e, fn) });
-		*/
+		frm[0].onsubmit = function(e){ return self.onFormSubmit(e, fn) };
 	},
 
 	loadMaterialNext : function(){
@@ -605,6 +603,18 @@ xe.DrEditor = $.Class({
 		}
 	},
 
+	onFormSubmit : function(e, fn) {
+		// 열려있는 편집기 모듈이 있는지 확인
+		if (this.container.find('div.wArea').filter('.open').length) {
+			// 열려있는 모듈이 있다는 경고 표시
+			if (!confirm(submit_without_saving_msg)) return false;
+		}
+
+		var bool = true;
+		if (typeof fn == 'function') bool = fn.apply(e.srcElement || e.target);
+
+		return bool;
+	},
 
 	$ON_SHOW_EDITOR : function(name) {
 		this.editArea.sortable('disable');
