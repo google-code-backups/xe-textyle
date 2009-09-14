@@ -196,7 +196,7 @@ xe.DrEditor = $.Class({
 		var frm = ctn.parents('form');
 		var fn  = frm[0].onsubmit;
 
-		frm[0].onsubmit = function(e){ return self.onFormSubmit(e, fn) };
+		frm[0].onsubmit = function(e){ return self.onFormSubmit(e || window.event, fn) };
 	},
 
 	loadMaterialNext : function(){
