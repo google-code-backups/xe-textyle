@@ -479,6 +479,9 @@ xe.DrEditor = $.Class({
 
 		this.tools.find('li.edit > button').unbind(sEvent, this.$onParaEdit).bind(sEvent, this.$onParaEdit);
 		this.tools.find('li.delete > button').unbind(sEvent, this.$onParaDelete).bind(sEvent, this.$onParaDelete);
+
+		// 단락이 선택됐음을 알리는 메시지
+		this.notify('SELECT_PARAGRAPH', [obj.attr('_key_action')?true:false]);
 	},
 	onParaDblclick : function(e) {
 		if(this.writer) return;
@@ -541,21 +544,28 @@ xe.DrEditor = $.Class({
 						this.cur_focus[e.keyCode==38?'prev':'next']()[e.keyCode==38?'before':'after'](this.cur_focus);
 	
 						this.notify('SORT_STOP');
+						this.notify('MOVE_PARAGRAPH');
 					}else{
 						if(e.keyCode ==38){
 							if(this.cur_focus && this.cur_focus.length>0){
 								var p = this.cur_focus.prev();
 								if(p.length>0) this.cur_focus = p;
-							}else this.cur_focus = eArea.eq(eArea.length-1);
-
+							}else {
+								this.cur_focus = eArea.eq(eArea.length-1);
+							}
 						}else{
 							if(this.cur_focus && this.cur_focus.length>0){
 								var n = this.cur_focus.next();
 								if(n.length>0) this.cur_focus = n;
-							}else this.cur_focus = eArea.eq(0);
+							}else {
+								this.cur_focus = eArea.eq(0);
+							}
 						}
-						this.cur_focus.click();
+						this.cur_focus.attr('_key_action', true).click().removeAttr('_key_action');
 					}
+
+//					this.notify('');
+
 					return false;
 
 				// 1~9,0 key	
@@ -615,6 +625,18 @@ xe.DrEditor = $.Class({
 
 		return bool;
 	},
+	
+	scrollIntoView : function() {
+		if (!this.cur_focus) return false;
+
+		var obj = this.cur_focus;
+		var offsetTop = obj.offset().top;
+		var docHeight = $(document.body).innerHeight();
+		var scTop     = $(document.body).scrollTop();
+		
+		// check if obj is in the view
+		//console.log(obj, offsetTop, docHeight, scTop);
+	},
 
 	$ON_SHOW_EDITOR : function(name) {
 		this.editArea.sortable('disable');
@@ -658,6 +680,14 @@ xe.DrEditor = $.Class({
 	$ON_SORT_RECEIVE : function() {
 		// 입력 설명 가리기
 		this.blankBox.remove();
+	},
+
+	$ON_MOVE_PARAGRAPH : function() {
+		this.scrollIntoView();
+	},
+
+	$ON_SELECT_PARAGRAPH : function(bByKeyAction) {
+		if (bByKeyAction) this.scrollIntoView();
 	}
 });
 
