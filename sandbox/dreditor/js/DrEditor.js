@@ -626,16 +626,29 @@ xe.DrEditor = $.Class({
 		return bool;
 	},
 	
+	// DocType이 XHTML Transitional이 아니라면 높이를 계산하는 과정에서 문제가 발생할 수 있습니다.
 	scrollIntoView : function() {
 		if (!this.cur_focus) return false;
 
-		var obj = this.cur_focus;
-		var offsetTop = obj.offset().top;
-		var docHeight = $(document.body).innerHeight();
-		var scTop     = $(document.body).scrollTop();
+		var obj  = this.cur_focus;
+		var oDoc = document.documentElement;
+		var docHeight  = oDoc.clientHeight;
+		var objHeight  = obj.height();
+		var toolHeight = obj.find('ul.eTool').height();
+		var offsetTop  = parseInt(obj.offset().top);
+		var offsetBot  = offsetTop + objHeight;
+		var viewTop    = oDoc.scrollTop;
+		var viewBottom = viewTop + docHeight;
 		
-		// check if obj is in the view
-		//console.log(obj, offsetTop, docHeight, scTop);
+		// 정상적인 경우는 리턴
+		if (((offsetTop - toolHeight) >= viewTop) && (offsetBot <= viewBottom)) return true;
+
+		// 위치 조정
+		if (offsetTop < viewTop) {
+			oDoc.scrollTop = Math.max(offsetTop - toolHeight, 0);
+		} else {
+			oDoc.scrollTop = Math.min(offsetBot - docHeight + 20, Math.max(offsetTop - toolHeight, 0) );
+		}
 	},
 
 	$ON_SHOW_EDITOR : function(name) {
