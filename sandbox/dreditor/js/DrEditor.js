@@ -630,24 +630,24 @@ xe.DrEditor = $.Class({
 	scrollIntoView : function() {
 		if (!this.cur_focus) return false;
 
-		var obj  = this.cur_focus;
-		var oDoc = document.documentElement;
+		var obj   = this.cur_focus;
+		var oDoc  = document.documentElement;
 		var docHeight  = oDoc.clientHeight;
 		var objHeight  = obj.height();
 		var toolHeight = obj.find('ul.eTool').height();
 		var offsetTop  = parseInt(obj.offset().top);
 		var offsetBot  = offsetTop + objHeight;
-		var viewTop    = oDoc.scrollTop;
+		var viewTop    = $(window).scrollTop();
 		var viewBottom = viewTop + docHeight;
 		
 		// 정상적인 경우는 리턴
 		if (((offsetTop - toolHeight) >= viewTop) && (offsetBot <= viewBottom)) return true;
 
 		// 위치 조정
-		if (offsetTop < viewTop) {
-			oDoc.scrollTop = Math.max(offsetTop - toolHeight, 0);
+		if ((offsetTop - toolHeight) < viewTop) {
+			$(window).scrollTop( Math.max(offsetTop - toolHeight, 0) );
 		} else {
-			oDoc.scrollTop = Math.min(offsetBot - docHeight + 20, Math.max(offsetTop - toolHeight, 0) );
+			$(window).scrollTop( Math.min(offsetBot - docHeight + 20, Math.max(offsetTop - toolHeight, 0) ) );
 		}
 	},
 
