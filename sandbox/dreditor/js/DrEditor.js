@@ -1526,6 +1526,17 @@ dr.imgWriter = $.Class({
 
 		this.showResize('xe_file_srl_'+fileObj.file_srl,fileObj.uploaded_filename);
 		this.oMsg.hide();
+
+		// 이미지 파일도 서버측에서는 파일로 카운트 되므로,
+		// reloadFileList를 호출해서 orderedFiles와 uploadedFiles 배열을 갱신해주도록 한다.
+		// 관련 이슈 : http://textyle.xpressengine.net/18256095
+		var settings = {
+			fileListAreaID : '',
+			editorSequence : this.editor.seq,
+			uploadTargetSrl : ''
+		};
+		reloadCallback[this.editor.seq] = function(){};
+		reloadFileList(settings);
 	},
 
 	showResize : function(css,src){
