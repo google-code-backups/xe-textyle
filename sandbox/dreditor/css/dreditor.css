@@ -25,7 +25,7 @@
 .keepClose .keep .header .collapse{ display:none;}
 
 /* Writing Toolbar */
-.wToolbarContainer{ position:relative; margin:20px 0 40px 0; height:72px; overflow:hidden;}
+.wToolbarContainer{ position:relative; margin:20px 0 40px 0; height:72px; overflow:hidden;z-index:1000}
 .wToolbarContainer.more{ height:141px;}
 .wToolbar{ position:relative; height:72px; margin:0 10px; *zoom:1; background-image:url(../img/bgWritingToolbarCenter.gif); background-repeat:repeat-x;}
 .wToolbarContainer.more .wToolbar{ height:141px; background-position:0 -100px;}

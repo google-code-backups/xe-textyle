@@ -460,10 +460,15 @@ xe.DrEditor = $.Class({
 		var btn  = $(sender);
 		var type = $.trim(btn.parent().attr('class').replace('hover',''));
 
-		if (this.writers[type]) {
-			this.writers[type].reset();
+		if (!this.writers[type]) return;
+
+		this.writers[type].reset();
+		if (this.cur_focus) {
+			this.writers[type].showNext();
+		} else {
 			this.writers[type].show();
 		}
+		this.scrollIntoView(this.writers[type].toObject());
 	},
 
 	onParaClick : function(e) {
@@ -640,18 +645,18 @@ xe.DrEditor = $.Class({
 	},
 	
 	// DocType이 XHTML Transitional이 아니라면 높이를 계산하는 과정에서 문제가 발생할 수 있습니다.
-	scrollIntoView : function() {
-		if (!this.cur_focus) return false;
+	scrollIntoView : function(obj) {
+		if (!obj) return false;
 
-		var obj   = this.cur_focus;
 		var oDoc  = document.documentElement;
 		var docHeight  = oDoc.clientHeight;
-		var objHeight  = obj.height();
-		var toolHeight = obj.find('ul.eTool').height();
+		var objHeight  = obj.outerHeight();
+		var toolHeight = obj.find('ul.eTool').height() || 0;
+		var tbHeight   = this.toolbar.height();
 		var offsetTop  = parseInt(obj.offset().top);
 		var offsetBot  = offsetTop + objHeight;
 		var viewTop    = $(window).scrollTop();
-		var viewBottom = viewTop + docHeight;
+		var viewBottom = viewTop + docHeight - tbHeight;
 		
 		// 정상적인 경우는 리턴
 		if (((offsetTop - toolHeight) >= viewTop) && (offsetBot <= viewBottom)) return true;
@@ -660,8 +665,10 @@ xe.DrEditor = $.Class({
 		if ((offsetTop - toolHeight) < viewTop) {
 			$(window).scrollTop( Math.max(offsetTop - toolHeight, 0) );
 		} else {
-			$(window).scrollTop( Math.min(offsetBot - docHeight + 20, Math.max(offsetTop - toolHeight, 0) ) );
+			$(window).scrollTop( Math.min(offsetBot - docHeight + tbHeight + 10, Math.max(offsetTop - toolHeight, 0) ) );
 		}
+
+		this.notify('SCROLL');
 	},
 
 	// 툴바의 위치가 항상 화면 하단에 있도록 재조정
@@ -743,11 +750,11 @@ xe.DrEditor = $.Class({
 	},
 
 	$ON_MOVE_PARAGRAPH : function() {
-		this.scrollIntoView();
+		this.scrollIntoView(this.cur_focus);
 	},
 
 	$ON_SELECT_PARAGRAPH : function(bByKeyAction) {
-		if (bByKeyAction) this.scrollIntoView();
+		if (bByKeyAction) this.scrollIntoView(this.cur_focus);
 	}
 });
 
@@ -904,6 +911,9 @@ dr.baseWriter = $.Class({
     },
 	onInputBlur : function(e,input) {
 		if ($.trim((input=$(input)).val()) == '') input.val(input.attr('title'));
+	},
+	toObject : function() {
+		return this.obj;
 	}
 });
 
