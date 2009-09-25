@@ -11,6 +11,7 @@ xe.DrEditor = $.Class({
 	editArea  : null,
 	writeArea : null,
 	dummyArea : null,
+	toolbar   : null,
 	blankBox  : null,
 	material  : null,
 	dragging  : false,
@@ -80,8 +81,9 @@ xe.DrEditor = $.Class({
 		etool.remove();
 
 		// 하단 버튼
-		wrt.find('>.wToolbarContainer>div.wToolbar button').click(function(e){ self.onTBClick(e, this); }).mouseover(function(){$(this).parent().addClass('hover');}).mouseout(function(){$(this).parent().removeClass('hover')});
-		wrt.find('>.wToolbarContainer>div.wToolbar li.more button').click(function(e){
+		this.toolbar = wrt.find('>.wToolbarContainer>div.wToolbar').css('position', 'relative');
+		this.toolbar.find('button').click(function(e){ self.onTBClick(e, this); }).mouseover(function(){$(this).parent().addClass('hover');}).mouseout(function(){$(this).parent().removeClass('hover')});
+		this.toolbar.find('li.more button').click(function(e){
 			var wtc = $(this).parents('div.wToolbarContainer');
 			if(wtc.hasClass('more')){
 				wtc.removeClass('more');
@@ -90,6 +92,17 @@ xe.DrEditor = $.Class({
 			}
 		});
 
+		// 스크롤 이벤트 캡쳐
+		var scrollTimer = null;
+		$(window).scroll(function(){
+			if (scrollTimer) clearTimeout(scrollTimer);
+			scrollTimer = setTimeout(function(){
+				scrollTimer = null;
+				self.notify('SCROLL')
+			}, 50);
+		});
+		// 이미지를 다 읽어들이면 강제로 스크롤 이벤트 발생
+		$(window).load(function(){ self.notify('LOAD'); });
 
 		// Notify 핸들러
 		this.regNotifyHandler(this);
@@ -415,7 +428,7 @@ xe.DrEditor = $.Class({
 
 		var i, len = h[msg].length;
 		for(i=0; i < len; i++) {
-			h[msg][i][0].apply(h[msg][i][1], args);
+			h[msg][i][0].apply(h[msg][i][1], args || []);
 		}
 
 		return true;
@@ -649,6 +662,40 @@ xe.DrEditor = $.Class({
 		} else {
 			$(window).scrollTop( Math.min(offsetBot - docHeight + 20, Math.max(offsetTop - toolHeight, 0) ) );
 		}
+	},
+
+	// 툴바의 위치가 항상 화면 하단에 있도록 재조정
+	toolbarRepos : function() {
+		var oDoc  = document.documentElement;
+		var docHeight  = oDoc.clientHeight;
+		var tbBox      = this.toolbar.parent();
+		var tbHeight   = tbBox.height();
+		var scrollTop  = $(window).scrollTop();
+		var viewBottom = scrollTop + docHeight;
+		var offsetTop  = 0;
+		var oldTop     = tbBox.css('top');
+
+		tbBox.css('top', 0);
+		offsetTop = tbBox.offset().top;
+
+		// bottom of screen view
+		var newTop = ((viewBottom - tbHeight) - offsetTop);
+
+		// 툴바의 위치는 문서의 범위를 넘지 않는다.
+		newTop = Math.min(newTop, 0)+'px';
+
+		if (oldTop != newTop) {
+			tbBox.css('top', oldTop);
+			tbBox.animate({'top':newTop}, 300, 'swing');
+		}
+	},
+
+	$ON_SCROLL : function() {
+		this.toolbarRepos();
+	},
+
+	$ON_LOAD : function() {
+		this.toolbarRepos();
 	},
 
 	$ON_SHOW_EDITOR : function(name) {
