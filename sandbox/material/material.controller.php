@@ -35,6 +35,8 @@
 					if(file_exists($file)) {
 						$material_srl = getNextSequence();
 						$ext = substr(strrchr($filename,'.'),1);
+                        $ext = array_shift(explode('?',$ext));
+
 						// insert file module
 						$file_info = array();
 						$file_info['tmp_name'] = $file;
