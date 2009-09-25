@@ -1693,7 +1693,7 @@ dr.fileWriter = $.Class({
 			if ((srl = parseInt(srl[1])) < 0) return;
 
 			var fileObj = uploadedFiles[srl];
-			dl += '<dd class="filesrl_'+srl+'"><a href="'+fileObj.download_url+'">'+fileObj.source_filename+'</a> '+fileObj.disp_file_size+'</dd>';
+			dl += '<dd class="filesrl_'+srl+'"><a href="'+ request_uri + fileObj.download_url+'">'+fileObj.source_filename+'</a> '+fileObj.disp_file_size+'</dd>';
 		});
 
 		dl += '</dl>';
