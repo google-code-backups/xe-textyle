@@ -695,7 +695,7 @@ xe.DrEditor = $.Class({
 
 		if (oldTop != newTop) {
 			tbBox.css('top', oldTop);
-			tbBox.animate({'top':newTop}, 300, 'swing');
+			tbBox.animate({'top':newTop}, 200, 'swing');
 		}
 	},
 
