@@ -149,12 +149,14 @@ xe.DrEditor = $.Class({
 		})
 		.bind('sortupdate', function(event,orgEvent,ui){
 		 })
-		.bind('sortstart', function(){ self.dragging = true })
+		.bind('sortstart', function(){ 
+			 self.dragging = true;
+			 self.notify('SORT_START');
+		 })
 		.bind('sortstop',  function(event,orgEvent,ui){ 
 			self.dragging = false;
 			self.notify('SORT_STOP', [ui]);
 		});
-
 
 		// 단락 타입버튼 Sortable
 		wrt.find('>.wToolbarContainer>div.wToolbar ul').sortable({
@@ -755,6 +757,12 @@ xe.DrEditor = $.Class({
 
 	$ON_SELECT_PARAGRAPH : function(bByKeyAction) {
 		if (bByKeyAction) this.scrollIntoView(this.cur_focus);
+	},
+	$ON_SORT_START : function() {
+		this.toolbar.css('display', 'none');
+	},
+	$ON_SORT_STOP : function() {
+		this.toolbar.css('display', '');
 	}
 });
 
