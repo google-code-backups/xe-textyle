@@ -85,11 +85,15 @@ xe.DrEditor = $.Class({
 		this.toolbar.find('button').click(function(e){ self.onTBClick(e, this); }).mouseover(function(){$(this).parent().addClass('hover');}).mouseout(function(){$(this).parent().removeClass('hover')});
 		this.toolbar.find('li.more button').click(function(e){
 			var wtc = $(this).parents('div.wToolbarContainer');
-			if(wtc.hasClass('more')){
+			var isExpand = wtc.hasClass('more');
+
+			if (isExpand) {
 				wtc.removeClass('more');
 			}else{
 				wtc.addClass('more');
 			}
+
+			self.notify('MORE', [!isExpand]);
 		});
 
 		// 스크롤 이벤트 캡쳐
@@ -688,7 +692,7 @@ xe.DrEditor = $.Class({
 		offsetTop = tbBox.offset().top;
 
 		// bottom of screen view
-		var newTop = ((viewBottom - tbHeight) - offsetTop);
+		var newTop = ((viewBottom - tbHeight) - offsetTop - 5);
 
 		// 툴바의 위치는 문서의 범위를 넘지 않는다.
 		newTop = Math.min(newTop, 0)+'px';
@@ -763,6 +767,9 @@ xe.DrEditor = $.Class({
 	},
 	$ON_SORT_STOP : function() {
 		this.toolbar.css('display', '');
+	},
+	$ON_MORE : function(isExpanded) {
+		this.toolbarRepos();
 	}
 });
 
