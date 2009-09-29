@@ -23,13 +23,13 @@
 <input type="hidden" name="_saved_doc_title" value="{htmlspecialchars($saved_doc->title)}" />
 <input type="hidden" name="_saved_doc_content" value="{htmlspecialchars($saved_doc->content)}" />
 <input type="hidden" name="_saved_doc_message" value="{$lang->msg_load_saved_doc}" />
-<span style="display:none"><p class="editor_autosaved_message" id="editor_autosaved_message_{$editor_sequence}" style="display:none"></p></span>
+<div style="display:none"><p class="editor_autosaved_message" id="editor_autosaved_message_{$editor_sequence}" style="display:none"></p></div>
 <!--@end-->
 <!-- 폼을 알아내기 위한 더미 -->
 <input type="hidden" id="dreditor_dummy_{$editor_sequence}" value="" />
 
 <!-- 에디터 -->
-<div id="DrEditor{$editor_sequence}" class="textyleEditor<!--@if(!$material_exists)--> wide<!--@end-->">
+<div id="DrEditor{$editor_sequence}" class="textyleEditor">
 <!-- class="textyleEditor" | class="textyleEditor keepClose" -->
 	<div class="editorContainer">
 		<!-- Editor Area -->
@@ -307,7 +307,6 @@
 			<div class="wArea mov">
 			<!-- class="wArea mov" | class="wArea mov open" -->
 				<fieldset>
-					<legend>동영상</legend>
 					<legend>{$lang->edit->mov}</legend>
 					<textarea name="" cols="50" rows="5" class="inputTextarea" title="{$lang->edit->insert_mov}"></textarea>
 					<textarea name="" cols="50" rows="5" class="inputTextarea" title="{$lang->edit->insert_mov_explain}"></textarea>
@@ -345,6 +344,7 @@
 			<div class="wArea file">
 			<!-- class="wArea file" | class="wArea file open" -->
 				<fieldset>
+				<legend>{$lang->edit->file}</legend>
                  <span id="swfUploadButton{$editor_sequence}" class="buttonFileUpload"><button type="button">{$lang->edit->file_select}</button></span>
 					<p class="info">{sprintf($lang->edit->file_uploadinfo,($file_config->allowed_filesize/(1024*1024)),($file_config->allowed_attach_size/(1024*1024)))} <!--button type="button" class="help">파일 업로드에 문제가 발생하는 경우 클릭.</button--></p>
 					<!--input name="" type="file" class="inputFile" title="파일 찾기" /-->
@@ -403,8 +403,38 @@
 				</fieldset>
 			</div>
 
+			<div class="mArea open">
+			<!-- class="mArea" | class="mArea open" -->
+				<fieldset>
+					<legend>{$lang->edit->materials}</legend>
+					<h4 class="h4">{$lang->edit->materials}</h4>
+					<button type="button" class="reload"><span>{$lang->edit->refresh}</span></button>
+					<p class="noData">{$lang->edit->no_materials}</p>
+					<dl>
+						<dt>{regdate}</dt>
+						<dd>
+							<div class="eArea">
+								{content}
+							</div>
+							<span class="button"><button type="button">{$lang->edit->insert}</button></span>
+						</dd>
+					</dl>
+					<!-- pagenate -->
+					<div class="paginate">
+						<button type="button" class="prev" title="{$lang->edit->paging_prev_help}"><span>{$lang->edit->paging_prev}</span></button>
+						<button type="button" class="next" title="{$lang->edit->paging_next_help}"><span>{$lang->edit->paging_next}</span></button>
+						<span>{current}/{total}</span>
+					</div>
+					<!-- pagenate -->
+					<span class="cap capTL"></span>
+					<span class="cap capTR"></span>
+					<span class="cap capBL"></span>
+					<span class="cap capBR"></span>
+				</fieldset>
+			</div>
+
 			<!-- wArea blank-->
-			<div class="wArea blank open">
+			<div class="wArea blank">
 			<!-- class="wArea blank" | class="wArea blank open" -->
 				<p class="writeHere">{$lang->edit->drag_here}</p>
 				<span class="cap capTL"></span>
@@ -418,12 +448,12 @@
 			<div class="wToolbarContainer">
 			<!-- class="wToolbarContainer" | class="wToolbarContainer more" -->
 				<div class="wToolbar">
-				<!-- class="wToolbar" | class="wToolbar hx | txt | link | list | blockquote | img | mov | file | hr | index" -->
+				<!-- class="wToolbar" | class="wToolbar hx | txt | link | list | blockquote | img | mov | file | hr | index | material" -->
 					<ul>
 						<!--@if($_COOKIE['DrEditorToolbar'])-->
 							{@$_DrEditorToolbar=$_COOKIE['DrEditorToolbar'];}
 						<!--@else-->
-							{@$_DrEditorToolbar='hx,txt,link,list,blockquote,img,mov,file,hr,index';}
+							{@$_DrEditorToolbar='hx,txt,link,list,blockquote,img,mov,file,hr,index,material';}
 						<!--@end-->
 						<!--@foreach(explode(',',$_DrEditorToolbar) as $k => $v)-->
 							<!--@if($v=='hx')-->
@@ -448,6 +478,8 @@
 							<li class="hr"><button type="button"><span>{$lang->edit->hr}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@elseif($v=='index')-->
 							<li class="index"><button type="button"><span>{$lang->edit->toc}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<!--@elseif($v=='material')-->
+							<li class="material"><button type="button"><span>{$lang->edit->material}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@end-->
 						<!--@end-->
 						<li class="more"><button type="button"><span>{$lang->edit->more}</span></button></li>
@@ -463,7 +495,7 @@
 		<!-- /Editor Area -->
 	</div>
 
-	<!-- Extension -->
+	<!-- 여기서 부터 삭제 -->
     <!--@if($material_exists)-->
 	<div class="keepingArea">
 
@@ -501,49 +533,12 @@
 				<!-- pagenate -->
 			</div>
 			<!-- /Keeping List -->
+			
 		</div>
-
-		<!--
-		<div class="section keep temp open">
-		<< class="section keep temp" | class="section keep temp open" >>
-			<div class="header">
-				<h3>{$lang->edit->temporary_savings}</h3>
-				<button type="button" class="toggle"><span>{$lang->edit->toggle_list}</span></button>
-			</div>
-
-			<< <p class="keepList noData">임시 저장된 글이 없습니다.</p> >>
-
-			< Keeping List >
-			<div class="keepList">
-				<div class="item">
-					<dl>
-						<dt>{regdate} <span class="time">{regtime}</span></dt>
-						<dd>
-							<h3>{title}</h3>
-							<p>{content}</p>
-						</dd>
-					</dl>
-					<button type="button" class="movable"><span>{$lang->edit->move}</span></button>
-					<span class="mask"></span>
-					<span class="arrow"></span>
-				</div>
-
-				<< pagenate >>
-				<div class="paginate">
-					<button type="button" class="prev" title="{$lang->edit->paging_prev_help}"><span>{$lang->edit->paging_prev}</span></button>
-					<button type="button" class="next" title="{$lang->edit->paging_next_help}"><span>{$lang->edit->paging_next}</span></button>
-					<span>{current}/{total}</span>
-				</div>
-				<< pagenate >>
-
-			</div>
-			<< /Keeping List >>
-		</div>
-		-->
-
 	</div>
     <!--@end-->
-	<!-- /Extension -->
+	<!-- /여기 까지 삭제 -->
+	
 </div>
 <!-- /에디터 -->
 

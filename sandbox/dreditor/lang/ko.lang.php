@@ -36,7 +36,7 @@
 	$lang->edit->insert_mov = '<object> 또는 <embed>로 시작하는 멀티미디어 삽입 코드를 넣어주세요';
 	$lang->edit->insert_mov_explain = '동영상의 설명을 입력할 수 있습니다. <a>, <strong>, <em> 태그를 쓸 수 있습니다.';
 
-	$lang->edit->file='파일';
+	$lang->edit->file ='파일';
 	$lang->edit->file_select = '업로드할 파일을 선택해 주세요';
 	$lang->edit->file_uploadinfo = '개당 %sMB, 모두 합쳐 %sMB 까지 업로드가 가능 합니다';
 	$lang->edit->file_total ='총 <strong class="filecount">{total_filecount}</strong>개';
@@ -55,6 +55,9 @@
 	$lang->edit->list_explain = 'CTRL+방향키를 누르면 항목의 위치나 단계를 변경할 수 있습니다.';
 	$lang->edit->toc = '목차';
 	$lang->edit->toc_explain ='문서 내의 소제목들을 모아 목차로 만들어주며, 자동으로 갱신됩니다.';
+	
+	$lang->edit->material = '글감';
+	$lang->edit->insert = '이 글감을 본문에 넣기';
 
 	$lang->edit->more = '더보기';
 	$lang->edit->move_button = '버튼이동';

@@ -2,15 +2,16 @@
 /* NHN > UIT Center > Open UI Platform Team > Jeong Chan Myeong(dece24@nhncorp.com) */
 
 /* Textyle Editor */
-.textyleEditor{ position:relative; *zoom:1; padding-right:250px; margin:0 0 1em 0;}
-.textyleEditor.wide { padding-right:0; }
+.textyleEditor{ position:relative; *zoom:1; margin:0 0 1em 0;}
 .textyleEditor:after{ content:""; display:block; clear:both;} 
-.textyleEditor .editorContainer{ position:relative; float:left; width:100%; margin-right:-100%; display:table; table-layout:fixed;}
+.textyleEditor .editorContainer{ position:relative; width:100%; display:table; table-layout:fixed;}
 .textyleEditor .editorContainer .editorArea{ opacity:1; filter:alpha(opacity=100);}
 .textyleEditor .editorContainer .writeArea{ position:relative; *zoom:1;}
-.textyleEditor .keepingArea{ position:absolute; top:0; right:0; float:right; width:230px; z-index:10; word-break:break-all;}
+/* 
+.textyleEditor .keepingArea{ position:absolute; top:0; right:0; float:right; width:230px; z-index:10; word-break:break-all;} 
+*/
 
-/* Keep Toggle Layout */
+/* Keep Toggle Layout 
 .textyleEditor.keepClose{ padding-right:60px;}
 .textyleEditor.keepClose .keepingArea{ width:40px;}
 .keepClose .keepList{ display:none !important;}
@@ -19,10 +20,11 @@
 .keepClose .keep.temp .header{ background-position:11px -41px;}
 .keepClose .keep .header h3{ display:none;}
 .keepClose .keep .header:hover h3{ display:block; position:absolute; top:-1px; right:100%; white-space:nowrap; border:1px solid #dcdee2; padding:10px 20px 10px 35px; height:15px; background:#fff url(../img/buttonToggleLeftRight.gif) no-repeat 20px center;}
-* html .keepClose .keep .header.hover h3{ display:block; position:absolute; top:-1px; right:100%; white-space:nowrap; border:1px solid #dcdee2; padding:10px 20px 10px 35px; height:15px; background:#fff url(../img/buttonToggleLeftRight.gif) no-repeat 20px center;}/* IE6 Only */
+* html .keepClose .keep .header.hover h3{ display:block; position:absolute; top:-1px; right:100%; white-space:nowrap; border:1px solid #dcdee2; padding:10px 20px 10px 35px; height:15px; background:#fff url(../img/buttonToggleLeftRight.gif) no-repeat 20px center;}
 .keepClose .keep .header .reload{ display:none;}
 .keepClose .keep .header .toggle{ width:38px;}
 .keepClose .keep .header .collapse{ display:none;}
+*/
 
 /* Writing Toolbar */
 .wToolbarContainer{ position:relative; margin:20px 0 40px 0; height:72px; overflow:hidden;z-index:1000}
@@ -33,38 +35,6 @@
 .wToolbarContainer.more .cap{ height:141px; background:url(../img/bgWritingToolbarMore.gif) no-repeat;}
 .wToolbar .cap.capLeft{ left:-10px; background-position:left top;}
 .wToolbar .cap.capRight{ right:-10px; background-position:right top;}
-/* 
-.wToolbar.hx,
-.wToolbar.txt,
-.wToolbar.link,
-.wToolbar.list,
-.wToolbar.blockquote,
-.wToolbar.img,
-.wToolbar.mov,
-.wToolbar.file,
-.wToolbar.hr,
-.wToolbar.index{ margin-top:-1em;} 
-*/
-.wToolbar.hx .cap.capLeft,
-.wToolbar.txt .cap.capLeft,
-.wToolbar.link .cap.capLeft,
-.wToolbar.list .cap.capLeft,
-.wToolbar.blockquote .cap.capLeft,
-.wToolbar.img .cap.capLeft,
-.wToolbar.mov .cap.capLeft,
-.wToolbar.file .cap.capLeft,
-.wToolbar.hr .cap.capLeft,
-.wToolbar.index .cap.capLeft{ background-position:left -200px;}
-.wToolbar.hx .cap.capRight,
-.wToolbar.txt .cap.capRight,
-.wToolbar.link .cap.capRight,
-.wToolbar.list .cap.capRight,
-.wToolbar.blockquote .cap.capRight,
-.wToolbar.img .cap.capRight,
-.wToolbar.mov .cap.capRight,
-.wToolbar.file .cap.capRight,
-.wToolbar.hr .cap.capRight,
-.wToolbar.index .cap.capRight{ background-position:right -200px;}
 
 .wToolbar ul{ position:relative; margin:0 70px 0 0; padding:1px 0 0 0; *zoom:1; height:68px;}
 .wToolbarContainer.more ul{ height:135px; background:url(../img/hrToolbarMore.gif) repeat-x left center;}
@@ -86,7 +56,8 @@
 .wToolbar.mov button,
 .wToolbar.file button,
 .wToolbar.hr button,
-.wToolbar.index button{ opacity:.5; filter:alpha(opacity=50);}
+.wToolbar.index button,
+.wToolbar.material button{ opacity:.5; filter:alpha(opacity=50);}
 
 .wToolbar.hx li.hx button,
 .wToolbar.txt li.txt button,
@@ -98,6 +69,7 @@
 .wToolbar.file li.file button,
 .wToolbar.hr li.hr button,
 .wToolbar.index li.index button,
+.wToolbar.material li.material button,
 .wToolbar li button:hover,
 .wToolbar li button:active,
 .wToolbar li button:focus{ opacity:1; filter:alpha(opacity=100);}
@@ -112,35 +84,34 @@
 .wToolbar li.file button{ background-position:center -700px;}
 .wToolbar li.hr button{ background-position:center -800px;}
 .wToolbar li.index button{ background-position:center -1000px;}
+.wToolbar li.material button{ background-position:center -1100px;}
 .wToolbar li.more button{ background-position:center -1970px;}
 .wToolbarContainer.more li.more button{ background-position:center -1770px;}
-
-/* 
-.wToolbar.hx li.hx,
-.wToolbar.txt li.txt,
-.wToolbar.link li.link,
-.wToolbar.list li.list,
-.wToolbar.blockquote li.blockquote,
-.wToolbar.img li.img,
-.wToolbar.mov li.mov,
-.wToolbar.file li.file,
-.wToolbar.hr li.hr,
-.wToolbar.index li.index{ top:-7px; padding-top:7px; background:url(../img/arrowToolbar.gif) no-repeat center top;} 
-*/
 
 .wToolbar li .dragable{ position:absolute; display:none; bottom:48px; right:0; padding:0; border:0; width:20px; height:20px; overflow:hidden; background:url(../img/iconMovable.gif) no-repeat center center !important; cursor:move; font-size:0; line-height:0;}
 .wToolbarContainer.more li.hover .dragable{ _display:block;}
 .wToolbarContainer.more li:hover .dragable{ display:block;}
 
+/* Writing Area + Material Area */
+.wArea,
+.mArea{ display:none; position:relative; *zoom:1; padding:20px; margin:0; background:#f5f5f5; border:1px solid #e9e9e9;}
+.mArea{ margin:20px 0;}
+.wArea.open,
+.mArea.open{ display:block;}
+.wArea .cap,
+.mArea .cap{ position:absolute; width:10px; height:10px; background-image:url(../img/bgRouningF5.gif); background-repeat:no-repeat; font-size:0; line-height:0; overflow:hidden;}
+.wArea .cap.capTL,
+.mArea .cap.capTL{ top:-1px; left:-1px; background-position:left top;}
+.wArea .cap.capTR,
+.mArea .cap.capTR{ top:-1px; right:-1px; background-position:right top;}
+.wArea .cap.capBL,
+.mArea .cap.capBL{ bottom:-1px; left:-1px; background-position:left bottom;}
+.wArea .cap.capBR,
+.mArea .cap.capBR{ bottom:-1px; right:-1px; background-position:right bottom;}
+.wArea .h4,
+.mArea .h4{ color:#555; font-size:14px; margin:0 0 10px 0;}
+
 /* Writing Area */
-.wArea{ display:none; position:relative; *zoom:1; padding:20px; margin:0; background:#f5f5f5; border:1px solid #e9e9e9;}
-.wArea.open{ display:block;}
-.wArea .cap{ position:absolute; width:10px; height:10px; background-image:url(../img/bgRouningF5.gif); background-repeat:no-repeat; font-size:0; line-height:0; overflow:hidden;}
-.wArea .cap.capTL{ top:-1px; left:-1px; background-position:left top;}
-.wArea .cap.capTR{ top:-1px; right:-1px; background-position:right top;}
-.wArea .cap.capBL{ bottom:-1px; left:-1px; background-position:left bottom;}
-.wArea .cap.capBR{ bottom:-1px; right:-1px; background-position:right bottom;}
-.wArea .h4{ color:#555; font-size:14px; margin:0 0 10px 0;}
 .wArea .buttonArea{ position:relative; text-align:left; *zoom:1;}
 .wArea .buttonArea .buttonGray button{ _top:0;}
 .wArea .buttonArea .info{ display:inline; padding:0 0 0 15px; color:#777;}
@@ -151,6 +122,23 @@
 .wArea .inputTextarea{ width:98%; border:1px solid #ddd; background:#fff url(../img/bgInputText.gif) no-repeat; color:#767676; padding:10px 0 0 10px; height:150px; font-size:12px; line-height:1.5; margin-bottom:10px;}
 .wArea .inputRadio{ width:13px; height:13px; vertical-align:middle;}
 .wArea .hr{ border-top:1px solid #e6e6e6; border-bottom:1px solid #fff; font-size:0; line-height:0; overflow:hidden; height:0; margin:15px -20px;}
+
+/* Material Area */
+.mArea .reload{ position:absolute; top:24px; right:20px; width:15px; height:16px; padding:0; cursor:pointer; border:0; *margin:0 5px 0 0; background:transparent url(../img/buttonRefresh.gif) no-repeat; vertical-align:middle;}
+.mArea .reload span{ position:absolute; width:0; height:0; font-size:0; line-height:0; overflow:hidden; z-index:-1; visibility:hidden;}
+.mArea .noData{ position:relative; border-top:1px solid #ddd; border-bottom:1px solid #ddd; background:#fff; padding:10px 20px;}
+.mArea dl{ position:relative; border-top:1px solid #ddd; border-bottom:1px solid #ddd; background:#fff;}
+.mArea dt{ position:relative; top:-16px; padding:10px 0 0 0; margin:15px; font-weight:bold; border-top:1px dotted #ccc; color:#767676;}
+.mArea dd{ position:relative; top:-16px; margin:0 15px;}
+.mArea dd .button{ position:absolute; top:-35px; right:0;}
+.mArea .eArea{ border:0; padding:0;}
+
+.mArea .paginate{ position:relative; text-align:center; padding:0; font-size:10px; color:#9096a9; *zoom:1;}
+.mArea .paginate:after{ content:""; display:block; clear:both;}
+.mArea .paginate button{ width:17px; height:18px; padding:0; background:transparent url(../img/buttonPaginate.gif) no-repeat 0 0; cursor:pointer; border:0; vertical-align:middle;}
+.mArea .paginate button span{ position:absolute; width:0; height:0; font-size:0; line-height:0; overflow:hidden; visibility:hidden; z-index:-1;}
+.mArea .paginate .prev{ float:left; background-position:left top;}
+.mArea .paginate .next{ float:right; background-position:right top;}
 
 /* Writing Area Blank */
 .editorArea .wArea { display:block;}
@@ -337,7 +325,7 @@
 .txEditor .toolbar .font32px { font-size:32px }
 .txEditor .toolbar .font36px { font-size:36px }
 
-/* keep List */
+/* keep List 
 .keep{ font-size:12px; margin:0 0 5px 0;}
 .keep .header{ position:relative; padding:10px 0 10px 40px; margin:0; font-size:12px; color:#616872; border:1px solid #dcdee2; background-color:#eff0f2; background-image:url(../img/iconKeepingHeader.gif); background-repeat:no-repeat; *zoom:1;}
 .keep.collection .header{ background-position:20px 11px;}
@@ -346,7 +334,7 @@
 .keep .header .toggle{ position:absolute; width:228px; height:35px; left:0; top:0; border:0; cursor:pointer; padding:0; background:transparent; *zoom:1;}
 .keep .header .toggle span{ position:absolute; width:0; height:0; font-size:0; line-height:0; overflow:hidden; z-index:-1; visibility:hidden;}
 .keep .header .controls{ position:absolute; top:10px; right:10px; white-space:nowrap;}
-.keep .header .reload{ width:15px; height:16px; padding:0; cursor:pointer; border:0; *margin:0 5px 0 0; background:transparent url(../img/buttonRefresh.gif) no-repeat; vertical-align:middle; vertical-align:middle;}
+.keep .header .reload{ width:15px; height:16px; padding:0; cursor:pointer; border:0; *margin:0 5px 0 0; background:transparent url(../img/buttonRefresh.gif) no-repeat; vertical-align:middle;}
 .keep .header .reload span{ position:absolute; width:0; height:0; font-size:0; line-height:0; overflow:hidden; z-index:-1; visibility:hidden;}
 .keep .header .collapse{ border:0; cursor:pointer; padding:0; background:transparent; text-align:right; z-index:3; overflow:visible; vertical-align:middle;}
 .keep .header .collapse span{ background:url(../img/buttonToggleLeftRight.gif) no-repeat right center; font-size:11px; padding-right:10px; color:#868d95;}
@@ -381,14 +369,7 @@
 .keep .paginate button span{ position:absolute; width:0; height:0; font-size:0; line-height:0; overflow:hidden; visibility:hidden; z-index:-1;}
 .keep .paginate .prev{ float:left; background-position:left top;}
 .keep .paginate .next{ float:right; background-position:right top;}
-
-/* dreditor Layout */
-.dreditor .keepingArea{ margin-top:-114px;}
-.dreditor .wTitle,
-.dreditor .wOption{ margin-right:60px;}
-.dreditorKeepOn .wTitle,
-.dreditorKeepOn .wOption{ margin-right:250px;}
-.dreditorKeepOn .toggle{ display:none;}
+*/
 
 /* Drag and Drop */
 .xe_dr_placeholder { background-color:#F8F4CE; padding:10px 0; z-index:0; -moz-border-radius:5px; -webkit-border-radius:5px; z-index:1; opacity:.5; filter:alpha(opacity=50);}
