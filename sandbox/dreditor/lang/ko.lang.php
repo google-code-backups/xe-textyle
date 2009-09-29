@@ -56,12 +56,12 @@
 	$lang->edit->toc = '목차';
 	$lang->edit->toc_explain ='문서 내의 소제목들을 모아 목차로 만들어주며, 자동으로 갱신됩니다.';
 	
-	$lang->edit->material = '글감';
-	$lang->edit->insert = '이 글감을 본문에 넣기';
-
 	$lang->edit->more = '더보기';
 	$lang->edit->move_button = '버튼이동';
 
+	$lang->edit->material = '글감';
+	$lang->edit->insert = '이 글감을 본문에 넣기';
+	$lang->edit->close_materials = '글감 보관함 닫기';
     $lang->edit->no_materials = '보관된 글감이 없습니다.';
     $lang->edit->msg_no_selected_object = '선택된 개체가 없습니다.';
     $lang->edit->msg_insert_value = '값을 입력해 주세요.';
