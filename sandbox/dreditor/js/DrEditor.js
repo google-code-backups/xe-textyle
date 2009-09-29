@@ -1066,6 +1066,9 @@ dr.txtWriter = $.Class({
 		var now = (new Date()).getTime();
 		//if(jQuery.browser.msie) appendNew = false;
 
+		// 다음 단락 추가 기능 비활성화
+		appendNew = false;
+
 		if (appendNew) {
 			newArea = $('<div class="eArea xe_content xe_dr_txt">');
 			if (eArea) this.eArea.before(newArea);
