@@ -13,7 +13,6 @@ xe.DrEditor = $.Class({
 	dummyArea : null,
 	toolbar   : null,
 	blankBox  : null,
-	material  : null,
 	dragging  : false,
 	fontFamily: null,
 	fontSize  : null,
@@ -26,7 +25,6 @@ xe.DrEditor = $.Class({
 		var ctn  = this.container = $('div#DrEditor'+editor_sequence);
 		var edt  = this.editArea  = ctn.find('>div>div.editorArea');
 		var wrt  = this.writeArea = ctn.find('>div>div.writeArea');
-		var mtr  = this.material  = ctn.find('>div.keepingArea');
 		var dum  = this.dummyArea = $('<div class="dummy" style="display:none">').appendTo(wrt);
 
 		// BlankBox = 글이 없을 때 보여주는 글상자
@@ -34,39 +32,6 @@ xe.DrEditor = $.Class({
 
 		// 편집기 시퀀스 저장
 		this.seq = editor_sequence;
-
-		// 글감 보관함 사이드바 토글
-		var btnToggle    = ctn.find('button.toggle');
-		var keepSections = ctn.find('.keepingArea .section');
-	
-		btnToggle.click(function(){ 
-			if(!$(this).parents('.section').hasClass('open')){
-				$(this).parents('.section').addClass('open');
-				ctn.removeClass('keepClose');
-				$(this).parents('form').addClass('dreditorKeepOn');
-
-				var expire = new Date();
-				expire.setTime(expire.getTime()+ (7000 * 24 * 3600000));
-				xSetCookie('showMaterial', 1, expire);
-
-			}
-		});
-		ctn.find('button.collapse').click(function(){ 
-			ctn.addClass('keepClose'); 
-			keepSections.removeClass('open'); 
-			$(this).parents('form').removeClass('dreditorKeepOn');
-
-			var expire = new Date();
-			expire.setTime(expire.getTime()+ (7000 * 24 * 3600000));
-			xSetCookie('showMaterial', -1, expire);
-
-		});
-
-		ctn.find('button.reload').click(function(){ self.loadMaterial()});
-
-		var showMaterial = xGetCookie('showMaterial');
-		if(showMaterial==-1) ctn.find('button.collapse').click();
-
 
 		// 편집 이벤트 핸들러
 		this.$onParaEdit   = $.fnBind(this.onParaEdit, this);
@@ -179,23 +144,10 @@ xe.DrEditor = $.Class({
 
 		}); 
 
-		// 글감 보관함 드래그&드롭 설정, 핸들러
-		this._dragOption = {
-			helper  : 'clone',
-			cancel  : 'input',
-			handle  : 'button.movable',
-			opacity : 0.8,
-			start   : function(event,orgEvent,ui){ self.editArea.sortable('refreshPositions') },
-			connectToSortable : this.editArea.selector
-		};
-
 		// 글감 보관함 컨텐트 읽어오기
-		this.matTpl = this.material.find('div.keepList:first > div.item:first').remove(); // 템플릿을 미리 떼놓는다.
-		this.loadMaterial();
+		//this.matTpl = mtr.find('dl').remove(); // 템플릿을 미리 떼놓는다.
+		//this.loadMaterial();
 
-		// 임시 저장 목록 읽어오기
-//		this.tmpTpl = this.material.find('div.keepList:last > div.item:first').remove(); // 템플릿
-		//this.loadTempSaving();
 
 		this.hidden_content=self.getContent();
 
@@ -216,127 +168,6 @@ xe.DrEditor = $.Class({
 		var fn  = frm[0].onsubmit;
 
 		frm[0].onsubmit = function(e){ return self.onFormSubmit(e || window.event, fn) };
-	},
-
-	loadMaterialNext : function(){
-		if(++this.next_page>=this.total_page) this.next_page=this.total_page;
-		this.next_page = this.next_page>0?this.next_page:1;
-		this.loadMaterial(this.next_page);
-
-	},
-
-	loadMaterialPrev : function(){
-		this.prev_page = --this.prev_page>0?this.prev_page:1;
-		this.loadMaterial(this.prev_page);
-	},
-
-	// 글감 보관함 불러오기
-	loadMaterial : function(page) {
-		var self = this;
-		var area = this.material.find('div.keepList:first');
-
-		if (!page) page = 1;
-
-		function callback(data){
-            if(data.page_navigation.total_count) jQuery('.keepList.noData').css('display','none');
-
-			// 글감 목록 전부 삭제
-			area.children('div.item').remove();
-
-			// 페이징
-			var paginate = area.find('div.paginate');
-			paginate.find('> span').text(data.page_navigation.cur_page+'/'+data.page_navigation.total_page);
-
-			self.prev_page = data.page_navigation.cur_page;
-			self.next_page = data.page_navigation.cur_page;
-			self.total_page = data.page_navigation.total_page;
-			
-			//paginate.find('> button.prev').unbind('click',$.fnBind(self.loadMaterialPrev,self)).bind('click',$.fnBind(self.loadMaterialPrev,self));
-			//paginate.find('> button.next').unbind('click',$.fnBind(self.loadMaterialNext,self)).bind('click',$.fnBind(self.loadMaterialNext,self));
-			
-			if(!self.loaded){
-				paginate.find('> button.prev').bind('click',$.fnBind(self.loadMaterialPrev,self));
-				paginate.find('> button.next').bind('click',$.fnBind(self.loadMaterialNext,self));
-			}
-
-			// 컨텐트 추가
-			$.each(data.material_list, function(){
-				var tpl = self.matTpl.clone();
-
-				tpl.addClass('xe_dr_'+this.type);
-				tpl.find('dt').text(this.regdate.substring(0,4)+'.'+this.regdate.substring(4,6)+'.'+this.regdate.substring(6,8)+' '+this.regdate.substring(8,10)+':'+this.regdate.substring(10,12));
-				tpl.find('dd').html(this.content);
-				var img = tpl.find('img');
-
-				if(img.size()>0){
-					$('<img>').attr('src',img.attr('src').replace(/(\.[^\.]*)$/,'.S$1')).replaceAll(img);
-				}
-
-				var ob = tpl.find('dd>div.xe_dr_mov>object, dd>div.xe_dr_mov object embed');
-				var w=ob.attr('width');
-				var h=ob.attr('height');
-				if(w>188){
-					ob.attr({_width:w,_height:h,width:188,height:parseInt(h*(188/w))});
-				}
-				paginate.before(tpl);
-			});
-
-			if (!self.$onMateMouseEnter) self.$onMateMouseEnter = $.fnBind(self.onMateMouseEnter,self);
-			if (!self.$onMateMouseLeave) self.$onMateMouseLeave = $.fnBind(self.onMateMouseLeave,self);
-
-			area.find('>div.item')
-				.mouseenter(self.$onMateMouseEnter)
-				.mouseleave(self.$onMateMouseLeave)
-				.draggable(self._dragOption)
-				.bind('dragstart',self._dragOption.start);
-
-			self.loaded =true;
-		}
-
-		if(jQuery('.keepingArea').length) $.exec_json('material.dispMaterialList',{page:page, list_count:4},callback);
-	},
-
-	// 임시저장 목록 불러오기
-	loadTempSaving : function(page) {
-		var self = this;
-		var area = this.material.find('div.keepList:last');
-
-		if (!page) page = 1;
-
-		function callback(data) {
-			// 임시 저장 목록 삭제
-			area.children('div.item').remove();
-
-			// 페이징
-			var paginate = area.find('div.paginate');
-			paginate.find('> span').text(data.page_navigation.cur_page+'/'+data.page_navigation.total_page);
-
-			// 컨텐트 추가
-			$.each(data.document_list, function(){
-				var tpl = self.tmpTpl.clone();
-
-				tpl.find('dt').text(this.regdate);
-				tpl.find('dd > h3').text(this.title);
-				tpl.find('dd > p').html(this.content);
-				tpl.find('img').attr({width:188});
-
-				paginate.before(tpl);
-			});
-		}
-
-		$.exec_json('member.dispSavedDocumentList',{page:page, list_count:5},callback);
-	},
-
-	createContentFromMaterial : function(obj) {
-		var div = $('<div class="eArea xe_content"></div>');
-		var cls = obj.attr('class').match(/xe_dr_([a-z]+)/);
-		var ctn = obj.find('dd');
-
-		if (!cls) cls = ['xe_dr_txt','txt'];
-
-		ctn.find('img').removeAttr('width');
-
-		return div.html(ctn.html()).addClass(cls[0]);
 	},
 
 	getContent : function() {
@@ -547,13 +378,6 @@ xe.DrEditor = $.Class({
 		this.cur_focus = null;
 	},
 
-	onMateMouseEnter : function(e) {
-		$(e.currentTarget).addClass('hover');
-	},
-
-	onMateMouseLeave : function(e) {
-		$(e.currentTarget).removeClass('hover');
-	},
 	onkeydown : function(e) {
 		if(typeof(e.keyCode) !='undefined'){
 			var eArea = this.editArea.find('>div.eArea');
@@ -1923,6 +1747,110 @@ dr.indexWriter = $.Class({
 	},
 	$ON_SORT_STOP : function(type) {
 		this.editor.editArea.find('div.xe_dr_index ul.toc').html(this.getIndexHTML());
+	}
+}).extend(dr.baseWriter);
+
+dr.materialWriter = $.Class({
+	name     : 'material',
+	tpl      : null,
+	selected : null,
+
+	$init : function(writeArea, oEditor) {
+		var self = this;
+
+		this.obj.find('button.close').click(function(e){ self.cancel(); });
+
+		// 리로드 버튼
+		this.obj.find('button.reload').click(function(){ self.loadMaterial()});
+
+		// 글감 읽어오기
+		this.tpl = this.obj.find('div._container > dl').remove(); // 템플릿을 미리 떼놓는다.
+		this.loadMaterial();
+	},
+	getData : function() {
+		if (this.selected) {
+			return this.selected.html();
+		} else {
+			return '';
+		}
+	},
+	setData : function(eArea) { },
+	save : function(e) {
+		this.selected = $(e.target).parents('dd').find('> div.eArea > div.eArea');
+		
+		var cls = this.selected.attr('class').match(/xe_dr_([a-z]+)/);
+		if (!cls) cls = ['xe_dr_txt','txt'];
+
+		var name = this.name;
+		this.name = cls[1];
+
+		this.$super.save(e);
+
+		this.name = name;
+
+		this.selected = null;
+	},
+	loadMaterialNext : function(){
+		if(++this.next_page>=this.total_page) this.next_page=this.total_page;
+		this.next_page = this.next_page>0?this.next_page:1;
+		this.loadMaterial(this.next_page);
+	},
+	loadMaterialPrev : function(){
+		this.prev_page = --this.prev_page>0?this.prev_page:1;
+		this.loadMaterial(this.prev_page);
+	},
+	loadMaterial : function(page) {
+		var self = this;
+		var area = this.obj.find('div._container');
+		var paginate = this.obj.find('div.paginate');
+
+		if (!page) page = 1;
+
+		function callback(data){
+			if(data.page_navigation.total_count) self.obj.find('p.noData').css('display','none');
+
+			// 글감 목록 전부 삭제
+			area.children().remove();
+
+			// 페이징
+			paginate.find('> span').text(data.page_navigation.cur_page+'/'+data.page_navigation.total_page);
+
+			self.prev_page  = data.page_navigation.cur_page;
+			self.next_page  = data.page_navigation.cur_page;
+			self.total_page = data.page_navigation.total_page;
+			
+			if(!self.loaded){
+				paginate.find('> button.prev').bind('click',$.fnBind(self.loadMaterialPrev,self));
+				paginate.find('> button.next').bind('click',$.fnBind(self.loadMaterialNext,self));
+			}
+
+			// 컨텐트 추가
+			$.each(data.material_list, function(){
+				var tpl = self.tpl.clone();
+
+				tpl.addClass('xe_dr_'+this.type);
+				tpl.find('dt').text(this.regdate.substring(0,4)+'.'+this.regdate.substring(4,6)+'.'+this.regdate.substring(6,8)+' '+this.regdate.substring(8,10)+':'+this.regdate.substring(10,12));
+				tpl.find('dd > div.eArea').html(this.content);
+				tpl.find('dd > span.button > button').click(function(e){ self.save(e) });
+
+				area.append(tpl);
+			});
+
+			self.loaded =true;
+		}
+
+		if(area.length) $.exec_json('material.dispMaterialList',{page:page, list_count:4}, callback);
+	},
+	createContentFromMaterial : function(obj) {
+		var div = $('<div class="eArea xe_content"></div>');
+		var cls = obj.attr('class').match(/xe_dr_([a-z]+)/);
+		var ctn = obj.find('dd');
+
+		if (!cls) cls = ['xe_dr_txt','txt'];
+
+		ctn.find('img').removeAttr('width');
+
+		return div.html(ctn.html()).addClass(cls[0]);
 	}
 }).extend(dr.baseWriter);
 

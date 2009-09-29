@@ -403,7 +403,7 @@
 				</fieldset>
 			</div>
 
-			<div class="mArea open">
+			<div class="wArea mArea material">
 			<!-- class="mArea" | class="mArea open" -->
 				<fieldset>
 					<legend>{$lang->edit->materials}</legend>
@@ -411,15 +411,15 @@
 					<button type="button" class="reload"><span>{$lang->edit->refresh}</span></button>
 					<button type="button" class="close"><span>{$lang->edit->close_materials}</span></button>
 					<p class="noData">{$lang->edit->no_materials}</p>
-					<dl>
-						<dt>{regdate}</dt>
-						<dd>
-							<div class="eArea">
-								{content}
-							</div>
-							<span class="button"><button type="button">{$lang->edit->insert}</button></span>
-						</dd>
-					</dl>
+					<div class="_container">
+						<dl>
+							<dt>{regdate}</dt>
+							<dd>
+								<div class="eArea">{content}</div>
+								<span class="button"><button type="button">{$lang->edit->insert}</button></span>
+							</dd>
+						</dl>
+					</div>
 					<!-- pagenate -->
 					<div class="paginate">
 						<button type="button" class="prev" title="{$lang->edit->paging_prev_help}"><span>{$lang->edit->paging_prev}</span></button>
@@ -495,51 +495,6 @@
 		</div>
 		<!-- /Editor Area -->
 	</div>
-
-	<!-- 여기서 부터 삭제 -->
-    <!--@if($material_exists)-->
-	<div class="keepingArea">
-
-		<div class="section keep collection open">
-		<!-- class="section keep collection" | class="section keep collection open" -->
-			<div class="header">
-				<h3>{$lang->edit->materials}</h3>
-				<button type="button" class="toggle"><span>{$lang->edit->toggle_list}</span></button>
-				<span class="controls">
-					<button type="button" class="reload"><span>{$lang->edit->refresh}</span></button>
-					<button type="button" class="collapse"><span>{$lang->edit->minimize_list}</span></button>
-				</span>
-			</div>
-
-			<p class="keepList noData">{$lang->edit->no_materials}</p>
-
-			<!-- Keeping List -->
-			<div class="keepList">
-				<!-- class="item" | class="item hover" -->
-				<div class="item">
-					<dl>
-						<dt>{regdate}</dt>
-						<dd>{content}</dd>
-					</dl>
-					<button type="button" class="movable"><span>{$lang->edit->move}</span></button>
-					<span class="mask"></span>
-					<span class="arrow"></span>
-				</div>
-				<!-- pagenate -->
-				<div class="paginate">
-					<button type="button" class="prev" title="{$lang->edit->paging_prev_help}"><span>{$lang->edit->paging_prev}</span></button>
-					<button type="button" class="next" title="{$lang->edit->paging_next_help}"><span>{$lang->edit->paging_next}</span></button>
-					<span>{current}/{total}</span>
-				</div>
-				<!-- pagenate -->
-			</div>
-			<!-- /Keeping List -->
-			
-		</div>
-	</div>
-    <!--@end-->
-	<!-- /여기 까지 삭제 -->
-	
 </div>
 <!-- /에디터 -->
 
