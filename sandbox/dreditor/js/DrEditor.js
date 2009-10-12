@@ -324,10 +324,10 @@ xe.DrEditor = $.Class({
 		if (!obj.length) return;
 
 		if (par.get(0) === obj.get(0)) return;
+
 		this.editArea.find('.eFocus').removeClass('eFocus');
 		obj.addClass('eFocus').append(this.tools);
 		this.cur_focus = obj;
-
 
 		// 이벤트를 해제 후 재할당 - sort 할 때 이벤트가 사라지는 버그 때문
 		var sEvent = $.browser.msie?'mouseup':'click';
@@ -618,8 +618,8 @@ dr.baseWriter = $.Class({
 
 		// Buttons
 		var buttons = this.obj.find('div.buttonArea button');
-		buttons.eq(0).click(function(e){ self.save(); });
-		buttons.eq(1).click(function(e){ self.cancel(); });
+		buttons.eq(0).click(function(e){ self.save(); return false; });
+		buttons.eq(1).click(function(e){ self.cancel(); return false; });
 
 		// Inputs
 		this.inputs = this.obj.find('input[type=text],textarea');
@@ -720,6 +720,13 @@ dr.baseWriter = $.Class({
 					}
 				}
 				this.editor.notify('ADD_CONTENT', [this.name]);
+			}
+
+			if (this.editor.cur_focus) {
+				var selected = this.editor.cur_focus;
+				var editor   = this.editor;
+				
+				setTimeout(function(){ editor.onParaClick({target:editor.cur_focus}); }, 0);
 			}
 		}
 
