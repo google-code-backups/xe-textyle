@@ -32,6 +32,7 @@ function editorStart_xe(editor_sequence, primary_key, content_key, editor_height
 	oEditor.addWriter(xe.DrEditor.hrWriter);
 	oEditor.addWriter(xe.DrEditor.indexWriter);
 	oEditor.addWriter(xe.DrEditor.materialWriter);
+	oEditor.addWriter(xe.DrEditor.helpWriter);
 
 	// Set standard API
 	editorRelKeys[editor_sequence] = new Array();

@@ -1758,10 +1758,10 @@ dr.materialWriter = $.Class({
 	$init : function(writeArea, oEditor) {
 		var self = this;
 
-		this.obj.find('button.close').click(function(e){ self.cancel(); });
+		this.obj.find('button._close').click(function(e){ self.cancel(); });
 
 		// 리로드 버튼
-		this.obj.find('button.reload').click(function(){ self.loadMaterial()});
+		this.obj.find('button._reload').click(function(){ self.loadMaterial()});
 
 		// 글감 읽어오기
 		this.tpl = this.obj.find('div._container > dl').remove(); // 템플릿을 미리 떼놓는다.
@@ -1831,7 +1831,7 @@ dr.materialWriter = $.Class({
 				tpl.addClass('xe_dr_'+this.type);
 				tpl.find('dt').text(this.regdate.substring(0,4)+'.'+this.regdate.substring(4,6)+'.'+this.regdate.substring(6,8)+' '+this.regdate.substring(8,10)+':'+this.regdate.substring(10,12));
 				tpl.find('dd > div.eArea').html(this.content);
-				tpl.find('dd > span.button > button').click(function(e){ self.save(e) });
+				tpl.find('dd > span.buttonDrEditor > button').click(function(e){ self.save(e) });
 
 				area.append(tpl);
 			});
@@ -1852,6 +1852,19 @@ dr.materialWriter = $.Class({
 
 		return div.html(ctn.html()).addClass(cls[0]);
 	}
+}).extend(dr.baseWriter);
+
+// Help
+dr.helpWriter = $.Class({
+	name : 'help',
+	$init : function() {
+		var self = this;
+		this.obj.find('span.buttonDrEditor > button').click(function(e){ self.cancel(); });
+	},
+	getData : function() {
+		return '';
+	},
+	setData : function(eArea) { }
 }).extend(dr.baseWriter);
 
 // Utility function
