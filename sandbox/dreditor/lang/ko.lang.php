@@ -65,4 +65,14 @@
     $lang->edit->no_materials = '보관된 글감이 없습니다.';
     $lang->edit->msg_no_selected_object = '선택된 개체가 없습니다.';
     $lang->edit->msg_insert_value = '값을 입력해 주세요.';
+
+	$lang->edit->close_help_q1 = '글 쓰기 단축키';
+	$lang->edit->close_help_a1 = '단락의 유형에 따라 숫자키 \'1~9\' 까지 단축키가 할당되어 있습니다.';
+	$lang->edit->close_help_q2 = '단락 선택';
+	$lang->edit->close_help_a2 = '선택하려는 단락을 \'클릭\' 또는 \'방향키(위-아래)\'를 사용하여 선택.';
+	$lang->edit->close_help_q3 = '선택된 단락을 편집';
+	$lang->edit->close_help_a3 = '키보드\'Enter\' 또는 \'더블클릭\' 또는 \'편집\'을 클릭.';
+	$lang->edit->close_help_q4 = '선택된 단락을 이동';
+	$lang->edit->close_help_a4 = '\'Ctrl+방향키(위-아래)\' 또는 \'드래그 &amp; 드롭\'.';
+
 ?>

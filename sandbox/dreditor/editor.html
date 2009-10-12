@@ -1,6 +1,7 @@
 <!--// 스킨 css 로드 -->
 <!--%import("css/dreditor.css")-->
 <!--%import("css/style@content.css")-->
+<!--%import("css/button.css")-->
 
 <!--// 기본 JS 로드 -->
 <!--%import("../../tpl/js/editor_common.js")-->
@@ -408,15 +409,17 @@
 				<fieldset>
 					<legend>{$lang->edit->materials}</legend>
 					<h4 class="h4">{$lang->edit->materials}</h4>
-					<button type="button" class="reload"><span>{$lang->edit->refresh}</span></button>
-					<button type="button" class="close"><span>{$lang->edit->close_materials}</span></button>
+					<div class="controls">
+						<span class="buttonDrEditor black"><button type="button">{$lang->edit->refresh}</button></span>
+						<span class="buttonDrEditor black"><button type="button">{$lang->edit->close_materials}</button></span>
+					</div>
 					<p class="noData">{$lang->edit->no_materials}</p>
 					<div class="_container">
 						<dl>
 							<dt>{regdate}</dt>
 							<dd>
 								<div class="eArea">{content}</div>
-								<span class="button"><button type="button">{$lang->edit->insert}</button></span>
+								<span class="buttonDrEditor green small"><button type="button">{$lang->edit->insert}</button></span>
 							</dd>
 						</dl>
 					</div>
@@ -427,6 +430,31 @@
 						<span>{current}/{total}</span>
 					</div>
 					<!-- pagenate -->
+					<span class="cap capTL"></span>
+					<span class="cap capTR"></span>
+					<span class="cap capBL"></span>
+					<span class="cap capBR"></span>
+				</fieldset>
+			</div>
+
+			<div class="wArea mArea help">
+			<!-- class="mArea" | class="mArea open" -->
+				<fieldset>
+					<legend>{$lang->edit->help}</legend>
+					<h4 class="h4">{$lang->edit->help}</h4>
+					<div class="controls">
+						<span class="buttonDrEditor black"><button type="button">{$lang->edit->close_help}</button></span>
+					</div>
+					<dl>
+						<dt>{$lang->edit->close_help_q1}</dt>
+						<dd>{$lang->edit->close_help_a1}</dd>
+						<dt>{$lang->edit->close_help_q2}</dt>
+						<dd>{$lang->edit->close_help_a2}</dd>
+						<dt>{$lang->edit->close_help_q3}</dt>
+						<dd>{$lang->edit->close_help_a3}</dd>
+						<dt>{$lang->edit->close_help_q4}</dt>
+						<dd>{$lang->edit->close_help_a4}</dd>
+					</dl>
 					<span class="cap capTL"></span>
 					<span class="cap capTR"></span>
 					<span class="cap capBL"></span>
@@ -449,7 +477,7 @@
 			<div class="wToolbarContainer">
 			<!-- class="wToolbarContainer" | class="wToolbarContainer more" -->
 				<div class="wToolbar">
-				<!-- class="wToolbar" | class="wToolbar hx | txt | link | list | blockquote | img | mov | file | hr | index | material" -->
+				<!-- class="wToolbar" | class="wToolbar hx | txt | link | list | blockquote | img | mov | file | hr | index | material | help" -->
 					<ul>
 						<!--@if($_COOKIE['DrEditorToolbar'])-->
 							{@$_DrEditorToolbar=$_COOKIE['DrEditorToolbar'];}
@@ -483,6 +511,7 @@
 							<li class="material"><button type="button"><span>{$lang->edit->material}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@end-->
 						<!--@end-->
+						<li class="help"><button type="button"><span>{$lang->edit->help}</span></button></li>
 						<li class="more"><button type="button"><span>{$lang->edit->more}</span></button></li>
 					</ul>
 					<span class="cap capLeft"></span>

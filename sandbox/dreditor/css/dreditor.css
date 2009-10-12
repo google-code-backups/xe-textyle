@@ -39,7 +39,8 @@
 .wToolbar.file button,
 .wToolbar.hr button,
 .wToolbar.index button,
-.wToolbar.material button{ opacity:.5; filter:alpha(opacity=50);}
+.wToolbar.material button,
+.wToolbar.help button{ opacity:.5; filter:alpha(opacity=50);}
 
 .wToolbar.hx li.hx button,
 .wToolbar.txt li.txt button,
@@ -52,6 +53,7 @@
 .wToolbar.hr li.hr button,
 .wToolbar.index li.index button,
 .wToolbar.material li.material button,
+.wToolbar.help li.help button,
 .wToolbar li button:hover,
 .wToolbar li button:active,
 .wToolbar li button:focus{ opacity:1; filter:alpha(opacity=100);}
@@ -67,8 +69,9 @@
 .wToolbar li.hr button{ background-position:center -800px;}
 .wToolbar li.index button{ background-position:center -1000px;}
 .wToolbar li.material button{ background-position:center -1100px;}
-.wToolbar li.more button{ background-position:center -1970px;}
-.wToolbarContainer.more li.more button{ background-position:center -1770px;}
+.wToolbar li.help button{ background-position:center -1800px;}
+.wToolbar li.more button{ background-position:center -2070px;}
+.wToolbarContainer.more li.more button{ background-position:center -1870px;}
 
 .wToolbar li .dragable{ position:absolute; display:none; bottom:48px; right:0; padding:0; border:0; width:20px; height:20px; overflow:hidden; background:url(../img/iconMovable.gif) no-repeat center center !important; cursor:move; font-size:0; line-height:0;}
 .wToolbarContainer.more li.hover .dragable{ _display:block;}
@@ -76,12 +79,16 @@
 
 /* Writing Area + Material Area */
 .wArea,
-.mArea{ display:none; position:relative; *zoom:1; padding:20px; margin:0; background:#f5f5f5; border:1px solid #e9e9e9;}
+.mArea{ display:none; position:relative; *zoom:1; padding:20px; margin:0;}
+.wArea{ background:#f5f5f5; border:1px solid #e9e9e9;}
+.mArea{ background:url(../img/bgChess76.gif); border:1px solid #666;}
 .mArea{ margin:20px 0;}
 .wArea.open,
 .mArea.open{ display:block;}
 .wArea .cap,
-.mArea .cap{ position:absolute; width:10px; height:10px; background-image:url(../img/bgRouningF5.gif); background-repeat:no-repeat; font-size:0; line-height:0; overflow:hidden;}
+.mArea .cap{ position:absolute; width:10px; height:10px; background-repeat:no-repeat; font-size:0; line-height:0; overflow:hidden;}
+.wArea .cap{ background-image:url(../img/bgRouningF5.gif);}
+.mArea .cap{ background-image:url(../img/bgRouning76.gif);}
 .wArea .cap.capTL,
 .mArea .cap.capTL{ top:-1px; left:-1px; background-position:left top;}
 .wArea .cap.capTR,
@@ -91,7 +98,10 @@
 .wArea .cap.capBR,
 .mArea .cap.capBR{ bottom:-1px; right:-1px; background-position:right bottom;}
 .wArea .h4,
-.mArea .h4{ color:#555; font-size:14px; margin:0 0 10px 0;}
+.mArea .h4{ font-size:16px; margin:0 0 10px 0;}
+.wArea .h4{ color:#555;}
+.mArea .h4{ color:#fff;}
+.mArea .controls{ position:absolute; top:20px; right:20px;}
 
 /* Writing Area */
 .wArea .buttonArea{ position:relative; text-align:left; *zoom:1;}
@@ -111,15 +121,15 @@
 .mArea .close{ position:absolute; top:24px; right:20px; width:15px; height:16px; padding:0; cursor:pointer; border:0; *margin:0 5px 0 0; background:transparent url(../img/buttonClose.gif) no-repeat; vertical-align:middle;}
 .mArea .close span{ position:absolute; width:0; height:0; font-size:0; line-height:0; overflow:hidden; z-index:-1; visibility:hidden;}
 .mArea .noData{ position:relative; border-top:1px solid #ddd; border-bottom:1px solid #ddd; background:#fff; padding:10px 20px;}
-.mArea dl{ position:relative; border-top:1px solid #ddd; border-bottom:1px solid #ddd; background:#fff;}
-.mArea dt{ position:relative; top:-16px; padding:10px 0 0 0; margin:15px; font-weight:bold; border-top:1px dotted #ccc; color:#767676;}
-.mArea dd{ position:relative; top:-16px; margin:0 15px;}
-.mArea dd .button{ position:absolute; top:-35px; right:0;}
+.mArea dl{ position:relative; background:#fff;}
+.mArea dt{ position:relative; padding:7px 15px; font-weight:bold; color:#fff; background:#555; border-top:1px solid #444;}
+.mArea dd{ margin:0 15px; padding:5px 0;}
+.mArea dd .buttonDrEditor{ position:absolute; top:8px; right:10px;}
 .mArea .eArea{ border:0; padding:0;}
 
-.mArea .paginate{ position:relative; text-align:center; padding:0; font-size:10px; color:#9096a9; *zoom:1;}
+.mArea .paginate{ position:relative; width:100px; margin:0 auto; text-align:center; padding:0; font-size:12px; color:#fff; *zoom:1;}
 .mArea .paginate:after{ content:""; display:block; clear:both;}
-.mArea .paginate button{ width:17px; height:18px; padding:0; background:transparent url(../img/buttonPaginate.gif) no-repeat 0 0; cursor:pointer; border:0; vertical-align:middle;}
+.mArea .paginate button{ width:17px; height:17px; padding:0; background:transparent url(../img/buttonPaginate.gif) no-repeat 0 0; cursor:pointer; border:0; vertical-align:middle;}
 .mArea .paginate button span{ position:absolute; width:0; height:0; font-size:0; line-height:0; overflow:hidden; visibility:hidden; z-index:-1;}
 .mArea .paginate .prev{ float:left; background-position:left top;}
 .mArea .paginate .next{ float:right; background-position:right top;}
