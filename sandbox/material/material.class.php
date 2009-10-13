@@ -8,9 +8,7 @@
 
     class material extends ModuleObject {
 
-
 		function material(){
-
 		}
 
 		/**
