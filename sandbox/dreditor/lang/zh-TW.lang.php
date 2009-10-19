@@ -59,7 +59,19 @@
 	$lang->edit->more = '更多';
 	$lang->edit->move_button = 'Move Button';
 
+	$lang->edit->material = 'Ingredients';
+	$lang->edit->insert = 'Insert the ingredient to content';
+	$lang->edit->close_materials = 'Close';
     $lang->edit->no_materials = 'There is no writting ingredient.';
     $lang->edit->msg_no_selected_object = 'There is no selected object.';
     $lang->edit->msg_insert_value = 'Please input the value.';
+
+	$lang->edit->close_help_q1 = 'Shortcuts';
+	$lang->edit->close_help_a1 = 'Numbers \'1~9\' are assigned as shurtcuts for paragraphs.';
+	$lang->edit->close_help_q2 = 'Select a pargraph';
+	$lang->edit->close_help_a2 = 'You may select a paragraph by \'clikcing\' it, or using keyboard \'UP-DOWN\'.';
+	$lang->edit->close_help_q3 = 'Edit the selected paragraph.';
+	$lang->edit->close_help_a3 = 'Press \'Enter\' or \'Double-Click\' the paragraph, or click \'Edit\' button.';
+	$lang->edit->close_help_q4 = 'Move the selected paragraph';
+	$lang->edit->close_help_a4 = 'By \'Ctrl+(Up-Down)\' or \'Drag &amp; Drop\'.';
 ?>
