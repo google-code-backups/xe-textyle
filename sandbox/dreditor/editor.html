@@ -73,7 +73,46 @@
 					<input type="hidden" />
 					<div class="txEditor">
 						<ul class="toolbar tool">
-							<li class="strong xpress_xeditor_ui_bold"><button type="button"><span>{$lang->edit->bold}</span></button></li>
+							<li class="xpress_xeditor_ui_undo undo"><button type="button" title="Ctrl+Z:{$lang->edit->undo}"><span>{$lang->edit->undo}</span></button></li>
+							<li class="xpress_xeditor_ui_redo redo"><button type="button" title="Ctrl+Y:{$lang->edit->redo}"><span>{$lang->edit->redo}</span></button></li>
+							<li class="vRule xpress_xeditor_ui_fontName">
+								<select class="xpress_xeditor_ui_fontName_select">
+									<option value="">{$lang->edit->fontname}</option>
+									<!--@foreach($lang->edit->fontlist as $key=>$obj)-->
+									<option value="{$key}" style="font-family:{$key}">{$obj}</option>
+									<!--@end-->
+								</select>
+							</li>
+							<li class="fSize xpress_xeditor_ui_fontSize">
+								<select class="xpress_xeditor_ui_fontSize_select">
+									<option>{$lang->edit->fontsize}</option>
+									<option value="9px" class="font9px">9px</option>
+									<option value="10px" class="font10px">10px</option>
+									<option value="11px" class="font11px">11px</option>
+									<option value="12px" class="font12px">12px</option>
+									<option value="14px" class="font14px">14px</option>
+									<option value="16px" class="font16px">16px</option>
+									<option value="18px" class="font18px">18px</option>
+									<option value="20px" class="font20px">20px</option>
+									<option value="24px" class="font24px">24px</option>
+									<option value="28px" class="font28px">28px</option>
+									<option value="32px" class="font32px">32px</option>
+									<option value="36px" class="font36px">36px</option>
+								</select>
+							</li>
+							<li class="xpress_xeditor_ui_lineHeight">
+								<select class="xpress_xeditor_ui_lineHeight_select">
+									<option value="">{$lang->edit->lineheight}</option>
+									<option value="1">100%</option>
+									<option value="1.2">120%</option>
+									<option value="1.4">140%</option>
+									<option value="1.6">160%</option>
+									<option value="1.8">180%</option>
+									<option value="2">200%</option>
+								</select>
+							</li>
+
+							<li class="strong vRule xpress_xeditor_ui_bold"><button type="button"><span>{$lang->edit->bold}</span></button></li>
 							<li class="em xpress_xeditor_ui_italic"><button type="button"><span>{$lang->edit->italic}</span></button></li>
 							<li class="underline xpress_xeditor_ui_underline"><button type="button"><span>{$lang->edit->underline}</span></button></li>
 							<li class="del xpress_xeditor_ui_lineThrough"><button type="button"><span>{$lang->edit->strike}</span></button></li>
@@ -93,23 +132,6 @@
 
 								</div>
 								<!-- /URL 레이어 -->
-							</li>
-							<li class="fSize xpress_xeditor_ui_fontSize">
-								<select class="xpress_xeditor_ui_fontSize_select">
-									<option>{$lang->edit->fontsize}</option>
-									<option value="9px" class="font9px">9px</option>
-									<option value="10px" class="font10px">10px</option>
-									<option value="11px" class="font11px">11px</option>
-									<option value="12px" class="font12px">12px</option>
-									<option value="14px" class="font14px">14px</option>
-									<option value="16px" class="font16px">16px</option>
-									<option value="18px" class="font18px">18px</option>
-									<option value="20px" class="font20px">20px</option>
-									<option value="24px" class="font24px">24px</option>
-									<option value="28px" class="font28px">28px</option>
-									<option value="32px" class="font32px">32px</option>
-									<option value="36px" class="font36px">36px</option>
-								</select>
 							</li>
 							<li class="fColor xpress_xeditor_ui_fontColor">
 								<button type="button" title="{$lang->edit->help_fontcolor}"><span>{$lang->edit->fontcolor}</span></button>
@@ -191,6 +213,18 @@
 							<li class="bgColor xpress_xeditor_ui_bgColor">
 								<button type="button" title="{$lang->edit->help_fontbgcolor}"><span>{$lang->edit->fontbgcolor}</span></button>
 								<div class="xpress_xeditor_bgcolor_layer" style="display:none;"></div>
+							</li>
+							<li class="left vRule xpress_xeditor_ui_justifyleft">
+								<button type="button" title="{$lang->edit->help_align_left}"><span>{$lang->edit->align_left}</span></button>
+							</li>
+							<li class="center xpress_xeditor_ui_justifycenter">
+								<button type="button" title="{$lang->edit->help_align_center}"><span>{$lang->edit->align_center}</span></button>
+							</li>
+							<li class="right xpress_xeditor_ui_justifyright">
+								<button type="button" title="{$lang->edit->help_align_right}"><span>{$lang->edit->align_right}</span></button>
+							</li>
+							<li class="justify xpress_xeditor_ui_justifyfull">
+								<button type="button" title="{$lang->edit->help_align_justify}"><span>{$lang->edit->align_justify}</span></button>
 							</li>
 						</ul>
 						<div class="inputRichText xpress_xeditor_editing_area_container">

@@ -945,7 +945,9 @@ dr.txtWriter = $.Class({
 		ed.registerPlugin(new xe.XE_EditingArea_WYSIWYG(oWYSIWYGIFrame));
 		ed.registerPlugin(new xe.XpressRangeManager(oWYSIWYGIFrame));
 		ed.registerPlugin(new xe.XE_ExecCommand(oWYSIWYGIFrame));
+		ed.registerPlugin(new xe.XE_FontNameWithSelectUI(elAppContainer));
 		ed.registerPlugin(new xe.XE_FontSizeWithSelectUI(elAppContainer));
+		ed.registerPlugin(new xe.XE_LineHeightWithSelectUI(elAppContainer));
 		ed.registerPlugin(new xe.XE_ColorPalette(elAppContainer));
 		ed.registerPlugin(new xe.XE_FontColor(elAppContainer));
 		ed.registerPlugin(new xe.XE_BGColor(elAppContainer));
