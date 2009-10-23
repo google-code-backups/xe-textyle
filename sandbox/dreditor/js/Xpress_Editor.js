@@ -4539,42 +4539,16 @@ xe.XE_SCharacter = jQuery.Class({
 		if(this.bSCharSetDrawn[i]) return;
 		this.bSCharSetDrawn[i] = true;
 
-		var len = this.charSet[i].length;
-		var aLI = new Array(len);
+		var charList = jQuery(this.aSCharList[i]).empty();
+		var button, span;		
 
-		this.aSCharList[i].innerHTML = '';
-
-		var button, span;
-		$(this.aSCharList).each(function(){
-			var li  = $('<li>');
-			var btn = $('<button type="button"><span>'+unescape(this.charSet[i][ii])+'</span></button>');
+		jQuery(this.charSet[i]).each(function(idx,ch){			
+			var li  = jQuery('<li>');
+			var btn = jQuery('<button type="button"><span>'+unescape(ch)+'</span></button>');
 
 			li.append(btn);
-			$(this).append(li);
+			charList.append(li);
 		});
-		/*
-		for(var ii=0; ii<len; ii++){
-			aLI[ii] = $('<li>');
-			button  = $('<button type="button"><span>'+unescape(this.charSet[i][ii])+'</span></button>');
-			aLI[ii].append(button);
-			$(this.aSCharList[i]).append(aLI[ii]);
-
-			if(this.bIE){
-				button = document.createElement('<BUTTON type="button">');
-			}else{
-				button = document.createElement("BUTTON");
-				button.type = "button";
-			}
-
-			//button = $('<button type="button"><span>'+unescape(this.charSet[i][ii])+'</span></button>');
-			//span = document.createElement("SPAN");
-			//span.innerHTML = unescape(this.charSet[i][ii]);
-			//button.appendChild(span);
-
-			//aLI[ii].appendChild(button);
-			//this.aSCharList[i].appendChild(aLI[ii]);
-		}
-		*/
 
 		// enable this after Jindo framework is updated
 //		this.oApp.exec("ATTACH_HOVER_EVENTS", [jQuery(">LI>BUTTON", this.aSCharList[i])]).get();
