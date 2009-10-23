@@ -260,6 +260,9 @@
 .txEditor .toolbar li button:focus,
 .txEditor .toolbar li button.active{ border:1px solid #ddd;}
 .txEditor .toolbar li button span{ position:absolute; width:0; height:0; overflow:hidden; font-size:0; line-height:0; z-index:-1; visibility:hidden;}
+.txEditor .toolbar li select{ font-size:12px; vertical-align:middle; height:21px;}
+.txEditor .toolbar li.undo button{ width:23px; background-position:center -210px;}
+.txEditor .toolbar li.redo button{ width:23px; background-position:center -240px;}
 .txEditor .toolbar li.strong button{ width:23px; background-position:center 0;}
 .txEditor .toolbar li.em button{ width:23px; background-position:center -30px;}
 .txEditor .toolbar li.underline button{ width:23px; background-position:center -60px;}
@@ -267,11 +270,15 @@
 .txEditor .toolbar li.vRule{ padding-left:10px; margin:0 5px; background:url(../img/vrEditorToolbar.gif) no-repeat left center;}
 .txEditor .toolbar li.aHref button{ width:23px; background-position:center -120px;}
 .txEditor .toolbar li.fSize{ margin-right:5px;}
-.txEditor .toolbar li.fSize select{ font-size:12px; vertical-align:middle;}
 .txEditor .toolbar li.fColor{ margin-right:5px; z-index:2;}
 .txEditor .toolbar li.fColor button{ width:28px; background-position:center -150px;}
 .txEditor .toolbar li.bgColor{ margin-right:5px; z-index:1;}
 .txEditor .toolbar li.bgColor button{ width:28px; background-position:center -180px;}
+.txEditor .toolbar li.left button{ width:23px; background-position:center -270px;}
+.txEditor .toolbar li.center button{ width:23px; background-position:center -300px;}
+.txEditor .toolbar li.right button{ width:23px; background-position:center -330px;}
+.txEditor .toolbar li.justify button{ width:23px; background-position:center -360px;}
+.txEditor .toolbar li.character button{ width:23px; background-position:center -390px;}
 .txEditor .toolbar li.list button{ width:23px; background-image:url(../img/buttonListToolbar.gif); background-repeat:no-repeat;}
 .txEditor .toolbar li.disc button{ background-position:center 0;}
 .txEditor .toolbar li.circle button{ background-position:center -30px;}
@@ -281,9 +288,7 @@
 .txEditor .toolbar li.alphaUpper button{ background-position:center -150px;}
 .txEditor .toolbar li.romanLower button{ background-position:center -180px;}
 .txEditor .toolbar li.romanUpper button{ background-position:center -210px;}
-.txEditor .toolbar li.indent button{ background-position:center -240px;}
-.txEditor .toolbar li.outdent button{ background-position:center -270px;}
-.txEditor .toolbar li .uri{ display:none; position:absolute; left:10px; top:25px; padding:15px 20px; border:1px solid #ddd; background:#fff; *zoom:1;}
+.txEditor .toolbar li .uri{ display:none; position:absolute; left:10px; top:25px; padding:15px 20px; border:1px solid #ddd; background:#fff; *zoom:1; *white-space:nowrap;}
 .txEditor .toolbar li .uri h3{ font-size:12px; margin:0 0 .5em 0;}
 .txEditor .toolbar li .uri .link{ border:1px solid #ccc; padding:3px 4px; height:14px; font-size:12px; width:200px; font-size:11px; color:#666;}
 .txEditor .toolbar li .uri p{ margin:.5em 0;}
@@ -326,7 +331,6 @@
 .txEditor .toolbar li.character .layer p input{ padding:3px 0 0 4px; margin:0 4px 0 0; width:300px; _width /**/:306px; height:16px; _height /**/:20px; border:1px solid #acacac; border-right:1px solid #dadada; border-bottom:1px solid #dadada;}
 .txEditor .toolbar li.character .layer p button{ position:relative; *top:1px; width:38px; height:21px; background:url(../img/btn_layer_confirm.gif) no-repeat;}
 
-.txEditor .toolbar .fSize select { height:21px }
 .txEditor .toolbar .font9px { font-size:9px }
 .txEditor .toolbar .font10px { font-size:10px }
 .txEditor .toolbar .font11px { font-size:11px }
