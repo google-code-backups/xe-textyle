@@ -226,6 +226,35 @@
 							<li class="justify xpress_xeditor_ui_justifyfull">
 								<button type="button" title="{$lang->edit->help_align_justify}"><span>{$lang->edit->align_justify}</span></button>
 							</li>
+							<li class="character vRule xpress_xeditor_ui_sCharacter">
+								<button type="button" title="{$lang->edit->special_character}"><span>{$lang->edit->special_character}</span></button>
+								<!-- 특수문자 레이어 -->
+								<div class="layer xpress_xeditor_sCharacter_layer" style="display:none">
+									<h3>{$lang->edit->insert_special_character}</h3>
+									<button type="button" class="close" title="{$lang->edit->close_special_character}"><span>{$lang->edit->close_special_character}</span></button>
+									<ul class="nav">
+										<li><a href="#character1" class="on">{$lang->edit->symbol}</a></li>
+										<li><a href="#character2">{$lang->edit->number_unit}</a></li>
+										<li><a href="#character3">{$lang->edit->circle_bracket}</a></li>
+										<li><a href="#character4">{$lang->edit->korean}</a></li>
+										<li><a href="#character5">{$lang->edit->greece},{$lang->edit->Latin}</a></li>
+										<li><a href="#character6">{$lang->edit->japan}</a></li>
+									</ul>
+									<ul style="display: block;" id="character1" class="list"></ul>
+									<ul style="display: none;" id="character2" class="list"></ul>
+									<ul style="display: none;" id="character3" class="list"></ul>
+									<ul style="display: none;" id="character4" class="list"></ul>
+									<ul style="display: none;" id="character5" class="list"></ul>
+									<ul style="display: none;" id="character6" class="list"></ul>
+									<p>
+										<label for="preview">{$lang->edit->selected_symbol}</label>
+										<input id="preview" name="" type="text" />
+										<button type="button" title="{$lang->confirm}"><span>{$lang->confirm}</span></button>
+									</p>
+									<button type="button" class="close" title="{$lang->edit->close_special_character}"><span>{$lang->edit->close_special_character}</span></button>
+								</div>
+								<!-- /특수문자 레이어 -->
+							</li>
 						</ul>
 						<div class="inputRichText xpress_xeditor_editing_area_container">
 							<iframe src="{$editor_path}blank.html" frameborder="0" scrolling="yes" title="{$lang->edit->richtext_area}"></iframe>

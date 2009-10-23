@@ -4545,22 +4545,36 @@ xe.XE_SCharacter = jQuery.Class({
 		this.aSCharList[i].innerHTML = '';
 
 		var button, span;
+		$(this.aSCharList).each(function(){
+			var li  = $('<li>');
+			var btn = $('<button type="button"><span>'+unescape(this.charSet[i][ii])+'</span></button>');
+
+			li.append(btn);
+			$(this).append(li);
+		});
+		/*
 		for(var ii=0; ii<len; ii++){
-			aLI[ii] = document.createElement("LI");
+			aLI[ii] = $('<li>');
+			button  = $('<button type="button"><span>'+unescape(this.charSet[i][ii])+'</span></button>');
+			aLI[ii].append(button);
+			$(this.aSCharList[i]).append(aLI[ii]);
 
 			if(this.bIE){
-				button = document.createElement("<BUTTON type='button'>");
+				button = document.createElement('<BUTTON type="button">');
 			}else{
 				button = document.createElement("BUTTON");
 				button.type = "button";
 			}
-			span = document.createElement("SPAN");
-			span.innerHTML = unescape(this.charSet[i][ii]);
-			button.appendChild(span);
 
-			aLI[ii].appendChild(button);
-			this.aSCharList[i].appendChild(aLI[ii]);
+			//button = $('<button type="button"><span>'+unescape(this.charSet[i][ii])+'</span></button>');
+			//span = document.createElement("SPAN");
+			//span.innerHTML = unescape(this.charSet[i][ii]);
+			//button.appendChild(span);
+
+			//aLI[ii].appendChild(button);
+			//this.aSCharList[i].appendChild(aLI[ii]);
 		}
+		*/
 
 		// enable this after Jindo framework is updated
 //		this.oApp.exec("ATTACH_HOVER_EVENTS", [jQuery(">LI>BUTTON", this.aSCharList[i])]).get();

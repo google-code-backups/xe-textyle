@@ -951,6 +951,7 @@ dr.txtWriter = $.Class({
 		ed.registerPlugin(new xe.XE_ColorPalette(elAppContainer));
 		ed.registerPlugin(new xe.XE_FontColor(elAppContainer));
 		ed.registerPlugin(new xe.XE_BGColor(elAppContainer));
+		ed.registerPlugin(new xe.XE_SCharacter(elAppContainer));
 		ed.registerPlugin(new xe.XE_FontSetter(this.getFontFamily(), this.getFontSize()));
 
 		if (!$.browser.msie && !$.browser.opera) {
