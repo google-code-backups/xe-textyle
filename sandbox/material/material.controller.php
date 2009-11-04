@@ -141,7 +141,13 @@
 
         function procMaterialsDelete(){
             $module_srl = Context::get('module_srl');
-            if(!$module_srl) return new Object(-1,'msg_invalid_request');
+            if(!$module_srl) return new Object(-1, 'msg_invalid_request');
+
+            // 권한 체크
+            $oModuleModel = &getModel('module');
+            $logged_info = $logged_info = Context::get('logged_info');
+            if(!$oModuleModel->isSiteAdmin($logged_info)) return new Object(-1, 'msg_not_permitted');
+
             return $this->deleteMaterials($module_srl);
         }
 
