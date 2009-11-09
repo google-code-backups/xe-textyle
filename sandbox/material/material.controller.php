@@ -153,7 +153,7 @@
 
         function deleteMaterials($module_srl){
             $args->module_srl = $module_srl;
-            $output = executeQuery('material.deleteMaterial', $args);
+            $output = executeQuery('material.deleteMaterials', $args);
             $this->setMessage('success_deleted');
 
             // trigger 호출 (after)
