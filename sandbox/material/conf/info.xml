@@ -10,7 +10,7 @@
 	<description xml:lang="vi">Module thu nhập những thành phần từ những trang Web khác.</description>
     <description xml:lang="zh-CN">收集文章素材的模块。</description>
     <description xml:lang="jp">ネタを収集するモジュールです。</description>
-    <version>0.9</version>
+    <version>0.9.1</version>
     <date>2009-11-11</date>
     <category>package</category>
     <author email_address="" link="http://textyle.xpressengine.net">
