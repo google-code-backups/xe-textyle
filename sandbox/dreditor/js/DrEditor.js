@@ -153,7 +153,7 @@ xe.DrEditor = $.Class({
 
 		window.onbeforeunload = function(e){
 			if(self.hidden_content != self.getContent()){
-				var msg = editorRelKeys[self.seq]["primary"].form.msg_close_before_write.value;
+				var msg = msg_close_before_write || '';
 				var ie = ('\v'=='v');
 				if(!ie){
 					return msg;
