@@ -87,7 +87,6 @@ xe.DrEditor = $.Class({
 		// 단락 Sortable Drag & Drop
 		this.editArea.sortable({
 			items : '> div.eArea',
-			opacity : 0.8,
 			placeholder: 'xe_dr_placeholder',
 			handle : 'li.move > button',
 			axis   : 'y',
@@ -346,6 +345,7 @@ xe.DrEditor = $.Class({
 	},
 
 	onParaOut : function(e) {
+        if(e) { e.preventDefault(); return; }
 		//if (e && $.browser.msie && $(e.toElement).is('div.editorContainer')) return;
 		this.tools.parent().removeClass('eFocus');
 		this.dummyArea.append(this.tools);
@@ -846,6 +846,8 @@ dr.txtWriter = $.Class({
 		var tx   = this.obj.find('div.txEditor');
 		// 이미 할당된 이벤트를 제거하기 위해 에디터를 DOM에서 제거한 후 추가한다.
 		tx.prev().after(tx.remove());
+
+		if(this.oEdit) this.oEdit.exec('MSG_APP_DESTORY');
 
 		this.$super.showNext();
 		this.oEdit = null;
