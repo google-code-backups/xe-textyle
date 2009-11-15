@@ -56,10 +56,22 @@
 	$lang->edit->toc = 'Nội dung';
 	$lang->edit->toc_explain ='Nếu tạo một nhóm các nội dung, tiêu đề của từng đoạn sẽ tự động được tạo.';
 
+	$lang->edit->material = 'Thành phần';
+	$lang->edit->insert = 'Chèn thành phần vào bài viết.';
+	$lang->edit->close_materials = 'Đóng';
 	$lang->edit->more = 'Xem thêm';
 	$lang->edit->move_button = 'Chuyển nút bấm';
 
     $lang->edit->no_materials = 'Không có bài viết được lưu trữ.';
     $lang->edit->msg_no_selected_object = 'Không có mục nào được chọn.';
     $lang->edit->msg_insert_value = 'Xin hãy nhập giá trị.';
+	
+	$lang->edit->close_help_q1 = 'Phím tắt';
+	$lang->edit->close_help_a1 = 'Phím tắt chỉ có thể sử dụng các số từ  \'1~9\'.';
+	$lang->edit->close_help_q2 = 'Chọn đoạn văn bản';
+	$lang->edit->close_help_a2 = 'Bạn có thể chọn một đoạn văn bằng cách \'Bấm\' vào nó, hoặc sử dụng phím \'Lên - Xuống\' trên bàn phím.';
+	$lang->edit->close_help_q3 = 'Sửa đoạn văn bản đã chọn.';
+	$lang->edit->close_help_a3 = 'Bấm \'Enter\' hoặc \'nhấp đúp\', hoặc bấm \'Sửa\' lên đoạn văn bản để sửa.';
+	$lang->edit->close_help_q4 = 'Di chuyển đoạn văn bản đã chọn.';
+	$lang->edit->close_help_a4 = 'Nhấn tổ hợp \'Ctrl+(Up/Down)\' hoặc \'Kéo &amp; Thả\'.';
 ?>
