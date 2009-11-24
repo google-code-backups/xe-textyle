@@ -1325,6 +1325,7 @@ dr.imgWriter = $.Class({
 							width:data.resized_info.info[0],
 							height:data.resized_info.info[1]
 							});
+                        if(!self.oImg.attr('rawsrc'))self.oImg.attr('rawsrc', self.src);
 					}
 				});
 			}		
@@ -1358,10 +1359,14 @@ dr.imgWriter = $.Class({
 		var img = eArea.find('img');
 		var srl = img.attr('class').match(/xe_file_srl_(\d+)/);
 		// 폼 리셋
-		this.reset();
+		//this.reset();
 
 		// 시리얼 찾고
 		this.srl = srl?srl[1]:'';
+
+        // 원본이미지경로 찾기
+		if(img.attr('rawsrc'))
+		    this.oImg.attr('rawsrc', img.attr('rawsrc'));
 
 		// 사진 보여주기
 		this.showResize('', img.attr('src'));
@@ -1381,6 +1386,7 @@ dr.imgWriter = $.Class({
 		this.srl=null;
 		this.oImg.attr('src','');
 		this.oImg.attr('class','');
+        this.oImg.removeAttr('rawsrc');
 		this.oDesc.val('').blur();
 		this.oCite.val('').blur();
 		this.oResize.removeClass('open');
