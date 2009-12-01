@@ -2,7 +2,7 @@
 	/**
 	 * @file   modules/editor/skins/dreditor/lang/zh-TW.lang.php
 	 * @author sol <sol@ngleader.com> 翻譯：royallin
-	 * @brief  단락에디터 언어팩正體中文語言
+	 * @brief  段落編輯器正體中文語言
 	 **/
 
 
@@ -23,24 +23,24 @@
 	$lang->edit->image = '圖片';
 	$lang->edit->find_image = '尋找圖片';
 	$lang->edit->uploading = '上傳中...';
-	$lang->edit->uploading_info = 'You can upload to maximum %sMB';
+	$lang->edit->uploading_info = '最大可上傳 %sMB';
 	$lang->edit->uploaded_image = 'User Uploaded Image';
 
 	$lang->edit->image_width = '圖片寬度';
 	$lang->edit->resize = 'Resize';
 	$lang->edit->resize_info = 'A new copy of image in inputted size will be created. Original image will still remain';
 	$lang->edit->resize_error = 'Please input smaller size than original image size';
-	$lang->edit->insert_image_explain = 'Please input description. <a>, <strong>, <em> tags are available.';
+	$lang->edit->insert_image_explain = '請輸入圖片簡介。可使用 <a>, <strong>, <em> 等標籤。';
 
 	$lang->edit->mov ='影片';
 	$lang->edit->insert_mov = 'Please input multimedia insertion code starts with <object> or <embed>';
-	$lang->edit->insert_mov_explain = 'Please input description. <a>, <strong>, <em> tags are available.';
+	$lang->edit->insert_mov_explain = '請輸入影片簡介。可使用 <a>, <strong>, <em> 等標籤。';
 
 	$lang->edit->file = '檔案';
 	$lang->edit->file_select = 'Please select a file to upload';
 	$lang->edit->file_uploadinfo = 'You can upload to maximum %sMB each, %sMB total';
 	$lang->edit->file_total ='Total <strong class="filecount">{total_filecount}</strong>file(s)';
-	$lang->edit->insert_file_explain ='Please input description';
+	$lang->edit->insert_file_explain ='請輸入檔案簡介。';
 
 	$lang->edit->hr = 'HR';
 	$lang->edit->hr_simple= 'Simple HR';
@@ -61,7 +61,7 @@
 
 	$lang->edit->material = 'Ingredients';
 	$lang->edit->insert = 'Insert the ingredient to content';
-	$lang->edit->close_materials = 'Close';
+	$lang->edit->close_materials = '關閉';
     $lang->edit->no_materials = 'There is no writting ingredient.';
     $lang->edit->msg_no_selected_object = 'There is no selected object.';
     $lang->edit->msg_insert_value = 'Please input the value.';
