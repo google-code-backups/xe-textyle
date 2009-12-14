@@ -680,7 +680,7 @@ dr.baseWriter = $.Class({
 		this.editor.notify('SHOW_EDITOR', [this.name]);
 	},
 	hide : function() {
-		this.obj.removeClass('open');
+		this.obj.removeClass('open').removeClass('here');
 		xe.DrEditor.baseWriter.prev = null;
 
 		if (this.eArea){
