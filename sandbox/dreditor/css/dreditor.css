@@ -23,55 +23,22 @@
 .wToolbar ul:after{ content:""; display:block; clear:both;}
 .wToolbar li{ position:relative; float:left; list-style:none; width:11.1%; *width:11%; _margin-top:0; _margin-right:-1px;}
 .wToolbar li.more{ float:none; position:absolute; top:1px; right:-70px; width:60px; height:auto; background:url(../img/vrToolbarMore.gif) repeat-y;}
-.wToolbar li button{ position:relative; padding:0; width:100%; height:67px; border:0; background:transparent; cursor:pointer; font-size:11px; color:#44506a; background-image:url(../img/iconWritingToolbar.gif); background-repeat:no-repeat;}
-.wToolbar li button span{ display:inline-block; padding-top:40px; height:27px;}
+.wToolbar li button{ position:relative; padding:0; width:100%; height:67px; border:0; background:transparent; cursor:pointer; font-size:11px; color:#44506a; text-align:center;}
+.wToolbar li button span{ display:block;}
 .wToolbar li.more button{ width:60px;}
 .wToolbarContainer.more li.more button{ height:136px;}
-.wToolbarContainer.more li.more button span{ padding-bottom:59px; _padding-bottom:55px;}
 
-.wToolbar.hx button,
-.wToolbar.txt button,
-.wToolbar.link button,
-.wToolbar.list button,
-.wToolbar.blockquote button,
-.wToolbar.img button,
-.wToolbar.mov button,
-.wToolbar.file button,
-.wToolbar.hr button,
-.wToolbar.index button,
-.wToolbar.material button,
-.wToolbar.help button{ opacity:.5; filter:alpha(opacity=50);}
+.wToolbar.wtActive li button{ opacity:.5; filter:alpha(opacity=50);}
 
-.wToolbar.hx li.hx button,
-.wToolbar.txt li.txt button,
-.wToolbar.link li.link button,
-.wToolbar.list li.list button,
-.wToolbar.blockquote li.blockquote button,
-.wToolbar.img li.img button,
-.wToolbar.mov li.mov button,
-.wToolbar.file li.file button,
-.wToolbar.hr li.hr button,
-.wToolbar.index li.index button,
-.wToolbar.material li.material button,
-.wToolbar.help li.help button,
+.wToolbar.wtActive li.active button,
 .wToolbar li button:hover,
 .wToolbar li button:active,
 .wToolbar li button:focus{ opacity:1; filter:alpha(opacity=100);}
 
-.wToolbar li.hx button{ background-position:center top;}
-.wToolbar li.txt button{ background-position:center -100px;}
-.wToolbar li.link button{ background-position:center -200px;}
-.wToolbar li.list button{ background-position:center -300px;}
-.wToolbar li.blockquote button{ background-position:center -400px;}
-.wToolbar li.img button{ background-position:center -500px;}
-.wToolbar li.mov button{ background-position:center -600px;}
-.wToolbar li.file button{ background-position:center -700px;}
-.wToolbar li.hr button{ background-position:center -800px;}
-.wToolbar li.index button{ background-position:center -1000px;}
-.wToolbar li.material button{ background-position:center -1100px;}
-.wToolbar li.help button{ background-position:center -1800px;}
-.wToolbar li.more button{ background-position:center -2070px;}
-.wToolbarContainer.more li.more button{ background-position:center -1870px;}
+.wToolbar li.more button{ background:url(../img/buttonWtMore.gif) no-repeat center -150px;}
+.wToolbar li.more button span{ line-height:67px;}
+.wToolbarContainer.more li.more button{ background-position:center 50px;}
+.wToolbarContainer.more li.more button span{ line-height:136px;}
 
 .wToolbar li .dragable{ position:absolute; display:none; bottom:48px; right:0; padding:0; border:0; width:20px; height:20px; overflow:hidden; background:url(../img/iconMovable.gif) no-repeat center center !important; cursor:move; font-size:0; line-height:0;}
 .wToolbarContainer.more li.hover .dragable{ _display:block;}

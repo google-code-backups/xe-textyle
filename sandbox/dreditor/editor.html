@@ -540,7 +540,7 @@
 			<div class="wToolbarContainer">
 			<!-- class="wToolbarContainer" | class="wToolbarContainer more" -->
 				<div class="wToolbar">
-				<!-- class="wToolbar" | class="wToolbar hx | txt | link | list | blockquote | img | mov | file | hr | index | material | help" -->
+				<!-- class="wToolbar" | class="wToolbar wtActive" -->
 					<ul>
 						<!--@if($_COOKIE['DrEditorToolbar'])-->
 							{@$_DrEditorToolbar=$_COOKIE['DrEditorToolbar'];}
@@ -549,32 +549,32 @@
 						<!--@end-->
 						<!--@foreach(explode(',',$_DrEditorToolbar) as $k => $v)-->
 							<!--@if($v=='hx')-->
-							<li class="hx"><button type="button"><span>{$lang->edit->title_title}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<li><button type="button"><img src="drcomponents/hx/button.gif" alt="{$lang->edit->title_title}" /><span>{$lang->edit->title_title}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@elseif($v=='txt')-->
-							<li class="txt"><button type="button"><span>{$lang->edit->text}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<li><button type="button"><img src="drcomponents/txt/button.gif" alt="{$lang->edit->text}" /><span>{$lang->edit->text}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@elseif($v=='link')-->
-							<li class="link"><button type="button"><span>{$lang->edit->link}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<li><button type="button"><img src="drcomponents/link/button.gif" alt="{$lang->edit->link}" /><span>{$lang->edit->link}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@elseif($v=='list')-->
-							<li class="list"><button type="button"><span>{$lang->edit->list}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<li><button type="button"><img src="drcomponents/list/button.gif" alt="{$lang->edit->list}" /><span>{$lang->edit->list}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@elseif($v=='blockquote')-->
-							<li class="blockquote"><button type="button"><span>{$lang->edit->blockquote}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<li><button type="button"><img src="drcomponents/blockquote/button.gif" alt="{$lang->edit->blockquote}" /><span>{$lang->edit->blockquote}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@elseif($v=='img')-->
-							<li class="img"><button type="button"><span>{$lang->edit->image}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<li><button type="button"><img src="drcomponents/img/button.gif" alt="{$lang->edit->image}" /><span>{$lang->edit->image}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@elseif($v=='mov')-->
-							<li class="mov"><button type="button"><span>{$lang->edit->mov}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<li><button type="button"><img src="drcomponents/mov/button.gif" alt="{$lang->edit->mov}" /><span>{$lang->edit->mov}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@elseif($v=='file')-->
 							<!--@if($allow_fileupload)-->
-							<li class="file"><button type="button"><span>{$lang->edit->file}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<li><button type="button"><img src="drcomponents/file/button.gif" alt="{$lang->edit->file}" /><span>{$lang->edit->file}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@end-->
 							<!--@elseif($v=='hr')-->
-							<li class="hr"><button type="button"><span>{$lang->edit->hr}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<li><button type="button"><img src="drcomponents/hr/button.gif" alt="{$lang->edit->hr}" /><span>{$lang->edit->hr}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@elseif($v=='index')-->
-							<li class="index"><button type="button"><span>{$lang->edit->toc}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<li><button type="button"><img src="drcomponents/index/button.gif" alt="{$lang->edit->toc}" /><span>{$lang->edit->toc}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@elseif($v=='material')-->
-							<li class="material"><button type="button"><span>{$lang->edit->material}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<li><button type="button"><img src="drcomponents/material/button.gif" alt="{$lang->edit->material}" /><span>{$lang->edit->material}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@end-->
 						<!--@end-->
-						<li class="help"><button type="button"><span>{$lang->edit->help}</span></button></li>
+						<li><button type="button"><img src="drcomponents/help/button.gif" alt="{$lang->edit->help}" /><span>{$lang->edit->help}</span></button></li>
 						<li class="more"><button type="button"><span>{$lang->edit->more}</span></button></li>
 					</ul>
 					<span class="cap capLeft"></span>
