@@ -116,7 +116,7 @@ var Fold = xe.createPlugin('Fold', {
 		} else if (bef) {
 			$(bef).after(cfg.editor);
 		} else {
-			cfg.editor.prependTo(configs[seq].writeArea);
+			cfg.editor.appendTo(configs[seq].editArea);
 		}
 		cfg.editor.show().find('input[type=text]:first').focus();
 	},
@@ -151,6 +151,7 @@ var Fold = xe.createPlugin('Fold', {
 			}
 			cfg.marker = fold;
 			this.assign_class(seq);
+			this.cast('SAVE_PARAGRAPH', [seq]);
 		}
 
 		box.show();

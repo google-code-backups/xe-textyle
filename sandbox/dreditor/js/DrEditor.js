@@ -22,7 +22,7 @@ var DrEditor = xe.createApp('DrEditor', {
 			var _writeArea = _container.find('>div>div.writeArea:first');
 			var _editArea  = _container.find('>div>div.editorArea:first');
 			var _dummyArea = $('<div class="dummy" style="display:none">').appendTo(_writeArea);
-			var _blankBox  = _writeArea.find('>div.blank:first').appendTo(_editArea);
+			var _blankBox  = _writeArea.find('>div.blank:first').prependTo(_writeArea);
 			var _toolbar   = _writeArea.find('>.wToolbarContainer>div.wToolbar');
 			var _editTool  = _writeArea.find('ul.eTool').remove();
 			var _hookerBtn = $('<button type="button" class="_hookerBtn">').attr('seq', seq).css({position:'absolute',width:'1px',height:'1px',left:'-2000px',top:0}).prependTo(_container);
@@ -291,6 +291,17 @@ var DrEditor = xe.createApp('DrEditor', {
 			this.selLast   = null;
 		});
 	},
+	API_SAVE_PARAGRAPH : function(sender, params) {
+		var seq = params[0];
+		var _editor = params[1];
+		var _box    = params[2];
+		var _type   = (params[3]||'').toLowerCase();
+
+		if (_type) _box.addClass('eArea _'+_type).attr('type', _type);
+		if (_editor && _box) _editor.before(_box);
+
+		configs[seq].blankBox.hide();
+	},
 	API_DELETE_PARAGRAPH : function(sender, params) {
 		var self   = this;
 		var seq    = params[0];
@@ -305,6 +316,7 @@ var DrEditor = xe.createApp('DrEditor', {
 				.hide('fast', function(){
 					$(this).remove();
 					self.cast('TOOLBAR_REPOSITION', [seq]);
+					if (!configs[seq].editArea.children('div.eArea:first').length) configs[seq].blankBox.show();
 				});
 
 			if (next) this.cast('SELECT_PARAGRAPH', [seq, next, next, next]);
@@ -535,7 +547,7 @@ var HeaderWriter = xe.createPlugin('HeaderWriter', {
 		} else if (bef) {
 			$(bef).after(cfg.editor);
 		} else {
-			cfg.editor.prependTo(configs[seq].writeArea);
+			cfg.editor.appendTo(configs[seq].editArea);
 		}
 		cfg.editor.show().find('input[type=text]:first').focus();
 	},
@@ -546,14 +558,14 @@ var HeaderWriter = xe.createPlugin('HeaderWriter', {
 		var box  = cfg.editor.prev('div._hx:hidden');
 
 		if(save) {
-			var newBox  = $('<div class="eArea _hx">').attr('type', 'hx');
+			var newBox  = $('<div>');
 			var id      = box.children(header_tag).attr('id');
 			var tagName = cfg.inputLevel.filter(':checked').val();
 
 			newBox.html('<'+tagName+' id="'+id+'"></'+tagName+'>').children(':first').text(cfg.inputHead.val());
 
 			box.remove();
-			cfg.editor.before(box=newBox);
+			this.cast('SAVE_PARAGRAPH', [seq, cfg.editor, box=newBox, 'HX']);
 		} else {
 			box.show();
 		}
@@ -693,7 +705,7 @@ var TextWriter = xe.createPlugin('TextWriter', {
 		ed.registerPlugin(new xe.XE_FontColor(elAppContainer));
 		ed.registerPlugin(new xe.XE_BGColor(elAppContainer));
 		ed.registerPlugin(new xe.XE_SCharacter(elAppContainer));
-//		ed.registerPlugin(new xe.XE_FontSetter(this.getFontFamily(), this.getFontSize()));
+		//ed.registerPlugin(new xe.XE_FontSetter(this.getFontFamily(), this.getFontSize()));
 
 		if (!$.browser.msie && !$.browser.opera) {
 			ed.registerPlugin(new xe.XE_WYSIWYGEnterKey(oWYSIWYGIFrame));
@@ -770,7 +782,7 @@ var TextWriter = xe.createPlugin('TextWriter', {
 			bef.after(cfg.editor);
 			cfg.textarea.val( '<p><br /></p>' );
 		} else {
-			cfg.editor.prependTo(configs[seq].writeArea);
+			cfg.editor.appendTo(configs[seq].editArea);
 			cfg.textarea.val( '<p><br /></p>' );
 		}
 
@@ -791,12 +803,11 @@ var TextWriter = xe.createPlugin('TextWriter', {
 		var box  = cfg.editor.prev('div._txt:hidden');
 
 		if(save) {
-			var newBox  = $('<div class="eArea _txt">').attr('type', 'txt');
-			newBox.html( cfg.xpress.getIR() );
+			var newBox  = $('<div>').html( cfg.xpress.getIR() );
 			box.remove();
-			cfg.editor.before(box=newBox);
+			this.cast('SAVE_PARAGRAPH', [seq, cfg.editor, box=newBox, 'TXT']);
 		} else {
-			if (box) box.show();
+			box.show();
 		}
 		cfg.editor.hide().appendTo(configs[seq].writeArea);
 
@@ -866,7 +877,7 @@ var QuoteWriter = xe.createPlugin('QuoteWriter', {
 			cfg.source.val(box.find('cite').html());
 		} else {
 			self.cast('RESET_EDITOR', [seq, cfg.editor, 'QUOTE']);
-			cfg.editor.prependTo(configs[seq].writeArea);
+			cfg.editor.appendTo(configs[seq].editArea);
 		}
 		cfg.editor.show().find('textarea').focus();
 	},
@@ -877,13 +888,13 @@ var QuoteWriter = xe.createPlugin('QuoteWriter', {
 		var box  = cfg.editor.prev('div._quote:hidden');
 
 		if (save && $.trim(cfg.textarea.val())) {
-			var newBox = $('<div class="eArea _quote">').attr('type', 'quote');
+			var newBox = $('<div>');
 			var quote  = $('<blockquote class="citation"></blockquote>').append( $('<p>').text(cfg.textarea.val()) ).appendTo(newBox);
 
 			if($.trim(cfg.source.val())) quote.append('<cite>').html(translateCite(cfg.source.val()));
 
 			box.remove();
-			cfg.editor.before(box=newBox);
+			this.cast('SAVE_PARAGRAPH', [seq, cfg.editor, box=newBox, 'QUOTE']);
 		} else {
 			box.show();
 		}
@@ -962,9 +973,9 @@ var MovieWriter = xe.createPlugin('MovieWriter', {
 		var val;
 
 		if (save && (val=$.trim(cfg.textarea.val())) ) {
-			var newBox = $('<div class="eArea _movie">').attr('movie').html( val );
+			var newBox = $('<div>').html( val );
 			box.remove();
-			cfg.editor.before(box=newBox);
+			this.cast('SAVE_PARAGRAPH', [seq, cfg.editor, box=newBox, 'MOVIE']);
 		} else {
 			box.show();
 		}
@@ -1215,7 +1226,7 @@ var ImageWriter = xe.createPlugin('ImageWriter', {
 		} else if (bef) {
 			bef.after(cfg.editor);
 		} else {
-			cfg.editor.prependTo(configs[seq].writeArea);
+			cfg.editor.appendTo(configs[seq].editArea);
 		}
 
 		cfg.editor.show();
@@ -1228,7 +1239,7 @@ var ImageWriter = xe.createPlugin('ImageWriter', {
 
 		if (save && cfg.image.attr('src')) {
 			var align = cfg.align.find('input[type=radio]:checked').val();
-			var newBox = $('<div class="eArea _img">').attr('type', 'img');
+			var newBox = $('<div>');
 			var img    = $('<img>').attr('src', cfg.image.attr('src'));
 			var rawsrc = cfg.image.attr('rawsrc');
 
@@ -1243,7 +1254,7 @@ var ImageWriter = xe.createPlugin('ImageWriter', {
 			if (filesrl) img.addClass('xe_filesrl_'+filesrl);
 			
 			box.remove();
-			cfg.editor.before(box=newBox);
+			this.cast('SAVE_PARAGRAPH', [seq, cfg.editor, box=newBox, 'IMG']);
 		} else {
 			box.show();
 		}
@@ -1376,7 +1387,7 @@ var MaterialWriter = xe.createPlugin('MaterialWriter', {
 		if (bef) {
 			bef.after(cfg.editor);
 		} else {
-			cfg.editor.prependTo(configs[seq].writeArea);
+			cfg.editor.appendTo(configs[seq].editArea);
 		}
 
 		cfg.editor.show();
@@ -1391,7 +1402,7 @@ var MaterialWriter = xe.createPlugin('MaterialWriter', {
 			var newBox = cfg.to_save.children('div.eArea');
 
 			cfg.to_save = null;
-			cfg.editor.before(box=newBox);
+			this.cast('SAVE_PARAGRAPH', [seq, cfg.editor, box=newBox, '']);
 		} else {
 			box = cfg.editor.prev('div.eArea');
 		}
@@ -1606,7 +1617,7 @@ var FileWriter = xe.createPlugin('FileWriter', {
 		} else if (bef) {
 			bef.after(cfg.editor);
 		} else {
-			cfg.editor.prependTo(configs[seq].writeArea);
+			cfg.editor.appendTo(configs[seq].editArea);
 		}
 
 		cfg.editor.show();
@@ -1633,7 +1644,7 @@ var FileWriter = xe.createPlugin('FileWriter', {
 		var cite = $.trim(cfg.cite.val());
 
 		if (save && file.length) {
-			var newBox = $('<div class="eArea _file">').attr('type', 'file');
+			var newBox = $('<div>');
 			var dl     = $('<dl class="attachedFile"><dt>'+xe.lang.attached_files+'</dt></dl>').appendTo(newBox);
 
 			$.each(file, function(){
@@ -1655,7 +1666,7 @@ var FileWriter = xe.createPlugin('FileWriter', {
 			if (cite && cite != cfg.cite.attr('title')) newBox.append($('<p class="cite">').html(translate(cite)));
 
 			box.remove();
-			cfg.editor.before(box=newBox);
+			this.cast('SAVE_PARAGRAPH', [seq, cfg.editor, box=newBox, 'FILE']);
 		} else {
 			box.show();
 		}
@@ -1917,7 +1928,7 @@ var ListWriter = xe.createPlugin('ListWriter', {
 		} else if (bef) {
 			bef.after(cfg.editor);
 		} else {
-			cfg.editor.prependTo(configs[seq].writeArea);
+			cfg.editor.appendTo(configs[seq].editArea);
 		}
 
 		this.add_event(seq);
@@ -1930,7 +1941,7 @@ var ListWriter = xe.createPlugin('ListWriter', {
 		var box  = cfg.editor.prev('div._list:hidden');
 
 		if (save) {
-			var newBox = $('<div class="eArea _list">').attr('type', 'list');
+			var newBox = $('<div');
 			var list   = cfg.list.children('ul,ol').appendTo(newBox);
 			var div    = $('<div>');
 			list.find('input[type=text]').each(function(){
@@ -1949,7 +1960,7 @@ var ListWriter = xe.createPlugin('ListWriter', {
 
 			if (list.children('li').length) {
 				box.remove();
-				cfg.editor.before(box=newBox);
+				this.cast('SAVE_PARAGRAPH', [seq, cfg.editor, box=newBox, 'LIST']);
 			}
 		}
 
@@ -2044,7 +2055,7 @@ var LinkWriter = xe.createPlugin('LinkWriter', {
 		} else if (bef) {
 			bef.after(cfg.editor);
 		} else {
-			cfg.editor.prependTo(configs[seq].writeArea);
+			cfg.editor.appendTo(configs[seq].editArea);
 		}
 
 		cfg.editor.show();
@@ -2060,7 +2071,7 @@ var LinkWriter = xe.createPlugin('LinkWriter', {
 		var desc = $.trim(cfg.desc.val());
 
 		if (save && text && url) {
-			var newBox = $('<div class="eArea _link">').attr('type', 'link');
+			var newBox = $('<div>');
 			var para   = $('<p class="link">').appendTo(newBox)
 					.append( $('<strong>').text( text ) )
 					.append( $('<a>').attr('href', url).text(url) );
@@ -2068,7 +2079,7 @@ var LinkWriter = xe.createPlugin('LinkWriter', {
 			if (desc) para.append('<br>').append( $('<span class="desc">').text(desc) );
 
 			box.remove();
-			cfg.editor.before(box=newBox);
+			this.cast('SAVE_PARAGRAPH', [seq, cfg.editor, box=newBox, 'LINK']);
 		}
 
 		cfg.editor.hide().appendTo(configs[seq].writeArea);
