@@ -29,7 +29,7 @@ var DrEditor = xe.createApp('DrEditor', {
 
 			//  toolbar buttons
 			_toolbar
-				.mouseenter(function(){ _toolbar.parent().addClass('hover'); })
+				.mouseenter(function(){ if(!_editArea.children('div.wArea:visible').length) _toolbar.parent().addClass('hover'); })
 				.mouseleave(function(){ _toolbar.parent().removeClass('hover'); })
 				.find('button')
 				.hover(
@@ -45,11 +45,24 @@ var DrEditor = xe.createApp('DrEditor', {
 					}
 				);
 
+			// _blankBox
+			_blankBox.dblclick(function(){ self.cast('OPEN_EDITOR', [seq, null, null, 'HX']); });
+
 			// toolbar button sortable
-			_toolbar.children('ul:first').sortable({
-				items  : '>li',
-				start : function(){ alert('!'); }
-			});
+			_toolbar.children('ul:first')
+				.sortable({items  : '>li'})
+				.bind('sortstop', function(){
+					var tools = [];
+					_toolbar.find('li').each(function(){
+						tools.push($(this).attr('class'));
+					});
+
+					tools = tools.join(',');
+					if (tools) {
+						var expires = (new Date()).getTime() + 7 * 24 * 3600 * 1000; // one week
+						document.cookie = 'DrEditorToolbar='+tools+'; expires='+(new Date(expires)).toGMTString()+'; path=/;';
+					}
+				});
 
 			// focus hook event
 			_hookerBtn
@@ -77,7 +90,8 @@ var DrEditor = xe.createApp('DrEditor', {
 				hookerBtn : _hookerBtn,
 				selFirst  : null,
 				selLast   : null,
-				content   : ''
+				content   : '',
+				last_type : ''
 			});
 
 			if (!self.last_seq) self.last_seq = seq;
@@ -106,7 +120,10 @@ var DrEditor = xe.createApp('DrEditor', {
 
 			var seq = para.parents('form:first')[0].elements['editor_sequence'].value;
 			
-			if (configs[seq].editArea.children('div.wArea:visible').length) return true;
+			if (configs[seq].editArea.children('div.wArea:visible').length) {
+				// save
+				if (configs[seq].last_type) self.cast('CLOSE_EDITOR', [seq, true, configs[seq].last_type]);
+			}
 
 			// multiple selection
 			if (event.shiftKey) {
@@ -150,7 +167,7 @@ var DrEditor = xe.createApp('DrEditor', {
 
 			if (type) {
 				self.cast('CLEAR_SELECTION');
-				self.cast('OPEN_'+type.toUpperCase()+'_EDITOR', [seq, para]);
+				self.cast('OPEN_EDITOR', [seq, para, null, type]);
 			}
 		});
 
@@ -334,10 +351,10 @@ var DrEditor = xe.createApp('DrEditor', {
 
 		var editor = configs[seq].editArea.children('div.wArea:visible');
 		if (editor.length) {
-			if (editor.is(type)) this.cast('CLOSE_'+type+'_EDITOR', [seq, false]);
+			if (editor.is(type)) this.cast('CLOSE_EDITOR', [seq, false, type]);
 		} else {
 			this.cast('CLEAR_SELECTION');
-			this.cast('OPEN_'+type+'_EDITOR', [seq, null, selbox]);
+			this.cast('OPEN_EDITOR', [seq, null, selbox, type]);
 		}
 	},
 	API_ONSCROLL : function(sender, params) {
@@ -353,6 +370,8 @@ var DrEditor = xe.createApp('DrEditor', {
 		var key = event.keyCode, ctrl = event.ctrlKey, meta = event.metaKey, alt = event.altKey, shift = event.shiftKey;
 		var ENTER = 13, UP = 38, DOWN = 40, DEL = 46;
 		var selection, para, prev, next;
+
+		if ($(event.target).is(':text')) return false;
 
 		// hit enter to edit a selected paragraph
 		if(key == ENTER) {
@@ -441,8 +460,8 @@ var DrEditor = xe.createApp('DrEditor', {
 
 		// save and cancel button
 		var _buttons = editor.find('div.buttonArea button');
-		_buttons.eq(0).click(function(){ self.cast('CLOSE_'+type+'_EDITOR', [seq, true]); }); // save button
-		_buttons.eq(1).click(function(){ self.cast('CLOSE_'+type+'_EDITOR', [seq, false]); }); // cancel button
+		_buttons.eq(0).click(function(){ self.cast('CLOSE_EDITOR', [seq, true, type]); }); // save button
+		_buttons.eq(1).click(function(){ self.cast('CLOSE_EDITOR', [seq, false, type]); }); // cancel button
 
 		// textbox default value
 		editor.find('input[type=text],textarea')
@@ -452,6 +471,23 @@ var DrEditor = xe.createApp('DrEditor', {
 
 		// set default checkbox and radio button
 		editor.find('input[type=checkbox],input[type=radio]').filter(':checked').addClass('_default_check');
+
+		
+		editor.find('input,textarea').keydown(function(event){
+			var ESC = 27, ENTER = 13;
+
+			if (!configs[seq].last_type) return true;
+
+			if (event.keyCode == 27) {
+				self.cast('CLOSE_EDITOR', [seq, false, configs[seq].last_type]);
+				return false;
+			}
+
+			if (event.ctrlKey && event.keyCode == ENTER) {
+				self.cast('CLOSE_EDITOR', [seq, true, configs[seq].last_type]);
+				return false;
+			}
+		});
 	},
 	API_RESET_EDITOR : function(sender, params) {
 		var seq    = params[0];
@@ -473,6 +509,28 @@ var DrEditor = xe.createApp('DrEditor', {
 		var new_top     = Math.min( ((view_bottom - toolbar.height()) - offset_top - 5), 0);
 
 		if (old_top != new_top) toolbar.css('top', new_top+'px');
+	},
+	API_OPEN_EDITOR : function(sender, params) {
+		var seq  = params[0];
+		var box  = params[1]; // selection to edit
+		var bef  = params[2]; // selection to be before this editor
+		var type = params[3];
+
+		this.cast('OPEN_'+type.toUpperCase()+'_EDITOR', [seq, box, bef]);
+		configs[seq].last_type = type;
+		configs[seq].blankBox.hide();
+	},
+	API_CLOSE_EDITOR : function(sender, params) {
+		var seq  = params[0];
+		var save = !!params[1];
+		var type = params[2];
+
+		this.cast('CLOSE_'+type.toUpperCase()+'_EDITOR', [seq, save]);
+		if (configs[seq].editArea.children('div.eArea').length) {
+			configs[seq].blankBox.hide();
+		} else {
+			configs[seq].blankBox.show();
+		}
 	}
 });
 var editor = new DrEditor;
