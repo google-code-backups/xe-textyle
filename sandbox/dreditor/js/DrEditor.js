@@ -1,934 +1,673 @@
-// extends jQuery object
-(function($){$.extend({Class:function(def){function c(){if(typeof this.$super!='undefined')this.$super.$this=this;this.$init.apply(this,arguments)}if(!def.$init)def.$init=function(){};c.prototype=def;c.constructor=c;c.extend=Class_extend;return c;},$:function(id){if(typeof id=='string'){if(id.substring(0,1)=='<')return $(id).get(0);return $('#'+id).get(0);}else{return id;}},fnBind:function(fn,th){var args=$.makeArray(arguments);args.shift();args.shift();return function(){var a=args.concat($.makeArray(arguments));return fn.apply(th,a);};}});$.browser.nVersion=parseFloat($.browser.version);function Class_extend(superDef){var Super=superDef.prototype;this.prototype.$super={};function bind(fn){return function(){return fn.apply(this.$this,arguments)}};for(var x in Super){if(!Super.propertyIsEnumerable(x)||x=='$init')continue;if(typeof this.prototype[x]=='undefined')this.prototype[x]=Super[x];this.prototype.$super[x]=$.isFunction(Super[x])?bind(Super[x]):Super[x]};var f=this.prototype.$init,sf=Super.$init;this.prototype.$init=function(){var a=$.makeArray(arguments);sf.apply(this,a);f.apply(this,a)};return this}})(jQuery);
-
+/**
+ * 단락에디터 Paragraph Editor
+ * @author taggon (gonom9@gmail.com)
+ */
 (function($){
-if (typeof window.xe == 'undefined') window.xe = {};
 
-// 에디터 스킨용 자바스크립트
-xe.DrEditor = $.Class({
-	writers   : {},
-	container : null,
-	editArea  : null,
-	writeArea : null,
-	dummyArea : null,
-	toolbar   : null,
-	blankBox  : null,
-	dragging  : false,
-	fontFamily: null,
-	fontSize  : null,
-	handlers  : {},
-	writer :null,
-	cur_focus : null,
+var configs = {};
 
-	$init : function(editor_sequence) {
+var DrEditor = xe.createApp('DrEditor', {
+	loaded   : false,
+	last_seq : 0,
+	init : function() {
+	},
+	getConfig : function(seq) {
+		return configs[seq] || {};
+	},
+	API_ONREADY : function(sender, params) {
 		var self = this;
-		var ctn  = this.container = $('div#DrEditor'+editor_sequence);
-		var edt  = this.editArea  = ctn.find('>div>div.editorArea');
-		var wrt  = this.writeArea = ctn.find('>div>div.writeArea');
-		var dum  = this.dummyArea = $('<div class="dummy" style="display:none">').appendTo(wrt);
 
-		// BlankBox = 글이 없을 때 보여주는 글상자
-		this.blankBox = wrt.find('>div.blank').appendTo(edt);
-
-		// 편집기 시퀀스 저장
-		this.seq = editor_sequence;
-
-		// 편집 이벤트 핸들러
-		this.$onParaEdit   = $.fnBind(this.onParaEdit, this);
-		this.$onParaDelete = $.fnBind(this.onParaDelete, this);
-		this.$onParaMoving = $.fnBind(this.onParaMoving, this);
-		this.$onParaMoveEnd = $.fnBind(this.onParaMoveEnd, this);
-
-		// 편집도구
-		var etool = wrt.find('ul.eTool');
-		var tools = this.tools = etool.prev().nextAll().clone();
-		this.dummyArea.append(tools);
-		etool.remove();
-
-		// 하단 버튼
-		this.toolbar = wrt.find('>.wToolbarContainer>div.wToolbar').css('position', 'relative');
-		this.toolbar.find('button').click(function(e){ self.onTBClick(e, this); }).mouseover(function(){$(this).parent().addClass('hover');}).mouseout(function(){$(this).parent().removeClass('hover')});
-		this.toolbar.find('li.more button').click(function(e){
-			var wtc = $(this).parents('div.wToolbarContainer');
-			var isExpand = wtc.hasClass('more');
-
-			if (isExpand) {
-				wtc.removeClass('more');
-			}else{
-				wtc.addClass('more');
-			}
-
-			self.notify('MORE', [!isExpand]);
-		});
-
-		// 스크롤 이벤트 캡쳐
-		var scrollTimer = null;
-		$(window).scroll(function(){
-			if (scrollTimer) clearTimeout(scrollTimer);
-			scrollTimer = setTimeout(function(){
-				scrollTimer = null;
-				self.notify('SCROLL')
-			}, 50);
-		});
-		// 이미지를 다 읽어들이면 강제로 스크롤 이벤트 발생
-		$(window).load(function(){ self.notify('LOAD'); });
-
-		// Notify 핸들러
-		this.regNotifyHandler(this);
-
-		// 편집도구 보이기 / 가리기
-		//edt.mouseover($.fnBind(this.onParaMouseOver,this)).mouseleave($.fnBind(this.onParaMouseLeave,this)).dblclick($.fnBind(this.onParaDblclick,this));
-		edt.click($.fnBind(this.onParaClick,this)).blur($.fnBind(this.onParaOut,this)).dblclick($.fnBind(this.onParaDblclick,this));
-
-		$(document).keydown($.fnBind(this.onkeydown,this)).click(function(e){
-			if(!$(e.target).is('div.eArea') && $(e.target).parents('div.eArea').length==0) self.onParaOut();
-		});
-
-		// 단락 Sortable Drag & Drop
-		this.editArea.sortable({
-			items : '> div.eArea',
-			placeholder: 'xe_dr_placeholder',
-			handle : 'li.move > button',
-			axis   : 'y',
-			cursor : 'default',
-			cancel : 'input'
-		}).bind('sortreceive', function(event,orgEvent,ui) {
-			var img = ui.item.find('dd>div.xe_dr_img img');
-			if(img.size()>0){
-				var tmp_img = $('<img>').attr('src',img.attr('src').replace(/(\.S)(\.[^\.]*)$/,'$2')).load(function(){
-					$(this).attr({
-						width : this.width
-						,height : this.height
-					}).replaceAll(img);
-				});
-
-			}
-			var mov = ui.item.find('dd>div.xe_dr_mov object');
-			if(mov.size()>0){
-				mov.attr({width:mov.attr('_width'),
-						height:mov.attr('_height')});
-				mov.find('embed').attr({width:mov.attr('_width'),
-						height:mov.attr('_height')});
-			}
-
-			ui.item.before(ui.item.find('dd>div.eArea')).remove();
-			self.editArea.find('>div.eArea').addClass('xe_content');
-			self.notify('SORT_RECEIVE', [ui]);
-		})
-		.bind('sortupdate', function(event,orgEvent,ui){
-		 })
-		.bind('sortstart', function(){ 
-			 self.dragging = true;
-			 self.notify('SORT_START');
-		 })
-		.bind('sortstop',  function(event,orgEvent,ui){ 
-			self.dragging = false;
-			self.notify('SORT_STOP', [ui]);
-		});
-
-		// 단락 타입버튼 Sortable
-		wrt.find('>.wToolbarContainer>div.wToolbar ul').sortable({
-			items : '>li',
-			handle : '.dragable',
-			opacity : 0.8
-		}).bind('sortstop',  function(event,orgEvent,ui){
-			var serial = [];
-			$(this).find('>li').each(function(i){
-				var css = $.trim($(this).attr('class').replace('hover',''));
-				if(css!='more') serial.push(css);
-			});
-			var expire = new Date();
-			expire.setTime(expire.getTime()+ (7000 * 24 * 3600000));
-			xSetCookie('DrEditorToolbar', serial.join(','), expire);
-
-		}); 
-
-		// 글감 보관함 컨텐트 읽어오기
-		//this.matTpl = mtr.find('dl').remove(); // 템플릿을 미리 떼놓는다.
-		//this.loadMaterial();
-
-
-		this.hidden_content=self.getContent();
-
-		window.onbeforeunload = function(e){
-			if(self.hidden_content != self.getContent()){
-				var msg = msg_close_before_write || '';
-				var ie = ('\v'=='v');
-				if(!ie){
-					return msg;
-				}else{
-					window.event.returnValue = msg;
-				}
-			}
-		}
-
-		// submit 체크
-		var frm = ctn.parents('form');
-		var fn  = frm[0].onsubmit;
-
-		frm[0].onsubmit = function(e){ return self.onFormSubmit(e || window.event, fn) };
-	},
-
-	getContent : function() {
-		var aContent = [];
-
-		// 일단 도구들을 옮긴다.
-		this.dummyArea.append(this.tools);
-
-		this.editArea.find('> div.eArea').each(function(){
-            if(!/(^|\s)xe_dr_[a-z]+(\s|$)/.test(this.className)) return;
-			var t,html='', type = $.trim(this.className.match(/(^|\s)xe_dr_[a-z]+(\s|$)/)[0]);
-			if((t=$(this)).is('div.xe_dr_img')){
-				t=t.find('img');
-				t.attr({width:t.attr('_width'),height:t.attr('_height')}).removeAttr('_width').removeAttr('_height');
-			}
-			switch(type){
-				/*
-				case'xe_dr_file':
-					break;
-				case'xe_dr_hr':
-					break;
-				*/
-				default:
-					html = '<div class="eArea xe_content '+type+'">'+$(this).html()+'</div>';
-					break;
-			}
-
-			aContent.push(html);
-		});
-
-		return aContent.join('');
-	},
-
-    setFont : function(fontFamily, fontSize) {
-        this.fontFamily = fontFamily;
-        this.fontSize = fontSize;
-    },
-
-	setContent : function(sContent) {
-		var self    = this;
-		var unknown = null;
-		var div	     = $('<div>');
-		var nodes   = $('<div class="eArea xe_content"></div>'+sContent);
-
-		/**
-		 * nodes에서 <div>를 앞에 추가한 이유.
-		 * 텍스트만 있으면 노드로 만들어지지 않기 때문에, 더미 노드를 앞에 넣어 텍스트 노드가 사라지지 않도록 한다.
-		 */
-		var content = [];
-		nodes.slice(1).each(function(){
-			var t = $(this), d = $('<div class="eArea xe_content">');
-
-			if (this.nodeType != 1 && this.nodeType != 3) return;
-
-			if (this.nodeType != 3 && !t.is('div.eArea,img,blockquote,object,embed,h3,h4,h5,p')) {
-				// 알 수 없는 타입의 컨텐트는 죄다 unknown에 몰아둔다.(unknown은 텍스트 문단으로 취급)
-				if (!unknown) unknown = $('<div class="eArea xe_content xe_dr_txt">');
-				unknown.append(this);
-			} else if (unknown) {
-				content.push(unknown);
-				unknown = null;
-			}
-
-			if (this.nodeType == 3) {
-				d.addClass('xe_dr_txt').append($('<p>').text(this.nodeValue));
-			} else if (t.is('div.eArea')) {
-				d = t;
-			} else if (t.is('p')) {
-				d.append(t).addClass('xe_dr_txt');
-			} else if (t.is('h3,h4,h5')) {
-				d.append(t).addClass('xe_dr_hx');
-			} else if (t.is('img')) {
-				d.append($('<p>').append(t)).addClass('xe_dr_img');
-			} else if (t.is('blockquote')) {
-				d.append(t).addClass('xe_dr_blockquote');
-			} else if (t.is('object,embed')) {
-				d.append(t).addClass('xe_dr_mov');
-			}
-
-			content.push(d);
-		});
-
-		this.blankBox.remove();
-		this.editArea.empty();
-		$.each(content,function(){ self.editArea.append(this) });
-
-		if (!content.length) this.editArea.append(this.blankBox);
-	},
-
-	notify : function(msg, args){
-		var h = this.handlers;
-
-		msg = msg.toUpperCase();
-		if (!h[msg] || !h[msg].length) return false;
-
-		var i, len = h[msg].length;
-		for(i=0; i < len; i++) {
-			h[msg][i][0].apply(h[msg][i][1], args || []);
-		}
-
-		return true;
-	},
-
-	addWriter : function(writer) {
-		if (!writer || !writer.prototype.name) return false;
-
-		writer = new writer(this.writeArea, this);
-        writer.setFont(this.fontFamily, this.fontSize);
-
-		this.writers[writer.name] = writer;
-		this.regNotifyHandler(writer);
-	},
-
-	regNotifyHandler : function(obj) {
-		var rx  = /^\$ON_(\w+)$/, e;
-		for(var m in obj) {
-			if (rx.test(m)) {
-				e = RegExp.$1.toUpperCase();
-				if (typeof this.handlers[e] == 'undefined') this.handlers[e] = [];
-				this.handlers[e].push([obj[m], obj]);
-			}
-		}
-	},
-
-	// 하단 툴바 버튼 클릭
-	onTBClick : function(e, sender) {
-		var btn  = $(sender);
-		var type = $.trim(btn.parent().attr('class').replace('hover',''));
-
-		if (!this.writers[type]) return;
-
-		this.writers[type].reset();
-		if (this.cur_focus) {
-			this.writers[type].showNext();
-		} else {
-			this.writers[type].show();
-		}
-		this.scrollIntoView(this.writers[type].toObject());
-	},
-
-	onParaClick : function(e) {
-		this.onParaOut();
-
-		if (this.dragging) return;
-		if (this.writer) return;
-		var obj;
-		if(e){
-			obj = $(e.target).parents().andSelf().filter('div.eArea');
-		}else{
-			obj=this.cur_focus;
-		}
-		var par = this.tools.parent('div.eArea');
-
-		if (!obj.length) return;
-
-		if (par.get(0) === obj.get(0)) return;
-
-		this.editArea.find('.eFocus').removeClass('eFocus');
-		obj.addClass('eFocus').append(this.tools);
-		this.cur_focus = obj;
-
-		// 이벤트를 해제 후 재할당 - sort 할 때 이벤트가 사라지는 버그 때문
-		var sEvent = $.browser.msie?'mouseup':'click';
-
-		this.tools.find('li.edit > button').unbind(sEvent, this.$onParaEdit).bind(sEvent, this.$onParaEdit);
-		this.tools.find('li.delete > button').unbind(sEvent, this.$onParaDelete).bind(sEvent, this.$onParaDelete);
-
-		// 단락이 선택됐음을 알리는 메시지
-		this.notify('SELECT_PARAGRAPH', [obj.attr('_key_action')?true:false]);
-	},
-	onParaDblclick : function(e) {
-		if(this.writer) return;
-		var obj = $(e.target).parents('div.eArea');
-		if(obj.length==0) return;		
-		this.onParaEdit(e);
-	},
-
-	onParaOut : function(e) {
-        if(e) { e.preventDefault(); return; }
-		//if (e && $.browser.msie && $(e.toElement).is('div.editorContainer')) return;
-		this.tools.parent().removeClass('eFocus');
-		this.dummyArea.append(this.tools);
-		this.cur_focus = null;
-	},
-
-	onParaEdit : function(e) {
-		var type, eArea = e?this.tools.parent('div.eArea'):this.cur_focus;
-		eArea.removeClass('eFocus');
-		type = /xe_dr_(\w+)/.test(eArea.attr('class'))?RegExp.$1:'txt';
-		if (this.writers[type]) {
-			this.writers[type].reset();
-			this.writers[type].show(eArea);
-		}
-	},
-
-	onParaDelete : function(e) {
-		var eArea;
-		if(e) eArea=this.tools.parent('div.eArea');
-		else{
-			if(confirm(delete_dr_confirm_msg)) eArea=this.cur_focus;
-			else return;
-		}
-		var type = /xe_dr_(\w+)/.test(eArea.attr('class'))?RegExp.$1:'txt';
-
-		this.dummyArea.append(this.tools);
-		eArea.remove();
-
-		this.notify('DEL_CONTENT', [type]);
-		this.cur_focus = null;
-	},
-
-	onkeydown : function(e) {
-		if(typeof(e.keyCode) !='undefined'){
-			var eArea = this.editArea.find('>div.eArea');
-			
-			// not editing mode
-			if(!this.writer){
-				// up /down
-				//if(!$(e.srcElement?e.srcElement:e.originalTarget).is('input,textarea') && ( e.keyCode == 38||e.keyCode==40) ){
-				if( e.keyCode == 38||e.keyCode==40 ){
-					if(e.ctrlKey){
-						if(!this.cur_focus || this.cur_focus.length==0) return;
-						this.cur_focus[e.keyCode==38?'prev':'next']()[e.keyCode==38?'before':'after'](this.cur_focus);
-	
-						this.notify('SORT_STOP');
-						this.notify('MOVE_PARAGRAPH');
-					}else{
-						if(e.keyCode ==38){
-							if(this.cur_focus && this.cur_focus.length>0){
-								var p = this.cur_focus.prev();
-								if(p.length>0) this.cur_focus = p;
-							}else {
-								this.cur_focus = eArea.eq(eArea.length-1);
-							}
-						}else{
-							if(this.cur_focus && this.cur_focus.length>0){
-								var n = this.cur_focus.next();
-								if(n.length>0) this.cur_focus = n;
-							}else {
-								this.cur_focus = eArea.eq(0);
-							}
-						}
-						this.cur_focus.attr('_key_action', true).click().removeAttr('_key_action');
-					}
-
-//					this.notify('');
-
-					return false;
-
-				// 1~9,0 key	
-				}else if(e.keyCode>=48 && e.keyCode<=58){
-					if( !this.writer && !$(e.target).is('input,textarea')){
-						var writer_index = e.keyCode-49==-1?9:e.keyCode-49;
-						var writer_name = this.writeArea.find('>.wToolbarContainer>div.wToolbar li').eq(writer_index).attr('class');
-						if(writer_name && this.writers[writer_name]){
-							if(this.cur_focus && this.cur_focus.length>0){
-								this.writers[writer_name].reset();
-								this.writers[writer_name].showNext();
-								return false;
-							}else{
-								this.writers[writer_name].reset();
-								this.writers[writer_name].show();
-								return false;
-							}
-						}
-					}
-
-				// enter
-				}else if(e.keyCode==13){
-					if(!$(e.srcElement?e.srcElement:e.originalTarget).is('input,textarea') && this.cur_focus && this.cur_focus.length>0){
-						this.onParaEdit();
-						return false;
-					}
-				// delete
-				}else if(!$(e.srcElement?e.srcElement:e.originalTarget).is('input,textarea,button') && e.keyCode==46){
-					if(this.cur_focus && this.cur_focus.length>0){
-						var cur_focus;
-						if(this.cur_focus.next().length>0){
-							cur_focus = this.cur_focus.next();
-						}else if(this.cur_focus.prev().length>0){
-							cur_focus = this.cur_focus.prev();
-						}
-
-						this.onParaDelete();
-						if((this.cur_focus = cur_focus) && this.cur_focus.length>0) this.cur_focus.click();
+		$.each(configs, function(seq, val){
+			var _container = $('div#DrEditor'+seq);
+			var _writeArea = _container.find('>div>div.writeArea:first');
+			var _editArea  = _container.find('>div>div.editorArea:first');
+			var _dummyArea = $('<div class="dummy" style="display:none">').appendTo(_writeArea);
+			var _blankBox  = _writeArea.find('>div.blank:first').appendTo(_editArea);
+			var _toolbar   = _writeArea.find('>.wToolbarContainer>div.wToolbar');
+			var _editTool  = _writeArea.find('ul.eTool').remove();
+			var _hookerBtn = $('<button type="button" class="_hookerBtn">').attr('seq', seq).css({position:'absolute',width:'1px',height:'1px',left:'-2000px',top:0}).prependTo(_container);
+
+			//  toolbar buttons
+			_toolbar
+				.mouseenter(function(){ _toolbar.parent().addClass('hover'); })
+				.mouseleave(function(){ _toolbar.parent().removeClass('hover'); })
+				.find('button')
+				.hover(
+					function(){ $(this).parent().addClass('hover'); },
+					function(){ $(this).parent().removeClass('hover'); }
+				)
+				.click(
+					function(event){					
+						var type = $(this).parent().attr('class').toUpperCase().split(' ')[0];
+						self.cast('CLICK_TOOLBUTTON', [seq, this, type]);
 						
 						return false;
 					}
+				);
+
+			// toolbar button sortable
+			_toolbar.children('ul:first').sortable({
+				items  : '>li',
+				start : function(){ alert('!'); }
+			});
+
+			// focus hook event
+			_hookerBtn
+				.focus (function(){
+					if(!_editArea.children('div.eFocus,div.wArea:visible').length) self.cast('SELECT_PARAGRAPH', [seq, _editArea.find('>div:first')]);
+					self.last_seq = seq;
+					this.blur();
+				});
+
+			// form submit event
+			$(configs[seq].form).submit(function(){
+				if (_editArea.children('div.wArea:visible').length || _writerArea.children('div.wArea:visible').length) {
+					return confirm(submit_without_saving_msg);
 				}
-			}
+			});
 
-		}
-	},
+			configs[seq] = $.extend(configs[seq], {
+				sequence  : seq,
+				container : _container,
+				editArea  : _editArea,
+				writeArea : _writeArea,
+				blankBox  : _blankBox,
+				toolbar   : _toolbar,
+				editTool  : _editTool,
+				hookerBtn : _hookerBtn,
+				selFirst  : null,
+				selLast   : null,
+				content   : ''
+			});
 
-	onFormSubmit : function(e, fn) {
-		// 열려있는 편집기 모듈이 있는지 확인
-		if (this.container.find('div.wArea').filter('.open').length) {
-			// 열려있는 모듈이 있다는 경고 표시
-			if (!confirm(submit_without_saving_msg)) return false;
-		}
+			if (!self.last_seq) self.last_seq = seq;
+		});
 
-		var bool = true;
-		if (typeof fn == 'function') bool = fn.apply(e.srcElement || e.target);
+		function getPara(event) {
+			var target = $(event.target);
+			if(target.is('a,button,:input')) return null;
 
-		return bool;
-	},
-	
-	// DocType이 XHTML Transitional이 아니라면 높이를 계산하는 과정에서 문제가 발생할 수 있습니다.
-	scrollIntoView : function(obj) {
-		if (!obj) return false;
+			var para = target.parents('div').andSelf().filter('div.eArea:first');
 
-		var oDoc  = document.documentElement;
-		var docHeight  = oDoc.clientHeight;
-		var objHeight  = obj.outerHeight();
-		var toolHeight = obj.find('ul.eTool').height() || 0;
-		var tbHeight   = this.toolbar.height();
-		var offsetTop  = parseInt(obj.offset().top);
-		var offsetBot  = offsetTop + objHeight;
-		var viewTop    = $(window).scrollTop();
-		var viewBottom = viewTop + docHeight - tbHeight;
-		
-		// 정상적인 경우는 리턴
-		if (((offsetTop - toolHeight) >= viewTop) && (offsetBot <= viewBottom)) return true;
+			return para.length?para:null;
+		};
 
-		// 위치 조정
-		if ((offsetTop - toolHeight) < viewTop) {
-			$(window).scrollTop( Math.max(offsetTop - toolHeight, 0) );
-		} else {
-			$(window).scrollTop( Math.min(offsetBot - docHeight + tbHeight + 10, Math.max(offsetTop - toolHeight, 0) ) );
-		}
+		function falseFunc(){ return false; };
 
-		this.notify('SCROLL');
-	},
+		$(document).mousedown(function(event) {
+			var target = $(event.target);
 
-	// 툴바의 위치가 항상 화면 하단에 있도록 재조정
-	toolbarRepos : function() {
-		var oDoc  = document.documentElement;
-		var docHeight  = oDoc.clientHeight;
-		var tbBox      = this.toolbar.parent();
-		var tbHeight   = tbBox.height();
-		var scrollTop  = $(window).scrollTop();
-		var viewBottom = scrollTop + docHeight;
-		var offsetTop  = 0;
-		var oldTop     = tbBox.css('top');
+			if(!is_left_click(event)) return true;
+			if(target.is('a,button,:input')) return true;
+			if(target.parents('div.wToolbar:first').length) return true;
 
-		tbBox.css('top', 0);
-		offsetTop = tbBox.offset().top;
+			var para = target.parents('div').andSelf().filter('div.eArea:first');
+			if(!para.length) return true;
 
-		// bottom of screen view
-		var newTop = ((viewBottom - tbHeight) - offsetTop - 5);
+			var seq = para.parents('form:first')[0].elements['editor_sequence'].value;
+			
+			if (configs[seq].editArea.children('div.wArea:visible').length) return true;
 
-		// 툴바의 위치는 문서의 범위를 넘지 않는다.
-		newTop = Math.min(newTop, 0)+'px';
+			// multiple selection
+			if (event.shiftKey) {
+				if (configs[seq].selFirst) {
+					var children  = configs[seq].editArea.children('div');
+					var nSelFirst = children.index(configs[seq].selFirst);
+					var nPara     = children.index(para);
+					var nStart    = Math.min(nSelFirst, nPara);
+					var nEnd      = Math.max(nSelFirst, nPara);
 
-		if (oldTop != newTop) {
-			tbBox.css('top', oldTop);
-			tbBox.animate({'top':newTop}, 200, 'swing');
-		}
-	},
-
-	$ON_SCROLL : function() {
-		this.toolbarRepos();
-	},
-
-	$ON_LOAD : function() {
-		this.toolbarRepos();
-	},
-
-	$ON_SHOW_EDITOR : function(name) {
-		this.editArea.sortable('disable');
-		if(this.cur_focus&&this.cur_focus.length>0)this.cur_focus.blur();
-
-		// 입력 설명 가리기
-		this.blankBox.remove();
-
-		// 화살표 추가
-		this.writeArea.find('>.wToolbarContainer>div.wToolbar').attr('class', 'wToolbar '+name);
-		this.writer=name;
-	},
-
-	$ON_HIDE_EDITOR : function() {
-		this.editArea.sortable('enable');
-
-		// 입력 설명 보이기
-		if (this.editArea.find('>div.eArea').length == 0) {
-			this.blankBox.appendTo(this.editArea);
-		}
-
-		// 화살표 해제
-		this.writeArea.find('>.wToolbarContainer>div.wToolbar').attr('class', 'wToolbar');
-		this.writer=null;
-
-	},
-
-	$ON_ADD_CONTENT : function(args) {
-		// 입력 설명 가리기
-		this.blankBox.remove();
-		this.writer = null;
-	},
-
-	$ON_DEL_CONTENT : function() {
-		// 입력 설명 보이기
-		if (this.editArea.find('>div.eArea').length == 0) {
-			this.blankBox.appendTo(this.editArea);
-		}
-	},
-
-	$ON_SORT_RECEIVE : function() {
-		// 입력 설명 가리기
-		this.blankBox.remove();
-	},
-
-	$ON_MOVE_PARAGRAPH : function() {
-		this.scrollIntoView(this.cur_focus);
-	},
-
-	$ON_SELECT_PARAGRAPH : function(bByKeyAction) {
-		if (bByKeyAction) this.scrollIntoView(this.cur_focus);
-	},
-	$ON_SORT_START : function() {
-		this.toolbar.css('display', 'none');
-	},
-	$ON_SORT_STOP : function() {
-		this.toolbar.css('display', '');
-	},
-	$ON_MORE : function(isExpanded) {
-		this.toolbarRepos();
-	}
-});
-
-var dr = xe.DrEditor;
-dr.baseWriter = $.Class({
-	name  : 'base',
-	obj   : null,
-	eArea : null,
-	wArea : null,
-	editor: null,
-	inputs: null,
-    fontFamily:  null,
-    fontSize:  null,
-	$init : function(writeArea, oEditor){
-		var self = this;
-
-		this.wArea  = writeArea;
-		this.editor = oEditor;
-
-		if (typeof xe.DrEditor.baseWriter.prev == 'undefined') xe.DrEditor.baseWriter.prev = null;
-		this.obj = writeArea.find('> div.wArea').filter('.'+this.name);
-
-		// Buttons
-		var buttons = this.obj.find('div.buttonArea button');
-		buttons.eq(0).click(function(e){ self.save(); return false; });
-		buttons.eq(1).click(function(e){ self.cancel(); return false; });
-
-		// Inputs
-		this.inputs = this.obj.find('input[type=text],textarea');
-		this.inputs
-			.focus(function(e){ self.onInputFocus(e,this) })
-			.blur(function(e){ self.onInputBlur(e,this) })
-			.each(function(){ if($(this).attr('title')) $(this).val($(this).attr('title')) })
-			.filter('input').keydown(function(e){ if (e.keyCode == 13) { self.save(e); return false } });
-	},
-	reset : function(){}, /*abstract*/
-	showNext : function(){
-		if (xe.DrEditor.baseWriter.prev){
-			xe.DrEditor.baseWriter.prev.hide();
-		}
-
-		this.obj.addClass('open').addClass('here');
-		xe.DrEditor.baseWriter.prev = this;
-
-		this.eArea = null;
-		this.editor.cur_focus.after(this.obj);
-		// 현재 폼에서 가장 먼저 나오는 텍스트 박스에 포커스를 준다.
-		var first = this.obj.find('textarea:first,input[type=text]:first').eq(0);
-		if (first.length) {
-			if ($.trim(first.val()) == '') first.val(first.attr('title'));
-			try { first.select().get(0).focus() } catch(e){};
-		}
-
-		this.editor.notify('SHOW_EDITOR', [this.name]);
-
-//		this.editor.cur_focus.after($('<div class="eArea xe_content next xe_dr_'+this.name+'">'+this.getData()+'</div>'));
-//		this.show(this.editor.cur_focus.next());
-	},
-	show : function(eArea) {
-		if (xe.DrEditor.baseWriter.prev){
-			if(eArea) xe.DrEditor.baseWriter.prev.save();
-			else xe.DrEditor.baseWriter.prev.hide();
-		}
-
-		this.obj.addClass('open');
-		xe.DrEditor.baseWriter.prev = this;
-
-		this.eArea = eArea || null;
-
-		if (eArea) {
-			this.editor.dummyArea.append(this.editor.tools);
-			this.setData(eArea.hide().before(this.obj));
-		} else {
-			this.wArea.prepend(this.obj);
-		}
-
-		// 현재 폼에서 가장 먼저 나오는 텍스트 박스에 포커스를 준다.
-		var first = this.obj.find('textarea:first,input[type=text]:first').eq(0);
-		if (first.length) {
-			if ($.trim(first.val()) == '') first.val(first.attr('title'));
-			try { first.select().get(0).focus() } catch(e){};
-		}
-
-		this.editor.notify('SHOW_EDITOR', [this.name]);
-	},
-	hide : function() {
-		this.obj.removeClass('open').removeClass('here');
-		xe.DrEditor.baseWriter.prev = null;
-
-		if (this.eArea){
-			this.eArea.show();
-		}
-
-		this.editor.writeArea.prepend(this.obj);
-		this.editor.notify('HIDE_EDITOR', [this.name]);
-		if(this.editor.cur_focus && this.editor.cur_focus.length) this.editor.cur_focus.click();
-		return true;
-	},
-	save : function(e) {
-		var self = this;
-		this.inputs.each(function(){ self.onInputSave(e,this); });
-
-		var strData = $.trim(this.getData()), oTmp = null;
-
-		if (strData) {
-			oTmp    = $(strData);
-
-			if (oTmp.find('img').length || oTmp.text() || oTmp.is('hr,ol,object,embed')) {
-				var newElem = $('<div class="here eArea xe_content xe_dr_'+this.name+'">'+strData+'</div>');
-
-				if (this.eArea) {
-					var idx = this.eArea.prevAll('div.eArea').length;
-					this.editor.dummyArea.append(this.editor.tools);
-					this.eArea.before(newElem);
-					this.eArea.remove();
-					this.editor.cur_focus = this.editor.editArea.find('>div.eArea.here').removeClass('here');
+					self.cast('CLEAR_SELECTION');
+					self.cast('SELECT_PARAGRAPH', [seq, children.slice(nStart,nEnd+1), children.eq(nSelFirst), para]);
 				} else {
-					if(this.obj.is('.here')){
-						this.obj.after(newElem);
-						this.editor.cur_focus = this.obj.removeClass('here').next();
-					}else{
-						this.editor.editArea.append(newElem);
-						this.editor.cur_focus = this.editor.editArea.find('>div.eArea:last').eq(0);
-					}
+					self.cast('SELECT_PARAGRAPH', [seq, para, para, para]);
 				}
-				this.editor.notify('ADD_CONTENT', [this.name]);
+			} else if (event.ctrlKey) {
+				if (para.hasClass('eFocus')) {
+					self.cast('UNSELECT_PARAGRAPH', [seq, para, para, para]);
+				} else {
+					self.cast('SELECT_PARAGRAPH', [seq, para, para, para]);
+				}
+			} else {
+				self.cast('CLEAR_SELECTION');
+				self.cast('SELECT_PARAGRAPH', [seq, para, para, para]);
 			}
 
-			if (this.editor.cur_focus) {
-				var selected = this.editor.cur_focus;
-				var editor   = this.editor;
-				
-				setTimeout(function(){ editor.onParaClick({target:editor.cur_focus}); }, 0);
+			return false;
+		});
+
+		// global doubleclick
+		$(document).dblclick(function(event){
+			var target = $(event.target);
+			if(target.is('a,button,:input')) return true;
+			if(event.shiftKey || event.ctrlKey) return true;
+
+			var para = target.parents('div').andSelf().filter('div.eArea:first');
+			if(!para.length) return true;
+
+			var seq  = para.parents('form:first')[0].elements['editor_sequence'].value;
+			var type = para.attr('type');
+
+			if (type) {
+				self.cast('CLEAR_SELECTION');
+				self.cast('OPEN_'+type.toUpperCase()+'_EDITOR', [seq, para]);
 			}
+		});
+
+		$(document).keydown(function(event){
+			var target = $(event.target);
+
+			if(!event.shiftKey && !event.altKey && !event.ctrlKey && !event.metaKey && target.is(':input:not(button._hookerBtn)')) return true;
+			if(event.keyCode == 16 && event.shiftKey) return true; // only shift key
+			if(event.keyCode == 17 && event.ctrlKey)  return true; // only ctrl key
+			if(event.keyCode == 18 && event.altKey)   return true; // only alt key
+			if(event.keyCode == 9) return true;
+
+			var ret = self.cast('ONKEYDOWN', [self.last_seq, event]);
+			if (ret == true || ($.isArray(ret) && $.inArray(ret, true))) return false;
+		});
+
+		// scroll event
+		var _scrollTimer = null;
+		$(window).scroll(function(event){
+			if (_scrollTimer) clearTimeout(_scrollTimer);
+			_scrollTimer = setTimeout(function(){
+				_scrollTimer = null;
+				self.cast('ONSCROLL');
+			}, 10);
+		});
+
+		// before unload
+		window.onbeforeunload = function(e) {
+			var msg = '';
+			$.each(configs, function(){
+				var content = self.cast('GET_CONTENT', [this.sequence]);
+
+				if (content != this.content) {
+					msg = msg_close_before_write;
+					return false;
+				}
+			});
+
+			if (msg) {
+				if ($.browser.msie) window.event.returnValue = msg;
+				else return msg;
+			}
+		};
+	},
+	API_ONLOAD : function(sender, params) {
+		var self = this;
+
+		this.loaded = true;
+		$.each(configs, function(seq,val){ self.cast('TOOLBAR_REPOSITION', [seq]) });
+	},
+	API_CREATE_EDITOR : function(sender, params) {
+		configs[params[0]] = {form:params[1]};
+	},
+	API_GET_CONTENT : function(sender, params) {
+		var seq = params[0];
+		var box = configs[seq].editArea.contents().clone();
+		var dum = $('<div>').append(box);
+
+		box.filter('div.wArea').remove();
+
+		// getting content
+		this.cast('GETTING_CONTENT', [seq, dum]);
+
+		return dum.html();
+	},
+	API_SET_CONTENT : function(sender, params) {
+		var seq = params[0];
+		var txt = params[1];
+
+		// clear all document
+		this.cast('CLEAR', [seq]);
+
+		// process text
+		var dum = $('<div>').html( txt );
+		this.cast('SETTING_CONTENT', [seq, dum]);
+
+		// set content
+		if(configs[seq] && configs[seq].editArea) {
+			configs[seq].editArea.append(dum.children()).find('>div.eArea');
+			configs[seq].content = this.cast('GET_CONTENT', [seq]);
+		}
+	},
+	API_AFTER_SET_CONTENT : function(sender, params) {
+		var seq = params[0];
+
+		// show or hide blankbox
+		if(configs[seq].editArea.find('>div.eArea').length) {
+			configs[seq].blankBox.hide();
+		} else {
+			configs[seq].blankBox.show();
+		}
+	},
+	API_CLEAR : function(sender, params) {
+		var seq = params[0];
+		if(configs[seq] && configs[seq].editArea) configs[seq].editArea.empty();
+	},
+	API_GET_SELECTED_PARAGRAPH : function(sender, params) {
+		var seq = params[0];
+		return configs[seq].editArea.children('div.eFocus');
+	},
+	API_SELECT_PARAGRAPH : function(sender, params) {
+		var seq = params[0];
+		var par = params[1]; // clicked paragraph
+		var fir = params[2]; // selection first
+		var las = params[3]; // selection last
+
+		configs[seq].selFirst = fir || null;
+		configs[seq].selLast  = las || null;
+
+		var box = (las || fir || par).eq(0);
+		var top;
+
+		if (box && box.length) {
+			top = box.position().top + Math.floor(box.height()/2);
+			configs[seq].hookerBtn.css('top', top+'px');
 		}
 
-		this.hide();
+		par.addClass('eFocus');
 
-		return false;
+		if (par.length) {
+			configs[seq].hookerBtn.focus();
+		}
 	},
-	cancel  : function(e){
-		this.hide();
+	API_UNSELECT_PARAGRAPH : function(sender, params) {
+		var seq = params[0];
+		var par = params[1]; // clicked paragraph
+
+		par.removeClass('eFocus');
 	},
-	getData : function(){ return '' }, /*abstract*/
-	setData : function(eArea){}, /*abstract*/
-	onInputFocus : function(e,input) {
-		if ((input=$(input)).val() == input.attr('title') && input.attr('title')!='http://') input.val('');
+	API_CLEAR_SELECTION : function(sender, params) {
+		var skip_seq = params[0];
+
+		$.each(configs, function(seq){
+			if(skip_seq && skip_seq == seq) return true;
+
+			$(this.editArea.children('div.eFocus')).removeClass('eFocus');
+			this.selFirst  = null;
+			this.selLast   = null;
+		});
 	},
-	onInputSave : function(e,input) {
-		if ((input=$(input)).val() == input.attr('title')) input.val('');
+	API_DELETE_PARAGRAPH : function(sender, params) {
+		var self   = this;
+		var seq    = params[0];
+		var target = params[1];
+
+		if (target && target.length) {
+			var prev = target.eq(0).prev('div.eArea');
+			var next = target.eq(target.length-1).next('div.eArea');
+
+			target
+				.removeClass('eFocus')
+				.hide('fast', function(){
+					$(this).remove();
+					self.cast('TOOLBAR_REPOSITION', [seq]);
+				});
+
+			if (next) this.cast('SELECT_PARAGRAPH', [seq, next, next, next]);
+			else if (prev) this.cast('SELECT_PARAGRAPH', [seq, prev, prev, prev]);
+		}
 	},
-    setFont : function(fontFamily, fontSize) {
-        this.fontFamily = fontFamily;
-        this.fontSize = fontSize;
-    },
-    getFontFamily : function() {
-        return this.fontFamily;
-    },
-    getFontSize : function() {
-        return this.fontSize;
-    },
-	onInputBlur : function(e,input) {
-		if ($.trim((input=$(input)).val()) == '') input.val(input.attr('title'));
+	API_CLICK_TOOLBUTTON : function(sender, params) {
+		var seq    = params[0];
+		var button = $(params[1]);
+		var type   = params[2];
+		var selbox = this.cast('GET_SELECTED_PARAGRAPH', [seq]);
+
+		if(selbox.length) selbox = selbox.eq(0);
+		else selbox = null;
+
+		var editor = configs[seq].editArea.children('div.wArea:visible');
+		if (editor.length) {
+			if (editor.is(type)) this.cast('CLOSE_'+type+'_EDITOR', [seq, false]);
+		} else {
+			this.cast('CLEAR_SELECTION');
+			this.cast('OPEN_'+type+'_EDITOR', [seq, null, selbox]);
+		}
 	},
-	toObject : function() {
-		return this.obj;
+	API_ONSCROLL : function(sender, params) {
+		var self = this;
+		if (this.loaded) {
+			$.each(configs, function(seq,val){ self.cast('TOOLBAR_REPOSITION', [seq]) });
+		}
+	},
+	API_ONKEYDOWN : function(sender, params) {
+		var self = this;
+		var seq  = params[0];
+		var event = params[1];
+		var key = event.keyCode, ctrl = event.ctrlKey, meta = event.metaKey, alt = event.altKey, shift = event.shiftKey;
+		var ENTER = 13, UP = 38, DOWN = 40, DEL = 46;
+		var selection, para, prev, next;
+
+		// hit enter to edit a selected paragraph
+		if(key == ENTER) {
+			configs[seq].editArea.children('div.eFocus:first').dblclick();
+			return true;
+		}
+
+		if (key == UP || key == DOWN) {
+			if (ctrl) { // hit ctrl + up, down to move paragraphs
+				selection = this.cast('GET_SELECTED_PARAGRAPH', [seq]);
+
+				if (key == UP) {
+					prev = selection.eq(0).prev('div.eArea');
+
+					if (prev.length) prev.before(selection);
+					else configs[seq].editArea.prepend(selection);
+				} else {
+					next = selection.eq(selection.length-1).next('div.eArea');
+
+					if (next.length) next.after(selection);
+					else configs[seq].editArea.append(selection);
+				}
+
+				setTimeout(function(){ self.cast('ONMOVE_PARAGRPH', [seq]) }, 0);
+			} else if (shift) { // hit shift + up, down to select multiple paragraphs
+				var children  = configs[seq].editArea.children('div.eArea');
+				var current   = configs[seq].selLast || configs[seq].selFirst;
+				
+				if (key == UP) {
+					if ((prev=current.prev('div.eArea')).length) current = prev;
+				} else {
+					if ((next=current.next('div.eArea')).length) current = next;
+				}
+
+				var nSelFirst = children.index(configs[seq].selFirst);
+				var nCurrent  = children.index(current);
+				var nStart    = Math.min(nSelFirst, nCurrent);
+				var nEnd      = Math.max(nSelFirst, nCurrent);
+
+				this.cast('CLEAR_SELECTION');
+				this.cast('SELECT_PARAGRAPH', [seq, children.slice(nStart,nEnd+1), children.eq(nSelFirst), current]);
+			} else { // hit up or down arrow to move selection
+				selection = this.cast('GET_SELECTED_PARAGRAPH', [seq]);
+
+				if (key == UP) {
+					prev = selection.eq(0).prev('div.eArea');
+
+					if (prev.length) para = prev;
+					else para = selection.eq(0);
+				} else {
+					next = selection.eq(selection.length-1).next('div.eArea');
+
+					if (next.length) para = next;
+					else para = selection.eq(selection.length-1);
+				}
+
+				this.cast('CLEAR_SELECTION');
+				this.cast('SELECT_PARAGRAPH', [seq, para, para, para]);
+			}
+
+			return true;
+		}
+
+		// delete key
+		if (key == DEL) {
+			selection = this.cast('GET_SELECTED_PARAGRAPH', [seq]);
+			this.cast('DELETE_PARAGRAPH', [seq, selection]);
+
+			return true;
+		}
+
+		// number key
+		if (48 <= key && key <= 58) {
+			var buttons = configs[seq].toolbar.find('button');
+			if (key == 48) key = buttons.length+48;
+			buttons.eq(key-49).mousedown();
+
+			return true;
+		}
+	},
+	API_ADD_DEFAULT_EDITOR_ACTION : function(sender, params) {
+		var self   = this;
+		var seq    = params[0];
+		var editor = params[1];
+		var type   = (params[2]||'').toUpperCase();
+
+		// save and cancel button
+		var _buttons = editor.find('div.buttonArea button');
+		_buttons.eq(0).click(function(){ self.cast('CLOSE_'+type+'_EDITOR', [seq, true]); }); // save button
+		_buttons.eq(1).click(function(){ self.cast('CLOSE_'+type+'_EDITOR', [seq, false]); }); // cancel button
+
+		// textbox default value
+		editor.find('input[type=text],textarea')
+			.focus(function(){ if($.trim(this.value) == this.title) this.value = ''; })
+			.blur(function(){ var val=$.trim(this.value); if (val==this.title || val == '') this.value = this.title; })
+			.filter('input').keydown(function(event){ if(event.keyCode == 13) return false; });
+
+		// set default checkbox and radio button
+		editor.find('input[type=checkbox],input[type=radio]').filter(':checked').addClass('_default_check');
+	},
+	API_RESET_EDITOR : function(sender, params) {
+		var seq    = params[0];
+		var editor = params[1];
+		var type   = (params[2]||'').toUpperCase();
+
+		// reset textbox
+		editor.find('input[type=text],textarea').each(function(){ this.value = this.title; });
+
+		// reset checkbox and radio buttons
+		editor.find('input[type=checkbox],input[type=radio]').filter('._default_check').attr('checked', 'checked');
+	},
+	API_TOOLBAR_REPOSITION : function(sender, params) {
+		var seq         = params[0];
+		var toolbar     = configs[seq].toolbar.parent();
+		var view_bottom = $(window).scrollTop() + document.documentElement.clientHeight; //scroll_top + doc_height
+		var old_top     = toolbar.css('top');
+		var offset_top  = toolbar.css('top', 0).offset().top;
+		var new_top     = Math.min( ((view_bottom - toolbar.height()) - offset_top - 5), 0);
+
+		if (old_top != new_top) toolbar.css('top', new_top+'px');
 	}
 });
+var editor = new DrEditor;
+xe.registerApp(editor);
 
-
-// 제목 단락
-dr.hxWriter = $.Class({
-	name   : 'hx',
-	oHead  : null,
-	oLevel : null,
-	sId : '',
-	$init : function() {
+// Header Writer
+var header_tag = 'h1,h2,h3,h4,h5,h6';
+var HeaderWriter = xe.createPlugin('HeaderWriter', {
+	configs : null,
+	init    : function() {
+		this.configs = {};
+	},
+	create : function(seq) {
 		var self = this;
-		this.oHead  = this.obj.find('input[type=text]:first');
-		this.oLevel = this.obj.find(':radio').click( function(){self.oHead.attr('class', 'inputTitle '+this.value)} );
-	},
-	reset : function() {
-		this.oHead.val(this.oHead.attr('title'));
-		this.oLevel.get(0).checked = true;
-	},
-	getData : function() {
-		var tag = this.oLevel.filter(':checked').val();
-		var sid  = this.sId || 'h'+(new Date).getTime();
+		var _editor = configs[seq].writeArea.find('>div.hx');
+		var _inputHead  = _editor.find('input[type=text]:first');
+		var _inputLevel = _editor.find(':radio').click(function(){ self.cast('CHANGE_HEADER_FORMAT', [seq, this.value]) });
 
-		this.sId = '';
+		self.cast('ADD_DEFAULT_EDITOR_ACTION', [seq, _editor, 'HX']);
 
-		return '<'+tag+' id="'+sid+'">'+translate(this.oHead.val())+'</'+tag+'>';
+		this.configs[seq] = {
+			editor : _editor,
+			inputHead  : _inputHead,
+			inputLevel : _inputLevel
+		};
+
+		return this.configs[seq];
 	},
-	setData : function(eArea) {
-		var header = eArea.find('h3,h4,h5').eq(0);
-		this.oHead.val(header.text());
-		this.sId = header.attr('id') || '';
+	API_SETTING_CONTENT : function(sender, params) {
+		var seq = params[0];
+		var obj = params[1];
 
-		this.oLevel.filter('#'+header.get(0).tagName.toLowerCase()).get(0).checked = true;
+		obj.children('div.xe_dr_hx,'+header_tag)
+			.each(function(){
+				var t = $(this);
+				if (!t.is('.xe_dr_hx')) t = t.wrap('<div>').parent();
+
+				t.attr('class', 'eArea _hx').attr('type', 'hx');
+
+				var header = t.children(header_tag);
+				if(!header.attr('id')) header.attr('id', 'h'+(new Date).getTime());
+			});
+	},
+	API_GETTING_CONTENT : function(sender, params) {
+		var seq = params[0];
+		var obj = params[1];
+
+		var header = obj.children('div._hx').children(header_tag).each(function(){ var t=$(this); t.parent().after(t).remove() });
+	},
+	API_CHANGE_HEADER_FORMAT : function(sender, params) {
+		var seq = params[0];
+		var val = params[1];
+
+		this.configs[seq].inputHead.attr('class', 'inputTitle '+val);
+	},
+	API_OPEN_HX_EDITOR : function(sender, params) {
+		var seq = params[0];
+		var box = params[1]; // selection to edit
+		var bef = params[2]; // selection to be before this editor
+		var cfg = this.configs[seq];
+
+		// Create this editor if it doesn't exists
+		if(!cfg) cfg = this.create(seq);
+
+		if(box) {
+			var tagName = box.children(header_tag)[0].tagName.toLowerCase();
+
+			box.hide().after(cfg.editor);
+
+			cfg.inputHead.val( box.find(header_tag).eq(0).text() );
+			cfg.inputLevel.filter('[value='+tagName+']').click();
+		} else if (bef) {
+			$(bef).after(cfg.editor);
+		} else {
+			cfg.editor.prependTo(configs[seq].writeArea);
+		}
+		cfg.editor.show().find('input[type=text]:first').focus();
+	},
+	API_CLOSE_HX_EDITOR : function(sender, params) {
+		var seq  = params[0];
+		var save = params[1];
+		var cfg  = this.configs[seq];
+		var box  = cfg.editor.prev('div._hx:hidden');
+
+		if(save) {
+			var newBox  = $('<div class="eArea _hx">').attr('type', 'hx');
+			var id      = box.children(header_tag).attr('id');
+			var tagName = cfg.inputLevel.filter(':checked').val();
+
+			newBox.html('<'+tagName+' id="'+id+'"></'+tagName+'>').children(':first').text(cfg.inputHead.val());
+
+			box.remove();
+			cfg.editor.before(box=newBox);
+		} else {
+			box.show();
+		}
+		cfg.editor.hide().appendTo(configs[seq].writeArea);
+
+		if(!box.length) box = cfg.editor.prev('div.eArea');
+		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
 	}
-}).extend(dr.baseWriter);
+});
+editor.registerPlugin(new HeaderWriter);
 
-
-
-
-dr.txtWriter = $.Class({
-	name   : 'txt',
-	oTitle : null,
-	oId    : null,
-	oEdit  : null,
-	oFrame : null,
-	oText  : null,
-	newArea: null,
-	lastSaved : -1,
-	$init  : function() {
-		this.oTitle = this.obj.find('input[type=text]:first');
-		this.oId    = this.obj.find('input[type=hidden]:first');
-		this.oText  = $('<textarea style="display:none">');
-		this.oFrame = this.obj.find('iframe').css('height','100%').after(this.oText);
+var IndexWriter = xe.createPlugin('IndexWriter', {
+	init    : function() {
+		this.configs = {};
 	},
-	reset  : function() {
-		this.oId.val((new Date()).getTime());
-		this.oTitle.val(this.oTitle.attr('title'));
-		this.oText.val('');
+	createIndex : function(seq) {
+		var toc  = $('<ul class="toc"></ul>');
+		var rand = Math.ceil(Math.random()*1000);
+
+		configs[seq].editArea.children('div._hx').children('h1,h2,h3,h4,h5,h6')
+			.each(function(){
+				var t = $(this), id = t.attr('id'), n = this.nodeName.replace(/[^0-9]/,'');
+
+				if (!id) t.attr('id', id = 'h'+rand+Math.ceil(Math.random()*1000));
+				toc.append('<li class="toc'+n+'"><a href="#'+id+'">'+t.html()+'</a></li>');
+			});
+
+		return $('<div class="eArea _index">').append(toc);
 	},
-	show   : function(eArea) {
-		var self = this;
-		var tx   = this.obj.find('div.txEditor');
-		// 이미 할당된 이벤트를 제거하기 위해 에디터를 DOM에서 제거한 후 추가한다.
-		tx.prev().after(tx.remove());
+	API_SETTING_CONTENT : function(sender, params) {
+		var seq = params[0];
+		var obj = params[1];
 
-		if(this.oEdit) this.oEdit.exec('MSG_APP_DESTORY');
-
-		this.$super.show(eArea);
-		this.oEdit = null;
-
-		this.oTitle.blur();
-		(function(){
-			var fr = self.oFrame.get(0);
-			try {
-				var s = fr.contentWindow.document.body.innerHTML; // body의 속성에 접근이 가능한지 살펴보기 위한 의미없는 코드
-				self.oEdit = self.createWYSIWYGEditor();
-			}catch(e){
-				setTimeout(arguments.callee, 10);
-			}
-		})();
+		obj.children('div.xe_dr_index,ul.toc')
+			.each(function(){
+				var t = $(this);
+				if (t.is('ul')) t = t.wrap('<div>').parent();
+				t.attr('class', 'eArea _index').attr('type', 'index');
+			});
 	},
-	showNext   : function() {
-		var self = this;
-		var tx   = this.obj.find('div.txEditor');
-		// 이미 할당된 이벤트를 제거하기 위해 에디터를 DOM에서 제거한 후 추가한다.
-		tx.prev().after(tx.remove());
-
-		if(this.oEdit) this.oEdit.exec('MSG_APP_DESTORY');
-
-		this.$super.showNext();
-		this.oEdit = null;
-
-		(function(){
-			var fr = self.oFrame.get(0);
-			try {
-				var s = fr.contentWindow.document.body.innerHTML; // body의 속성에 접근이 가능한지 살펴보기 위한 의미없는 코드
-				self.oEdit = self.createWYSIWYGEditor();
-			}catch(e){
-				setTimeout(arguments.callee, 10);
-			}
-		})();
+	refreshIndex : function(seq) {
+		configs[seq].editArea.children('div._index').replaceWith(this.createIndex(seq));
 	},
+	API_GETTING_CONTENT : function(sender, params) {
+		var seq = params[0];
+		var obj = params[1];
+		var toc = obj.children('div._index').children('ul.toc');
 
-	getData : function() {
-		if(this.oEdit){
-			var div   = $('<div>');
-			var id    = $.trim(this.oId.val());
-			var text  = $.trim(this.oEdit.getIR()).replace(/<p><br ?\/?><\/p>$/i,''); // 줄 끝의 공백은 제거
+		toc.parent().before(toc).remove();
+	},
+	API_OPEN_INDEX_EDITOR : function(sender, params) {
+		var seq = params[0];
+		var box = params[1]; // selection to edit
+		var bef = params[2]; // selection to be before this editor
 
-			html = $.trim(div.append(text).html());
-			div.empty();
-
-		}else{
-			html ='';
+		if (box) {
+			box.fadein('fast');
+		} else if (bef) {
+			bef.after(box = this.createIndex(seq));
+		} else {
+			configs[seq].editArea.append(box = this.createIndex(seq));
 		}
-
-		// 제일 처음 노드가 <p>가 아니면 <p>로 wrap
-		if (!/<p[> ]/i.test(html)) html = '<p>'+html+'</p>';
-
-		return html;
+		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
 	},
-	setData : function(eArea) {
-		var self = this, html = '';
-		var div  = eArea.clone();
-		var id   = (new Date).getTime();
+	API_AFTER_CLOSE_HX_EDITOR : function(sender, params) {
+		var seq  = params[0];
+		var save = params[1];
 
-		this.oId.val(id);
-
-		this.oTitle.val(this.oTitle.attr('title'));
-		div.find('ul.eTool').nextAll().andSelf().remove();
-
-		html = div.html();
-		this.oText.val(html);
-	},
-	save : function(e,appendNew) {
-		var eArea = this.eArea, newArea = null;
-		var now = (new Date()).getTime();
-		//if(jQuery.browser.msie) appendNew = false;
-
-		// 다음 단락 추가 기능 비활성화
-		appendNew = false;
-
-		if (appendNew) {
-			newArea = $('<div class="eArea xe_content xe_dr_txt">');
-			if (eArea) this.eArea.before(newArea);
-			else this.editor.editArea.append(newArea);
-		}
-
-		this.$super.save(e);
-
-		if (eArea && $.trim(eArea.html()) == '') eArea.remove();
-
-		if (appendNew) {
-			newArea.next().after(newArea);
-			this.show(newArea);
+		if (save) {
+			// auto refresh if a header was saved or updated.
+			this.refreshIndex(seq);
 		}
 	},
-	cancel : function(e) {
-		this.$super.cancel(e);
+	ONMOVE_PARAGRPH : function(sender, params) {
+		var seq = params[0];
+		var selbox = this.cast('GET_SELECTED_PARAGRAPH', [seq]);
 
-		var eArea = this.eArea;
-		if (eArea && $.trim(eArea.html()) == '') eArea.remove();
+		if (selbox.filter('div._index').length) {
+			// auto refresh if a header was moved.
+			this.refreshIndex(seq);
+		}
+	}
+});
+editor.registerPlugin(new IndexWriter);
+
+// Text Editor
+var TextWriter = xe.createPlugin('TextWriter', {
+	configs : null,
+	init    : function() {
+		this.configs = {};
 	},
-	createWYSIWYGEditor : function() {
+	create : function(seq) {
 		var self = this;
-		var ed   = new xe.XpressCore();
-		var elAppContainer = this.obj.get(0);
-		var oWYSIWYGIFrame = this.oFrame.get(0);
-		var oIRTextarea	= this.oText.get(0);
+		var _editor   = configs[seq].writeArea.find('>div.txt:first');
+		var _textarea = $('<textarea>').hide();
+		var _iframe   = _editor.find('iframe').css('height','100%').after(_textarea);
+
+		self.cast('ADD_DEFAULT_EDITOR_ACTION', [seq, _editor, 'TXT']);
+
+		this.configs[seq] = {
+			editor   : _editor,
+			iframe   : _iframe,
+			textarea : _textarea,
+			xpress   : null
+		};
+
+		return this.configs[seq];
+	},
+	createXpressEditor : function(seq) {
+		var self = this;
+		var ed = new xe.XpressCore();
+		var elAppContainer = this.configs[seq].editor[0];
+		var oWYSIWYGIFrame = this.configs[seq].iframe[0];
+		var oIRTextarea    = this.configs[seq].textarea[0];
 		var pHotkey;
 
 		ed.registerPlugin(new xe.CorePlugin(function(){ this.oApp.exec('FOCUS',[]) }));
@@ -954,7 +693,7 @@ dr.txtWriter = $.Class({
 		ed.registerPlugin(new xe.XE_FontColor(elAppContainer));
 		ed.registerPlugin(new xe.XE_BGColor(elAppContainer));
 		ed.registerPlugin(new xe.XE_SCharacter(elAppContainer));
-		ed.registerPlugin(new xe.XE_FontSetter(this.getFontFamily(), this.getFontSize()));
+//		ed.registerPlugin(new xe.XE_FontSetter(this.getFontFamily(), this.getFontSize()));
 
 		if (!$.browser.msie && !$.browser.opera) {
 			ed.registerPlugin(new xe.XE_WYSIWYGEnterKey(oWYSIWYGIFrame));
@@ -962,132 +701,1109 @@ dr.txtWriter = $.Class({
 
 		// Ctrl+Enter를 입력하면 현재 문단 저장 후 새 텍스트 문단을 보여준다.
         pHotkey.add(pHotkey.normalize('ctrl+enter'), function(){ 
-			setTimeout(function() { self.save(null,true) }, 1);
+			setTimeout(function() { self.cast('CLOSE_TXT_EDITOR', [seq, true]) }, 1);
 		});
-
-		// 폰트 적용 
-		var doc = oWYSIWYGIFrame.contentWindow.document;
 
 		// 에디터 시작
 		ed.run();
 
 		return ed;
-	}
-}).extend(dr.baseWriter);
-
-
-
-dr.linkWriter = $.Class({
-	name  : 'link',
-	oTxt  : null,
-	oUrl  : null,
-	oDesc : null,
-	$init : function(writeArea, oEditor) {
-		var inputs = this.obj.find('input[type=text]');
-		this.oTxt  = inputs.eq(0);
-		this.oUrl  = inputs.eq(1);
-		this.oDesc = inputs.eq(2);
 	},
-	setData : function(eArea) {
-		this.oTxt.val(eArea.find('p > strong').text());
-		this.oUrl.val(eArea.find('p > a').attr('href'));
-		this.oDesc.val(eArea.find('p').eq(1).text()).blur();
+	API_AFTER_SETTING_CONTENT : function(sender, params) {
+		var seq = params[0];
+		var obj = params[1];
+
+		obj.children(':not(div.eArea)')
+			.each(function(){
+				var t = $(this);
+				if(!t.is('div.xe_dr_txt')) t = t.wrap('<div>').parent();
+
+				t.attr('class', 'eArea _txt').attr('type', 'txt');
+			});
 	},
-	getData : function() {
-		var div  = $('<div>');
-		var txt  = $.trim(this.oTxt.val());
-		var url  = $.trim(this.oUrl.val());
-		var desc = $.trim(this.oDesc.val());
-		var html = '<p>';
+	API_GETTING_CONTENT : function(sender, params) {
+		var self = this;
+		var seq = params[0];
+		var obj = params[1];
 
-		if(!url) return;
+		obj.children('div._txt').each(function(){
+			var div = $(this), node = null;
+			div.contents().each(function(){
+				var t = $(this);
 
-		if(txt) html += '<strong>'+div.text(txt).html()+'</strong>';
-		html += '<a href="'+url+'">'+url+'</a>';
-		html += '</p>';
-
-		if(desc) html += '<p>'+desc+'</p>';
-
-		return html;
-	},
-	reset : function() {
-		this.oTxt.val(this.oTxt.attr('title'));
-		this.oUrl.val(this.oUrl.attr('title'));
-		this.oDesc.val(this.oDesc.attr('title'));
-	}
-}).extend(dr.baseWriter);
-
-dr.listWriter = $.Class({
-	name   : 'list',
-	oList  : null,
-	focusedObj :  null,
-	$init  : function() {
-		this.oList  = this.obj.find('div.listArea');
-
-		// event binding
-		this.$onkeydown  = $.fnBind(this.onkeydown, this);
-		this.$onfocus    = $.fnBind(this.onfocus, this);
-		this.$onblur     = $.fnBind(this.onblur, this);
-		this.$onbtnclick = $.fnBind(this.onbtnclick, this);
-
-		// toolbar
-		this.obj.find('ul.toolbar button').click(this.$onbtnclick);
-	},
-	show   : function(eArea) {
-		this.$super.show(eArea);
-	},
-	reset : function() {
-		this.oList.empty().append('<ul>'+this.newItem()+'</ul>');
-		this.setEvent();
-	},
-	getData : function() {
-		var t = this.oList.clone();
-		var s = '';
-
-		t.find('input[type=text]').each(function(){
-			var o = $(this), par = o.parent('li');
-			
-			if ($.trim(o.val()) == '') {
-				if (par.parent('ul,ol').children('li').length == 1) {
-					if (par.find('ul,ol').length) {
-						o.replaceWith($('<span>&nbsp;</span>'));
+				if(this.nodeType == 3 || t.is('br')) {
+					if( t.is('br') || $.trim(t.text()) ) {
+						if(!node) (node = $('<p>')).before(div);
+						node.append(this);
 					} else {
-						par.parent().remove();
+						t.remove();
 					}
-				} else {
-					par.remove();
+					return true;
 				}
-			} else {
-				var t =$('<span>').text(o.val());
-				o.replaceWith(t);
+
+				div.before(t);
+				node = null;
+			});
+
+			div.remove();
+		});
+	},
+	API_OPEN_TXT_EDITOR : function(sender, params) {
+		var self = this;
+		var seq  = params[0];
+		var box  = params[1];
+		var bef  = params[2]; // selection to be before this editor
+		var cfg  = this.configs[seq];
+		var meanless;
+
+		// Create this editor if it doesn't exists
+		if (!cfg) cfg = this.create(seq);
+
+		// 이벤트 제거를 위해 DOM에서 제거한다.
+		var tx = cfg.editor.find('div.txEditor:first');
+		tx.prev().after(tx.remove());
+
+		if(box) {
+			box.hide().after(cfg.editor);
+			cfg.textarea.val( box.html() );
+		} else if (bef) {
+			bef.after(cfg.editor);
+			cfg.textarea.val( '<p><br /></p>' );
+		} else {
+			cfg.editor.prependTo(configs[seq].writeArea);
+			cfg.textarea.val( '<p><br /></p>' );
+		}
+
+		cfg.editor.show();
+		(function(){
+			try {
+				meanless = cfg.iframe[0].contentWindow.document.body.firstChild;
+				cfg.xpress = self.createXpressEditor(seq);
+			} catch(e) {
+				setTimeout(arguments.callee, 10);
+			}
+		})();
+	},
+	API_CLOSE_TXT_EDITOR : function(sender, params) {
+		var seq  = params[0];
+		var save = params[1];
+		var cfg  = this.configs[seq];
+		var box  = cfg.editor.prev('div._txt:hidden');
+
+		if(save) {
+			var newBox  = $('<div class="eArea _txt">').attr('type', 'txt');
+			newBox.html( cfg.xpress.getIR() );
+			box.remove();
+			cfg.editor.before(box=newBox);
+		} else {
+			if (box) box.show();
+		}
+		cfg.editor.hide().appendTo(configs[seq].writeArea);
+
+		if(!box.length) box = cfg.editor.prev('div.eArea');
+		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
+	}
+});
+editor.registerPlugin(new TextWriter);
+
+var QuoteWriter = xe.createPlugin('QuoteWriter', {
+	configs : {},
+	init : function() {
+		this.configs = {};
+	},
+	create : function(seq) {
+		var self      = this;
+		var _editor   = configs[seq].writeArea.find('>div.quote:first');
+		var _textarea = _editor.find('textarea:first');
+		var _source   = _editor.find('input[type=text]:first');
+
+		self.cast('ADD_DEFAULT_EDITOR_ACTION', [seq, _editor, 'QUOTE']);
+
+		this.configs[seq] = {
+			editor   : _editor,
+			textarea : _textarea,
+			source   : _source
+		};
+
+		return this.configs[seq];
+	},
+	API_SETTING_CONTENT : function(sender, params) {
+		var self = this;
+		var seq  = params[0];
+		var obj  = params[1];
+
+		obj.children('div.xe_dr_blockquote,blockquote.citation')
+			.each(function(){
+				var t = $(this);
+				if (t.is('div.xe_dr_blockquote')) {
+					t.find('>blockquote').attr('class', 'citation');
+				} else if (t.is('blockquote')) {
+					t = t.wrap('<blockquote class="citation"></blockquote>').parent();
+				}
+				t.attr('class', 'eArea _quote').attr('type', 'quote');
+			});
+	},
+	API_GETTING_CONTENT : function(sender, params) {
+		var self = this;
+		var seq  = params[0];
+		var obj  = params[1];
+		var quot = obj.children('div._quote').children('blockquote.citation');
+
+		quot.parent().before(quot).remove();
+	},
+	API_OPEN_QUOTE_EDITOR : function(sender, params) {
+		var self = this;
+		var seq  = params[0];
+		var box  = params[1];
+		var bef  = params[2]; // selection to be before this editor
+		var cfg  = this.configs[seq];
+
+		if (!cfg) cfg = this.create(seq);
+
+		if (box) {
+			box.hide().after(cfg.editor);
+			cfg.textarea.val(box.find('p').text());
+			cfg.source.val(box.find('cite').html());
+		} else {
+			self.cast('RESET_EDITOR', [seq, cfg.editor, 'QUOTE']);
+			cfg.editor.prependTo(configs[seq].writeArea);
+		}
+		cfg.editor.show().find('textarea').focus();
+	},
+	API_CLOSE_QUOTE_EDITOR : function(sender, params) {
+		var seq  = params[0];
+		var save = params[1];
+		var cfg  = this.configs[seq];
+		var box  = cfg.editor.prev('div._quote:hidden');
+
+		if (save && $.trim(cfg.textarea.val())) {
+			var newBox = $('<div class="eArea _quote">').attr('type', 'quote');
+			var quote  = $('<blockquote class="citation"></blockquote>').append( $('<p>').text(cfg.textarea.val()) ).appendTo(newBox);
+
+			if($.trim(cfg.source.val())) quote.append('<cite>').html(translateCite(cfg.source.val()));
+
+			box.remove();
+			cfg.editor.before(box=newBox);
+		} else {
+			box.show();
+		}
+		cfg.editor.hide().appendTo(configs[seq].writeArea);
+
+		if(!box.length) box = cfg.editor.prev('div.eArea');
+		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
+	}
+});
+editor.registerPlugin(new QuoteWriter);
+
+var MovieWriter = xe.createPlugin('MovieWriter', {
+	configs : {},
+	init : function() {
+		this.configs = {};
+	},
+	create : function(seq) {
+		var self = this;
+		var _editor = configs[seq].writeArea.find('>div.movie');
+
+		self.cast('ADD_DEFAULT_EDITOR_ACTION', [seq, _editor, 'MOVIE']);
+
+		this.configs[seq] = {
+			editor : _editor
+		};
+
+		return this.configs[seq];
+	},
+	API_SETTING_CONTENT : function(sender, params) {
+		var self = this;
+		var seq  = params[0];
+		var obj  = params[1];
+
+		obj.children('object,embed,div.xe_dr_mov')
+			.each(function(){
+				var t = $(this);
+				if (!t.is('div.xe_dr_mov')) t = t.wrap('<div>').parent();
+				t.attr('class', 'eArea _movie').attr('type', 'movie');
+			});
+	},
+	API_GETTING_CONTENT : function(sender, params) {
+		var self = this;
+		var seq  = params[0];
+		var obj  = params[1];
+		var mov  = obj.children('div._movie').children('embed,object');
+
+		// TODO : 플래시 태그면 embed, object를 모두 사용하도록 변환
+
+		obj.parent().before(mov).remove();
+	},
+	API_OPEN_MOVIE_EDITOR : function(sender, params) {
+		var self = this;
+		var seq  = params[0];
+		var box  = params[1];
+		var bef  = params[2]; // selection to be before this editor
+		var cfg  = this.configs[seq];
+
+		if (!cfg) cfg = this.create(seq);
+
+		self.cast('RESET_EDITOR', [seq, cfg.editor, 'MOVIE']);
+
+		if (box) {
+			box.hide().html();
+		} else if (bef) {
+			bef.after(cfg.editor);
+		} else {
+			self.cast('RESET_EDITOR', [seq, cfg.editor, 'MOVIE']);
+		}
+		cfg.editor.show().find('textarea:first').focus();
+	},
+	API_CLOSE_MOVIE_EDITOR : function(sender, params) {
+		var seq  = params[0];
+		var save = params[1];
+		var cfg  = this.configs[seq];
+		var box  = cfg.editor.prev('div._movie:hidden');
+		var val;
+
+		if (save && (val=$.trim(cfg.textarea.val())) ) {
+			var newBox = $('<div class="eArea _movie">').attr('movie').html( val );
+			box.remove();
+			cfg.editor.before(box=newBox);
+		} else {
+			box.show();
+		}
+		cfg.editor.hide().appendTo(configs[seq].writeArea);
+
+		if(!box.length) box = cfg.editor.prev('div.eArea');
+		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
+	}
+});
+editor.registerPlugin(new MovieWriter);
+
+// Image Writer
+var ImageWriter = xe.createPlugin('ImageWriter', {
+	configs : null,
+	_iframe : null,
+	_form   : null,
+	init : function() {
+		var target = 'xe_dr_imgframe_'+(new Date).getTime();
+
+		this.configs = {};
+		this._iframe = $('<iframe name="'+target+'" src="about:blank" style="position:absolute;width:1px;height:1px;left:-2000px;top:0">');
+		this._form   = $('<form target="'+target+'" method="POST" enctype="multipart/form-data" style="position:absolute;width:1px;height:1px;left:-2000px;"></form>')
+			.append('<input type="hidden" name="editor_sequence" value="" />')
+			.append('<input type="hidden" name="callback" />')
+			.append('<input type="hidden" name="file_srl" />')
+			.append('<input type="hidden" name="mid" value="" />')
+			.append('<input type="hidden" name="module" value="file" />')
+			.append('<input type="hidden" name="act" value="procFileIframeUpload" />')
+			.append('<input type="hidden" name="uploadTargetSrl" value="" />');
+
+		if (typeof(xeVid) != 'undefined') this._form.append('<input type="hidden" name="vid" value="'+xeVid+'" />');
+
+	},
+	create : function(seq) {
+		var self = this;
+		var _editor  = configs[seq].writeArea.find('>div.img');
+		var _file    = _editor.find('input[type=file]');
+		var _desc    = _editor.find('input[type=text].desc');
+		var _image   = _editor.find('div.image > img');
+		var _resize  = _editor.find('div.resize');
+		var _align   = _editor.find('div.align');
+		var _message = _editor.find('p.uploading');
+
+		self.cast('ADD_DEFAULT_EDITOR_ACTION', [seq, _editor, 'IMG']);
+
+		_file.change(function(){
+			var t = $(this);
+			var prev = t.prev();
+			
+			if ( !/\.(jpe?g|png|gif)$/i.test(t.val()) ) {
+				t.val('');
+				return false;
+			}
+
+			var callback_id = ''+(new Date).getTime()+Math.ceil(Math.random()*1000);
+			window[callback_id] = function(fileObj){ self.onfileuploaded(seq, callback_id, fileObj); }
+			
+			var filesrl = _image.attr('class').match(/(?:^|\s)xe_filesrl_(\d+)(?:\s|$)/);
+			filesrl = (filesrl && filesrl[1])? filesrl[1] : '';
+
+			// upload file
+			self._form.find('input[name=editor_sequence]').val(seq);
+			self._form.find('input[name=callback]').val(callback_id);
+			self._form.find('input[name=file_srl]').val(filesrl);
+			self._form.find('input[name=uploadTargetSrl]').val(editorRelKeys[seq]["primary"].value);
+			self._form.append(t).submit();
+			setTimeout(function(){ self.reset_fileform(t); prev.after(t) }, 0);
+
+			// hide image and show uploading
+			_image.parent().hide();
+			_file.hide();
+			_resize.hide();
+			_align.hide();
+			_message.show();
+		});
+
+		_message.find('button').click(function(){
+			self._iframe.attr('src', 'about:blank');
+			_file.show();
+			_message.hide();
+
+			if (_image.attr('src')) _image.parent().show();
+		});
+
+		_align.find('input[type=radio]').click(function(){ _image.parent().css('text-align', this.value); });
+
+		_resize.find('button.btn_resize').click(function(){
+			var w = parseInt(_resize.find('input[type=text].width').val());
+			var n = parseInt(_resize.find('dd>em').text());
+
+			if (isNaN(w) || isNaN(n) || w > n) {
+				_resize.find('p.resizeError').show();
+				return false;
+			}
+
+			_resize.find('p.resizeError').hide();
+			var _src = _image.attr('rawsrc') || _image.attr('src');
+
+			$.exec_json('file.procFileImageResize',{width:w, source_src:_src},function(data){
+				if(data.error != 0) return;
+
+				_image.attr({
+					src    : data.resized_info.src,
+					width  : data.resized_info.info[0],
+					height : data.resized_info.info[1]
+				});
+
+				if(!_image.attr('rawsrc')) _image.attr('rawsrc', _src);
+			});
+		})
+
+		this.configs[seq] = {
+			editor  : _editor,
+			file    : _file,
+			desc    : _desc,
+			image   : _image,
+			resize  : _resize,
+			align   : _align,
+			message : _message
+		};
+
+		return this.configs[seq];
+	},
+	show_resize : function(seq, src) {
+		var cfg = this.configs[seq];
+
+		cfg.resize.find('p.resizeError').hide();
+
+		cfg.image
+			.load(function(){ var w=this.width, h=this.height, t=$(this); if(w>600){ cfg.resize.show().find('dd>em').text(w);cfg.resize.find('dd>input:text').val(600); } })
+			.attr('src', src)
+			.parent().show();
+	},
+	reset_fileform : function(obj) {
+		var next = obj.next();
+		var form = $('<form>').append(obj)[0].reset();
+		next.before(obj);
+	},
+	onfileuploaded : function(seq, callback_id, fileObj) {
+		// remove callback function
+		delete window[callback_id];
+
+		if(fileObj.error==-1){
+			alert(fileObj.message);
+			return;
+		}
+		
+		var self = this;
+		var cfg  = this.configs[seq];
+
+        if(fileObj.upload_target_srl && fileObj.upload_target_srl != 0) {
+            editorRelKeys[seq]['primary'].value = fileObj.upload_target_srl;
+        }
+
+		// show resize
+		cfg.image
+			.removeAttr('width')
+			.removeAttr('height')
+			.attr('filesrl', fileObj.file_srl);
+
+		cfg.file.show();
+		cfg.align.show();
+		cfg.message.hide();
+		this.show_resize(seq, fileObj.uploaded_filename);
+
+		// 이미지 파일도 서버측에서는 파일로 카운트 되므로,
+		// reloadFileList를 호출해서 orderedFiles와 uploadedFiles 배열을 갱신해주도록 한다.
+		// 관련 이슈 : http://textyle.xpressengine.net/18256095
+		var settings = {
+			fileListAreaID : '',
+			editorSequence : seq,
+			uploadTargetSrl : ''
+		};
+		reloadCallback[seq] = function(){};
+		reloadFileList(settings);
+	},
+	API_ONREADY : function() {
+		this._form.attr('action', request_uri)
+		this._form.find('input[name=mid]').val(current_mid);
+
+		this._iframe.appendTo(document.body).after(this._form);
+	},
+	API_SETTING_CONTENT : function(sender, params) {
+		var seq = params[0];
+		var obj = params[1];
+
+		obj.children('img,p.img,div._img,div.xe_dr_img')
+			.each(function(){
+				var t = $(this);
+				if(t.is('img')) t = t.wrap('<p class="img"></p>');
+				if(t.is('p.img')) t = t.wrap('<div></div>').parent();
+				if(t.is('div.xe_dr_img')) {
+					var img  = t.children('p:has(img)').attr('class', 'img');
+					var desc = t.children('p.desc').remove();
+					var cite = t.children('p.cite').remove();
+					var div = $('<div>').text(desc.html());
+
+					if(cite.text()) div.text( div.text() + ' - ' + cite.text());
+					if(desc.length) img.append('<br>').append(div[0].firstChild);
+				}
+
+				t.attr('class', 'eArea _img').attr('type', 'img');
+			});
+	},
+	API_GETTING_CONTENT : function(sender, params) {
+		var seq = params[0];
+		var obj = params[1];
+
+		obj.children('div._img')
+			.each(function(){
+				var t = $(this);
+				var p = t.children('p').attr('class', 'img');
+				t.before(p).remove();
+			});
+	},
+	API_OPEN_IMG_EDITOR : function(sender, params) {
+		var seq = params[0];
+		var box = params[1];
+		var bef = params[2];
+		var cfg = this.configs[seq];
+
+		if (!cfg) cfg = this.create(seq);
+
+		// reset
+		this.cast('RESET_EDITOR', [seq, cfg.editor, 'IMG']);
+
+		if(box) {
+			var p   = box.children('p.img:first');
+			var img = p.find('img');
+
+			box.hide().after(cfg.editor);
+			cfg.align.show();
+
+			if (img.attr('rawsrc')) cfg.image.attr('rawsrc', img.attr('rawsrc'));
+			this.show_resize(seq, img.attr('src'));
+
+			var align = p.css('text-align');
+			if (align) {
+				cfg.align.find('input[value='+align.toLowerCase()+']').attr('checked', 'checked');
+				cfg.image.parent().css('text-align', align);
+			}
+
+			var _class = img.attr('class').match(/(?:^|\s)xe_filesrl_(\d+)(?:\s|$)/);
+			if (_class && _class[1]) cfg.image.attr('filesrl', _class[1]);
+
+			var desc  = $.trim(p.text());
+			if (desc) cfg.desc.val(desc);
+		} else if (bef) {
+			bef.after(cfg.editor);
+		} else {
+			cfg.editor.prependTo(configs[seq].writeArea);
+		}
+
+		cfg.editor.show();
+	},
+	API_CLOSE_IMG_EDITOR : function(sender, params) {
+		var seq  = params[0];
+		var save = params[1];
+		var cfg  = this.configs[seq];
+		var box  = cfg.editor.prev('div._img:hidden');
+
+		if (save && cfg.image.attr('src')) {
+			var align = cfg.align.find('input[type=radio]:checked').val();
+			var newBox = $('<div class="eArea _img">').attr('type', 'img');
+			var img    = $('<img>').attr('src', cfg.image.attr('src'));
+			var rawsrc = cfg.image.attr('rawsrc');
+
+			$('<p class="img">').css('text-align', align).append(img).appendTo(newBox);
+			img.attr({ 'width':cfg.image.attr('width'), 'height':cfg.image.attr('height') });
+			if (rawsrc) img.attr('rawsrc', rawsrc);
+
+			var desc = $.trim(cfg.desc.val());
+			if (desc && desc != cfg.desc.attr('title')) img.after(translateCite(desc)).after('<br />');
+
+			var filesrl = cfg.image.attr('filesrl');
+			if (filesrl) img.addClass('xe_filesrl_'+filesrl);
+			
+			box.remove();
+			cfg.editor.before(box=newBox);
+		} else {
+			box.show();
+		}
+		cfg.editor.hide().appendTo(configs[seq].writeArea);
+		
+		if(!box.length) box = cfg.editor.prev('div.eArea');
+		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
+	},
+	API_BEFORE_RESET_EDITOR : function(sender, params) {
+		var seq  = params[0];
+		var type = params[2];
+		var cfg  = this.configs[seq];
+
+		if (type == 'IMG') {
+			cfg.image
+				.removeAttr('filesrl')
+				.removeAttr('width')
+				.removeAttr('height')
+				.parent().css('text-align', '').hide();
+			cfg.resize.hide().find('input[type=text]').val('');
+			cfg.align.hide().find('input[type=radio]:first').attr('checked', 'checked');
+			cfg.file.show();
+			cfg.desc.val('');
+
+			this.reset_fileform(cfg.file);
+		}
+	}
+});
+editor.registerPlugin(new ImageWriter);
+
+// Material Writer
+var MaterialWriter = xe.createPlugin('MaterialWriter', {
+	configs : {},
+	init : function() {
+		this.configs = {};
+	},
+	create : function(seq) {
+		var self = this;
+		var _editor  = configs[seq].writeArea.find('>div.material:first');
+		var _buttons = _editor.find('div.controls button');
+		_buttons.eq(0).click(function(){ self.load_material(seq, 1); });
+		_buttons.eq(1).click(function(){ self.cast('CLOSE_MATERIAL_EDITOR', [seq, false]); });
+	
+		this.configs[seq] = {
+			editor     : _editor,
+			template   : _editor.find('div._container > dl').remove(),
+			to_save    : null,
+			loaded     : false,
+			prev_page  : 0,
+			next_page  : 0,
+			total_page : 0,
+		};
+
+		this.load_material(seq, 1);
+
+		return this.configs[seq];
+	},
+	load_material_next : function(seq){
+		var cfg = this.configs[seq];
+
+		if(++cfg.next_page>=cfg.total_page) cfg.next_page=cfg.total_page;
+		cfg.next_page = cfg.next_page>0?cfg.next_page:1;
+		this.load_material(seq, cfg.next_page);
+	},
+	load_material_prev : function(seq){
+		var cfg = this.configs[seq];
+
+		cfg.prev_page = --cfg.prev_page>0?cfg.prev_page:1;
+		this.load_material(seq, cfg.prev_page);
+	},
+	load_material : function(seq, page) {
+		var self = this;
+		var cfg  = this.configs[seq];
+		var area = cfg.editor.find('div._container');
+		var paginate = cfg.editor.find('div.paginate');
+
+		if (!page) page = 1;
+
+		function callback(data){
+			if(data.page_navigation.total_count) cfg.editor.find('p.noData').css('display','none');
+
+			// 글감 목록 전부 삭제
+			area.children().remove();
+
+			// 페이징
+			paginate.find('> span').text(data.page_navigation.cur_page+'/'+data.page_navigation.total_page);
+
+			cfg.prev_page  = data.page_navigation.cur_page;
+			cfg.next_page  = data.page_navigation.cur_page;
+			cfg.total_page = data.page_navigation.total_page;
+			
+			if(!cfg.loaded){
+				paginate.find('> button.prev').click(function(){ self.load_material_prev(seq) });
+				paginate.find('> button.next').click(function(){ self.load_material_next(seq) });
+			}
+
+			// 컨텐트 추가
+			$.each(data.material_list, function(){
+				var tpl = cfg.template.clone();
+
+				tpl.addClass('xe_dr_'+this.type);
+				tpl.find('dt').text(this.regdate.substring(0,4)+'.'+this.regdate.substring(4,6)+'.'+this.regdate.substring(6,8)+' '+this.regdate.substring(8,10)+':'+this.regdate.substring(10,12));
+				tpl.find('dd > div.eArea').html(this.content);
+				tpl.find('dd > span.buttonDrEditor > button').click(function(event){
+					var t = $(event.target);
+					var o = t.parent().prev('div.eArea').eq(0).clone();
+
+					self.cast('SETTING_CONTENT', [seq, o]);
+
+					cfg.to_save = o;
+					self.cast('CLOSE_MATERIAL_EDITOR', [seq, true]);
+				});
+
+				area.append(tpl);
+			});
+
+			cfg.loaded =true;
+		}
+
+		if(area.length) $.exec_json('material.dispMaterialList',{page:page, list_count:4}, callback);
+	},
+	API_OPEN_MATERIAL_EDITOR : function(sender, params) {
+		var seq = params[0];
+		var box = params[1];
+		var bef = params[2];
+		var cfg = this.configs[seq];
+
+		if (!cfg) cfg = this.create(seq);
+
+		if (bef) {
+			bef.after(cfg.editor);
+		} else {
+			cfg.editor.prependTo(configs[seq].writeArea);
+		}
+
+		cfg.editor.show();
+	},
+	API_CLOSE_MATERIAL_EDITOR : function(sender, params) {
+		var seq  = params[0];
+		var save = params[1];
+		var cfg  = this.configs[seq];
+		var box;
+
+		if (save && cfg.to_save) {
+			var newBox = cfg.to_save.children('div.eArea');
+
+			cfg.to_save = null;
+			cfg.editor.before(box=newBox);
+		} else {
+			box = cfg.editor.prev('div.eArea');
+		}
+
+		cfg.editor.hide().appendTo(configs[seq].writeArea);
+
+		if(!box.length) box = cfg.editor.prev('div.eArea');
+		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
+	}
+});
+editor.registerPlugin(new MaterialWriter);
+
+// File Writer
+var regex_srl  = /filesrl_([0-9-]+)/;
+var FileWriter = xe.createPlugin('FileWriter', {
+	configs : {},
+	init : function() {
+		this.configs = {};
+	},
+	create : function(seq) {
+		var self = this;
+		var _editor   = configs[seq].writeArea.find('>div.file');
+		var _files    = _editor.find('dl.attachedFile');
+		var _summary  = _editor.find('p.summary').next('div.hr').andSelf();
+		var _template = _files.find('> dd:first').show().remove();
+		var _count    = _summary.find('strong.filecount');
+		var _size     = _summary.find('em.filesize');
+		var _inputs   = _editor.find('input[type=text]');
+
+		this.cast('ADD_DEFAULT_EDITOR_ACTION', [seq, _editor, 'FILE']);
+
+		this.configs[seq] = {
+			editor    : _editor,
+			template  : _template,
+			summary   : _summary,
+			files     : _files,
+			count     : _count,
+			size      : _size,
+			desc      : _inputs.eq(0),
+			cite      : _inputs.eq(1),
+			n_count   : 0,
+			n_size    : 0,
+			queue_idx : 0
+		};
+
+		return this.configs[seq];
+	},
+	onstartupload : function(seq) {
+		this.configs[seq].queue_idx = 0;
+	},
+	onfileuploaded : function(seq, fileObj, serverData, obj) {
+		var self = this;
+		var cfg  = this.configs[seq];
+		var tpl  = cfg.template.clone();
+
+		tpl.find('>strong').text(fileObj.name);
+		tpl.find('>em').text(this.formatsize(fileObj.size));
+		tpl.addClass('filesrl_-'+(orderedFiles.length+cfg.queue_idx));
+		tpl.find('button.buttonDelete').click(function(){ self.ondelete(seq, $(this)) }).hide();
+		tpl.appendTo(cfg.files);
+
+		cfg.files.show().append(tpl);
+		cfg.queue_idx++;
+
+		// summary
+		cfg.summary.show();
+		cfg.count.text(++cfg.n_count);
+		cfg.size.text(this.formatsize(cfg.n_size += fileObj.size));
+
+		// process next queue
+		if (obj.getStats().files_queued > 0) obj.startUpload();
+	},
+	onreloadlist : function(seq, upload_target_srl) {
+		var cfg  = this.configs[seq];
+
+		if(upload_target_srl) editorRelKeys[seq].primary.value = upload_target_srl;
+		cfg.files.children('dd').each(function(){
+			var dd  = $(this);
+			var srl = dd.attr('class').match(regex_srl);
+			var cls;
+
+			if (!srl || !srl[1]) return;
+
+			cls = srl[0]; srl = parseInt(srl[1]);
+
+			if (srl <= 0) {
+				var fileObj = orderedFiles[Math.abs(srl)];
+
+				if (!fileObj) return;
+
+				// 기존 파일 시퀀스를 지우고 새 시퀀스 추가
+				dd.removeClass(cls).addClass('filesrl_'+fileObj.file_srl);
+
+				// 삭제버튼 보여주기
+				dd.find('button.buttonDelete').show();
 			}
 		});
-
-		s = t.html();
-		if (!s) return '';
-
-		return s;
 	},
-	setData : function(eArea) {
-		this.oList.html(eArea.html()).find('span').each(function(){
-			var o = $(this), ip = $('<input type="text">').val(o.text()), a = o.find('>a');
-			o.replaceWith(ip);
+	ondelete : function(seq, btn) {
+		var cfg = this.configs[seq];
+		var srl = btn.parent().attr('class').match(regex_srl);
+
+		if (!srl || !srl[1] || (srl=parseInt(srl[1])) < 0) return;
+
+		// remove this file
+		btn.parent().remove();
+		if (!cfg.files.children('dd').length) {
+			cfg.files.hide();
+			cfg.summary.hide();
+		}
+
+		// TODO : delete this file from the server
+
+		var fileObj = uploadedFiles[srl];
+		if (fileObj) {
+			cfg.count.text(--cfg.n_count);
+			cfg.size.text(this.formatsize(cfg.n_size -= fileObj.file_size));
+		}
+	},
+	formatsize : function(size) {
+		size = parseFloat(size);
+		if (isNaN(size)) return 'NaN';
+
+		var units = ['B','KB','MB','GB','TB'];
+		var i = 0;
+
+		while((i < units.length-1) && size > 1024) {
+			size /= 1024;
+			i++;
+		}
+
+		size = (size+'').replace(/(\.\d{2})\d+$/, '$1') + ' ' + units[i];
+
+		return size;
+	},
+	API_ONREADY : function() {
+		reloadFileList({fileListAreaID:'',editorSequence:1,uploadTargetSrl:''});
+	},
+	API_SETTING_CONTENT : function(sender, params) {
+		var seq = params[0];
+		var obj = params[1];
+
+		obj.children('div.xe_dr_file,dl.attachedFile')
+			.each(function(){
+				var t = $(this);
+
+				if (t.is('dl')) {
+					var div = t.wrap('<div>').parent();
+
+					if ((t=t.next('p.desc,p.cite')).length) div.appned(t);
+					if ((t=t.next('p.desc,p.cite')).length) div.appned(t);
+
+					t = div;
+				}
+
+				t.attr('class', 'eArea _file').attr('type', 'file');
+			});
+	},
+	API_GETTING_CONTENT : function(sender, params) {
+		var seq = params[0];
+		var obj = params[1];
+
+		obj.children('div._file')
+			.each(function(){
+				var t = $(this);
+				t.before(t.children('dl,p')).remove();
+			});
+	},
+	API_OPEN_FILE_EDITOR : function(sender, params) {
+		var self = this;
+		var init = false;
+		var seq = params[0];
+		var box = params[1];
+		var bef = params[2];
+		var cfg = this.configs[seq];
+		
+
+		if (!cfg) {
+			cfg  = this.create(seq);
+			init = true;
+		}
+
+		this.cast('RESET_EDITOR', [seq, cfg.editor, 'FILE']);
+
+		if(box) {
+			box.find('dl.attachedFile > dd').each(function(){
+				var dd  = $(this);
+				var tpl = cfg.template.clone();
+				var srl = dd.attr('class').match(regex_srl);
+
+				if (!srl || !(srl=srl[1])) return;
+				srl = parseInt(srl);
+
+				tpl.addClass('filesrl_'+srl);
+				tpl.find('>strong').text(dd.find('>a').text());
+				tpl.find('>em').text(dd.find('>span').text());
+				tpl.find('button.buttonDelete').click(function(){ self.ondelete(seq, $(this)) });
+
+				cfg.n_count++;
+				cfg.n_size += parseInt(uploadedFiles[srl].file_size) || 0
+
+				cfg.files.append(tpl);
+			});
+
+			cfg.count.text(cfg.n_count);
+			cfg.size.text(this.formatsize(cfg.n_size));
+			
+			cfg.files.show();
+			cfg.summary.show();
+
+			box.hide().after(cfg.editor);
+		} else if (bef) {
+			bef.after(cfg.editor);
+		} else {
+			cfg.editor.prependTo(configs[seq].writeArea);
+		}
+
+		cfg.editor.show();
+
+		if (init) {
+			// if you use firebug, this code will crash your firefox browser.
+			reloadCallback[seq] = function(upload_target_srl){ self.onreloadlist(seq, upload_target_srl) };
+
+			uploaderSettings['editorSequence'] = seq;
+			uploaderSettings['upload_start_handler']   = function(){ self.onstartupload(seq) };
+			uploaderSettings['upload_success_handler'] = function(file,serverData){self.onfileuploaded(seq,file,serverData,this)};
+			editorUploadInit(uploaderSettings);
+
+			init = true;
+		}
+	},
+	API_CLOSE_FILE_EDITOR : function(sender, params) {
+		var seq  = params[0];
+		var save = params[1];
+		var cfg  = this.configs[seq];
+		var box  = cfg.editor.prev('div._file:hidden');
+		var file = cfg.files.children('dd');
+		var desc = $.trim(cfg.desc.val());
+		var cite = $.trim(cfg.cite.val());
+
+		if (save && file.length) {
+			var newBox = $('<div class="eArea _file">').attr('type', 'file');
+			var dl     = $('<dl class="attachedFile"><dt>'+xe.lang.attached_files+'</dt></dl>').appendTo(newBox);
+
+			$.each(file, function(){
+				var dd  = $(this);
+				var srl = dd.attr('class').match(regex_srl);
+
+				if (!srl || !(srl=srl[1])) return;
+				srl = parseInt(srl);
+
+				var fileObj = uploadedFiles[srl];
+				var a  = $('<a>').attr('href', request_uri + fileObj.download_url).text(fileObj.source_filename);
+				var sz = $('<span>').text(fileObj.disp_file_size);
+				
+				
+				$('<dd>').attr('class', 'filesrl_'+srl).append(a).append(sz).appendTo(dl);
+			});
+
+			if (desc && desc != cfg.desc.attr('title')) newBox.append($('<p class="desc">').html(translate(desc)));
+			if (cite && cite != cfg.cite.attr('title')) newBox.append($('<p class="cite">').html(translate(cite)));
+
+			box.remove();
+			cfg.editor.before(box=newBox);
+		} else {
+			box.show();
+		}
+
+		cfg.editor.hide().appendTo(configs[seq].writeArea);
+
+		if(!box.length) box = cfg.editor.prev('div.eArea');
+		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
+	},
+	API_BEFORE_RESET_EDITOR : function(sender, params) {
+		var seq  = params[0];
+		var type = params[2];
+
+		if (type == 'FILE') {
+			var cfg = this.configs[seq];
+			cfg.n_count = 0;
+			cfg.n_size  = 0;
+			cfg.count.text(0);
+			cfg.size.text(0);
+			cfg.summary.hide();
+			cfg.files.empty().hide();
+		}
+	}
+});
+editor.registerPlugin(new FileWriter);
+
+// List Writer
+var ListWriter = xe.createPlugin('ListWriter', {
+	configs : {},
+	init : function() {
+		this.configs = {};
+	},
+	create : function(seq) {
+		var self = this;
+		var _editor  = configs[seq].writeArea.find('>div.list');
+		var _toolbar = _editor.find('ul.toolbar');
+		var _list    = _editor.find('div.listArea');
+		
+		this.cast('ADD_DEFAULT_EDITOR_ACTION', [seq, _editor, 'LIST']);
+
+		_toolbar.find('button').click(function(){
+			var type = $(this).attr('class').match(/type_([a-z]+)/);
+			if (!type || !type[1]) return false;
+
+			self.ontoolbutton(seq, type[1]);
+
+			return false;
 		});
 
-		this.setEvent();
+		this.configs[seq] = {
+			editor  : _editor,
+			toolbar : _toolbar,
+			list    : _list,
+			focused : null
+		};
+
+		return this.configs[seq];
 	},
-	setEvent : function() {
-		this.oList.find('input[type=text]:not(.hasHandler)').addClass('hasHandler').addClass('xe_content').keydown(this.$onkeydown).focus(this.$onfocus).blur(this.$onblur);
+	ontoolbutton : function(seq, type) {
+		var cfg = this.configs[seq];
+
+		if (!cfg.focused) return alert(no_selected_object_msg);
+
+		var par = cfg.focused.parent('li').parent('ul,ol');
+		if (par.length && type) par.eq(0).css('list-style-type', type);
+
+		cfg.focused.focus();
 	},
-	newItem : function(returnObject) {
+	add_event : function(seq) {
+		var self = this;
+
+		this.configs[seq].list.find('li > input:not(.hasHandler)')
+			.addClass('hasHandler xe_content')
+			.keydown(function(event){ return self.onkeydown(seq, event) })
+			.focus(function(event){ return self.onfocus(seq, event) });
+	},
+	new_item : function(returnObj) {
 		var html = '<li><input type="name" /></li>';
 
-		return returnObject?$(html):html;
+		return returnObj?$(html):html;
 	},
-	moveUp : function(obj, li) {
+	onkeydown : function(seq, event) {
+		var meta = ((navigator.platform||'').indexOf('Mac')<0)?true:e.metaKey;
+		var ctrl = event.ctrlKey && meta;
+		var cfg  = this.configs[seq];
+		var obj  = $(event.target);
+		var li   = obj.parent('li');
+		var item, ul, stop = false;
+
+		switch(event.keyCode) {
+			case 13: // enter
+				stop = true;
+				if (!$.trim(obj.val())) return obj.focus() && false;
+
+				if (ctrl) {
+					self.cast('CLOSE_LIST_EDITOR', [seq, true]);
+				} else {
+					li.after(item = this.new_item(true));
+					this.add_event(seq);
+					item.find('>input').focus();
+				}
+				break;
+			case 37: // left
+				if (!ctrl) break;
+				stop = true;
+				this.move_left(obj, li);
+				setTimeout(function(){obj.focus();}, 1);
+				break;
+			case 39: // right
+				if (!ctrl) break;
+				stop = true;
+				this.move_right(obj, li);
+				setTimeout(function(){obj.focus();},1);
+				break;
+			case 38: // up
+				if (!ctrl) {
+					if (!event.altKey && !event.shiftKey) {
+						var objs = cfg.list.find('input[type=text]');
+						var idx  = objs.index(obj);
+						if (idx > 0) objs.eq(idx-1).focus();
+					}
+					break;
+				}
+				stop = true;
+				this.move_up(obj, li);
+				setTimeout(function(){obj.focus();}, 1);
+				break;
+			case 40: // down
+				if (!ctrl) {
+					if (!event.altKey && !event.shiftKey) {
+						var objs = cfg.list.find('input[type=text]');
+						var idx  = objs.index(obj);
+						if (idx < objs.length-1) objs.eq(idx+1).focus();
+					}
+					break;
+				}
+				stop = true;
+				this.move_down(obj, li);
+				setTimeout(function(){obj.focus()}, 1);
+				break;
+		}
+
+		return !stop;
+	},
+	move_up : function(obj, li) {
 		if (li.prev('li').length) return li.prev('li').before(li);
 
-		var lev = this.getLevel(li);
+		var lev = this.get_level(li);
 		if (lev == 1) return;
 
 		var par = li.parent().parent('li');
@@ -1103,10 +1819,10 @@ dr.listWriter = $.Class({
 			par.parent('ol,ul').prepend(li);
 		}
 	},
-	moveDown : function(obj, li) {
+	move_down : function(obj, li) {
 		if (li.next('li').length) return li.next('li').after(li);
 
-		var lev = this.getLevel(li);
+		var lev = this.get_level(li);
 		if (lev == 1) return;
 
 		var par = li.parent().parent('li');
@@ -1123,8 +1839,8 @@ dr.listWriter = $.Class({
 			par.parent('ol,ul').append(li);
 		}
 	},
-	moveLeft : function(obj, li) {
-		if (this.getLevel(li) == 1) return;
+	move_left : function(obj, li) {
+		if (this.get_level(li) == 1) return;
 
 		var next = li.nextAll('li');
 		var list = li.children('ul,ol');
@@ -1136,7 +1852,7 @@ dr.listWriter = $.Class({
 
 		li.parent().parent('li').after(li);
 	},
-	moveRight : function(obj, li) {
+	move_right : function(obj, li) {
 		var prev = li.prev('li');
 		var list = prev.children('ul,ol');
 
@@ -1146,7 +1862,7 @@ dr.listWriter = $.Class({
 			$('<ul>').append(li).appendTo(prev);
 		}
 	},
-	getLevel : function(elem) {
+	get_level : function(elem) {
 		var el  = $(elem).get(0);
 		var lev = 0;
 		var tag = '';
@@ -1160,730 +1876,265 @@ dr.listWriter = $.Class({
 
 		return lev;
 	},
-	onbtnclick : function(e) {
-		var btn = $(e.target);
-		var typ = btn.attr('class').match(/type_([a-z-]+)/i);
-
-		typ = typ?typ[1]:'';
-
-		if (!this.focusedObj) return alert(no_selected_object_msg);
-
-		var par = this.focusedObj.parent('li').parent('ul,ol');
-		if (par.length && typ) par.eq(0).css('list-style-type', typ);
-
-		this.focusedObj.focus();
+	onfocus : function(seq, event) {
+		this.configs[seq].focused = $(event.target);
 	},
-	onkeydown : function(e) {
-		var meta = ((navigator.platform||'').indexOf('Mac')<0)?true:e.metaKey;
-		var ctrl = e.ctrlKey && meta;
-		var obj  = $(e.target);
-		var li   = obj.parent('li');
-		var item, ul, stop = false;
-
-		switch(e.keyCode) {
-			case 13: // enter
-				stop = true;
-				if (!$.trim(obj.val())) {
-					alert('값을 입력해주세요.');
-					return obj.focus() && false;
-				}
-
-				li.after(item = this.newItem(true));
-				this.setEvent();
-				item.find('>input').focus();
-				break;
-			case 37: // left
-				if (!ctrl) break;
-				stop = true;
-				this.moveLeft(obj, li);
-				setTimeout(function(){obj.focus();},0.1);
-				break;
-			case 39: // right
-				if (!ctrl) break;
-				stop = true;
-				this.moveRight(obj, li);
-				setTimeout(function(){obj.focus();},0.1);
-				break;
-			case 38: // up
-				if (!ctrl) {
-					if (!e.altKey && !e.shiftKey) {
-						var objs = this.obj.find('input[type=text]');
-						var idx  = objs.index(obj);
-						if (idx > 0) objs.eq(idx-1).focus();
-					}
-					break;
-				}
-				stop = true;
-				this.moveUp(obj, li);
-				setTimeout(function(){obj.focus();},0.1);
-				break;
-			case 40: // down
-				if (!ctrl) {
-					if (!e.altKey && !e.shiftKey) {
-						var objs = this.obj.find('input[type=text]');
-						var idx  = objs.index(obj);
-						if (idx < objs.length-1) objs.eq(idx+1).focus();
-					}
-					break;
-				}
-				stop = true;
-				this.moveDown(obj, li);
-				setTimeout(function(){obj.focus();},0.1);
-				break;
-		}
-
-		return !stop;
+	API_SETTING_CONTENT : function(sender, params) {
+		var seq = params[0];
+		var obj = params[1];
 	},
-	onfocus : function(e) {
-		this.focusedObj = $(e.target).addClass('hasFocus');
-	},
-	onblur : function(e) {
-/*
-		var old  = e.target;
-		var self = this;
-
-		setTimeout(function(){
-			if (self.focusedObj && self.focusedObj.get(0) == old) self.focusedObj = null;
-		}, 100);
-*/
-	}
-}).extend(dr.baseWriter);
-
-dr.blockquoteWriter = $.Class({
-	name : 'blockquote',
-	oTxt  : null,
-	oSrc  : null,
-	$init : function(writeArea, oEditor) {
-		this.oTxt = this.obj.find('textarea:first');
-		this.oSrc = this.obj.find('input[type=text]:first');
-	},
-	getData : function() {
-		var str = this.oTxt.val();
-		var src = this.oSrc.val();
-		if(!str) return;
-
-		var r ='<blockquote><p>'+translate(str)+'</p>';
-		if(src) r+='<cite>'+translateCite(src)+'</cite>';
-		r +='</blockquote>';
-		return r;
-	},
-	setData : function(eArea) {
-		var div = $('<div>').append(eArea.find('blockquote').clone());
-
-		div.find('cite').remove();
-
-		this.oTxt.val(div.text());
-		this.oSrc.val(eArea.find('cite').html());
-	},
-	reset : function() {
-		this.oTxt.val('').blur();
-		this.oSrc.val('').blur();
-	}
-}).extend(dr.baseWriter);
-
-
-dr.imgWriter = $.Class({
-	name    : 'img',
-	oForm   : null,
-	oFrame  : null,
-	oFile   : null,
-	oDesc   : null,
-	oImg    : null,
-	oMsg    : null,
-	oCancel : null,
-	timer   : null,
-	cbID    : '',
-	srl	: '',
-
-	$init : function() {
-		var self = this;
-
-		this.oFile = this.obj.find('input[type=file]');
-		this.oDesc = this.obj.find('input[type=text].desc');
-		this.oCite = this.obj.find('input[type=text].cite');
-		this.oImg  = this.obj.find('div.image > img').eq(0);
-		this.oResize  = this.obj.find('div.resize');
-		this.oResizeError  = this.obj.find('div.resize .resizeError');
-		this.oMsg    = this.obj.find('p.uploading');
-		this.oCancel = this.oMsg.find('>button').click(function(){ self.reset(); });
-		this.src = null;
-		this.resized = false;
-		this.oResize.find('button.btn_resize').click(function(e){
-			var w = self.oResize.find('input.width.copy').val();	
-			if(!self.src) self.src = self.oImg.attr('src');
-
-			if(parseInt(w) > parseInt(self.oResize.find('dd>em').html())){
-				self.oResizeError.addClass('open');
-				return false;
-			}else{
-				self.oResizeError.removeClass('open');
-				$.exec_json('file.procFileImageResize',{width:w, source_src:self.src},function(data){
-					if(data.error==0){
-						self.resized =true;
-						self.oImg.attr({
-							src:data.resized_info.src,
-							width:data.resized_info.info[0],
-							height:data.resized_info.info[1]
-							});
-                        if(!self.oImg.attr('rawsrc'))self.oImg.attr('rawsrc', self.src);
-					}
-				});
-			}		
-		});
-		this.oFrame = $('<iframe name="xe_dr_imgframe_'+(new Date).getTime()+'" style="position:absolute;width:1px;height:1px">').css('opacity',0).appendTo(this.obj);
-
-		var strForm = '<form action="" target="'+this.oFrame.attr('name')+'" method="POST" enctype="multipart/form-data"><input type="hidden" name="editor_sequence" value="'+this.editor.seq+'" /><input type="hidden" name="callback" /><input type="hidden" name="file_srl" /><input type="hidden" name="mid" value="'+current_mid+'" /><input type="hidden" name="module" value="file" /><input type="hidden" name="act" value="procFileIframeUpload" /><input type="hidden" name="uploadTargetSrl" value="" />';
-
-		if(typeof(xeVid)=='undefined') {
-			this.oForm = $(strForm+'</form>');
-		} else {
-			this.oForm  = $(strForm+'<input type="hidden" name="vid" value="'+xeVid+'" /></form>');
-		}
-		this.oForm.prependTo(document.body);
-		this.oFile.change($.fnBind(this.onFileChange, this));
-		this.oImg.parent().hide();
-	},
-	getData : function() {
-		var desc = this.oDesc.val();
-		var cite = this.oCite.val();
-
-		if(desc == this.oDesc.attr('title')) desc = '';
-		if(!this.oImg.attr('src'))return;
-
-		var r ='<p>'+this.oImg.parent().html()+'</p>';
-		if(desc) r+='<p class="desc">'+translate(desc)+'</p>';
-		if(cite) r+='<p class="cite">'+translateCite(cite)+'</p>';
-		return r;
-	},
-	setData : function(eArea) {
-		var img = eArea.find('img');
-		var srl = img.attr('class').match(/xe_file_srl_(\d+)/);
-		// 폼 리셋
-		//this.reset();
-
-		// 시리얼 찾고
-		this.srl = srl?srl[1]:'';
-
-        // 원본이미지경로 찾기
-		if(img.attr('rawsrc'))
-		    this.oImg.attr('rawsrc', img.attr('rawsrc'));
-
-		// 사진 보여주기
-		this.showResize('', img.attr('src'));
-
-		// 사진 설명
-		this.oDesc.val(eArea.find('p.desc').html()).blur();
-		this.oCite.val(eArea.find('p.cite').html()).blur();
-	},
-
-	reset : function() {
-		var prev = this.oFile.prev();
-		this.resized = false;
-		this.oForm.append(this.oFile).get(0).reset();
-		prev.after(this.oFile);
-
-		this.src=null;
-		this.srl=null;
-		this.oImg.attr('src','');
-		this.oImg.attr('class','');
-        this.oImg.removeAttr('rawsrc');
-		this.oDesc.val('').blur();
-		this.oCite.val('').blur();
-		this.oResize.removeClass('open');
-		this.oResizeError.removeClass('open');
-		this.oImg.parent().hide();
-		this.oMsg.hide();
-
-		this.oFrame.attr('src', 'about:blank');
-	},
-	/**
-	 * @brief 파일을 선택한 직후
-	 **/
-	onFileChange : function(e) {
-		var self = this, prev = this.oFile.prev();
-		
-		if(!/\.(gif|jpg|png|jpeg)$/i.test(this.oFile.val())){
-			this.oFile.val('');
-			return;
-		}
-
-		// 콜백
-		if (this.cbID) window[this.cbID] = function(){};
-		this.cbID = ''+(new Date).getTime()+Math.ceil(Math.random()*1000);
-		window[this.cbID] = $.fnBind(this.onFileUploaded, this);
-
-		// 파일을 바로 업로드 한다.
-		this.oForm.find('input[name=callback]').val(this.cbID);
-		this.oForm.find('input[name=file_srl]').val(this.srl);
-		this.oForm.find('input[name=uploadTargetSrl]').val(editorRelKeys[this.editor.seq]["primary"].value);
-		this.oForm.append(this.oFile);
-		this.oForm.submit();
-		setTimeout(function(){ prev.after(self.oFile) }, 0);
-
-		// 이미지를 숨기고 업로드 중이라는 메시지를 보여준다.
-		this.oImg.parent().hide();
-		this.oMsg.show();
-	},
-	/**
-	 * @brief 파일 업로드가 완료되었을 때
-	 **/
-	onFileUploaded : function(fileObj) {
-		if(fileObj.error==-1){
-			alert(fileObj.message);
-			return;
-		}
-		var self = this;
-
-		this.srl = fileObj.file_srl;
-		this.oImg.removeAttr('src').removeAttr('width').removeAttr('height');
-
-        if(fileObj.upload_target_srl && fileObj.upload_target_srl != 0) {
-            editorRelKeys[this.editor.seq]["primary"].value = fileObj.upload_target_srl;
-        }
-
-		this.showResize('xe_file_srl_'+fileObj.file_srl,fileObj.uploaded_filename);
-		this.oMsg.hide();
-
-		// 이미지 파일도 서버측에서는 파일로 카운트 되므로,
-		// reloadFileList를 호출해서 orderedFiles와 uploadedFiles 배열을 갱신해주도록 한다.
-		// 관련 이슈 : http://textyle.xpressengine.net/18256095
-		var settings = {
-			fileListAreaID : '',
-			editorSequence : this.editor.seq,
-			uploadTargetSrl : ''
-		};
-		reloadCallback[this.editor.seq] = function(){};
-		reloadFileList(settings);
-	},
-
-	showResize : function(css,src){
-		var self = this;
-
-		this.oImg.removeAttr('src').removeAttr('width').removeAttr('height');
-		if(css) this.oImg.addClass(css);
-		this.oImg.attr({'src' : src	,'alt':''}).load(function(e){
-			var w = this.width, h=this.height,t=$(this);
-			if(w>600 && !self.resized){
-				self.oResize.addClass('open');
-				self.oResize.find('dd>em').html(w);
-				self.oResize.find('dd>input').val(600);
-			}
-		}).parent().show();
-	}
-}).extend(dr.baseWriter);
-
-
-dr.movWriter = $.Class({
-	name  : 'mov',
-	oCode : null,
-	oDesc : null,
-	$init : function(writeArea, oEditor) {
-		var textarea = this.obj.find('textarea');
-		this.oCode = textarea.eq(0);
-		this.oDesc = textarea.eq(1);
-		this.oCite = this.obj.find('input[type=text]').eq(0);
-	},
-	getData : function() {
-		var code = this.oCode.val();
-		var desc = this.oDesc.val();
-		var cite = this.oCite.val();
-
-		if(!code) return;
-		if(desc) code += '<p class="desc">'+translate(desc)+'</p>';
-		if(cite) code += '<p class="cite">'+translateCite(cite)+'</p>';
-		return code;
-	},
-	setData : function(eArea) {
-		var code = $('<div>').append(eArea.find('object,embed').eq(0)).html();
-		this.oCode.val(code || this.oCode.attr('title'));
-		this.oDesc.val(eArea.find('p.desc').text()).blur();
-		this.oCite.val(eArea.find('p.cite').html()).blur();
-	},
-	reset : function() {
-		this.oCode.val('').blur();
-		this.oDesc.val('').blur();
-		this.oCite.val('').blur();
-	}
-}).extend(dr.baseWriter);
-
-
-
-dr.fileWriter = $.Class({
-	name  : 'file',
-	init  : false,
-	oTpl  : null,
-	oDesc : null,
-	rxSrl : /filesrl_([0-9-]+)/,
-	$init : function(writeArea, oEditor) {
-		this.oTpl  = this.obj.find('dl>dd:first').remove();
-		this.oDesc = this.obj.find('input[type=text]').eq(0);
-		this.oCite = this.obj.find('input[type=text]').eq(1);
-	},
-	show  : function(eArea) {
-		var self = this;
-		this.$super.show(eArea);
-		if (!this.init) {
-			reloadCallback[this.editor.seq] = $.fnBind(this.onReloadFileList, this);
-
-			uploaderSettings['editorSequence'] = this.editor.seq;
-			uploaderSettings['upload_start_handler'] = $.fnBind(this.onUploadStart, this);
-			uploaderSettings['upload_success_handler'] = function(file,serverData){self.onUploadSuccess(file,serverData,this)};
-			editorUploadInit(uploaderSettings);
-
-			this.init = true;
-		}
-	},
-	getData : function() {
-		var self = this;
-		var d = this.oDesc.val();
-		var c = this.oCite.val();
-		var dl = '<dl class="attachedFile"><dt>첨부파일</dt>';
-		if (d == this.oDesc.attr('title')) d = '';
-		else d = '<p class="desc">'+translate(d)+'</p>';
-		if (c == this.oCite.attr('title')) c = '';
-		else c = '<p class="cite">'+translateCite(c)+'</p>';
-
-		if(this.obj.find('dl > dd').size()==0) return;
-
-		this.obj.find('dl > dd').each(function(){
-			var dd  = $(this);
-			var srl = dd.attr('class').match(self.rxSrl);
-
-			if (!srl) return;
-			if ((srl = parseInt(srl[1])) < 0) return;
-
-			var fileObj = uploadedFiles[srl];
-			dl += '<dd class="filesrl_'+srl+'"><a href="'+ request_uri + fileObj.download_url+'">'+fileObj.source_filename+'</a> '+fileObj.disp_file_size+'</dd>';
-		});
-
-		dl += '</dl>';
-
-		return dl+d+c;
-	},
-	setData : function(eArea) {
-		var self = this;
-
-		this.totalFileCount = 0;
-		this.totalFileSize = 0;
-
-		// 요약 정보 보이기
-		this.obj.find('p.summary').next('div.hr').andSelf().show();
-
-		// 파일 설명
-		this.oDesc.val(eArea.find('p.desc').text()).blur();
-		this.oCite.val(eArea.find('p.cite').text()).blur();
-
-		// 파일정보 가져와서 세팅
-		this.obj.find('dl').empty();
-		eArea.find('dl.attachedFile > dd').each(function(){
-			var dd  = $(this);
-			var tpl = self.oTpl.clone().show();
-			var srl = dd.attr('class').match(self.rxSrl);
-
-			if (!srl || srl.length < 2) return;
-			srl = parseInt(srl[1]);
-
-			self.totalFileCount++;
-			self.totalFileSize += parseInt(uploadedFiles[srl].file_size)||0;
-
-			tpl.addClass('filesrl_'+srl);
-			tpl.find('>strong').text(dd.find('>a').text());
-			tpl.find('>em').text(dd.find('>span').text());
-
-			self.obj.find('dl').append(tpl);
-		});
-
-		// 종합 정보
-		var summary = this.obj.find('p.summary');
-		summary.next('div.hr').andSelf().show();
-		summary.find('.filecount').text(this.totalFileCount);
-		summary.find('.filesize').text(this.formatSize(this.totalFileSize));
-	},
-	reset : function() {
-		this.totalFileCount = 0;
-		this.totalFileSize = 0;
-
-		this.obj.find('dl').empty();
-		this.oDesc.val('').blur();
-		this.oCite.val('').blur();
-		this.obj.find('p.summary').next('div.hr').andSelf().hide();
-	},
-	formatSize : function(size) {
-		size = parseFloat(size);
-		if (isNaN(size)) return 'NaN';
-
-		var units = ['B','KB','MB','GB','TB'];
-		var i = 0;
-
-		while((i < units.length-1) && size > 1024) {
-			size /= 1024;
-			i++;
-		}
-
-		size = (size+'').replace(/(\.\d{2})\d+$/, '$1') + ' ' + units[i];
-
-		return size;
-	},
-	onUploadStart : function() {
-		this.queueIndex = 0;
-		return true;
-	},
-	onUploadSuccess : function(file, serverData, obj) {
-		this.onFileUploaded(file);
-		if (obj.getStats().files_queued > 0) obj.startUpload();
-	},
-	onFileUploaded : function(fileObj) {
-		var self = this;
-		var tpl  = this.oTpl.clone().show();
-
-		tpl.find('>strong').text(fileObj.name);
-		tpl.find('>em').text(this.formatSize(fileObj.size));
-		tpl.addClass('filesrl_-'+(orderedFiles.length+this.queueIndex));
-		tpl.find('button.buttonDelete').click(function(){
-			var btn = $(this);
-			var srl = btn.parent().attr('class').match(self.rxSrl);
-
-			if (!srl) return;
-			if ((srl = parseInt(srl[1])) < 0) return;
-
-			// TODO : 파일을 서버에서 제거 후 onFileDelete 실행
-
-			self.onFileDelete(btn);
-		}).hide();
-
-		this.obj.find('dl').append(tpl);
-
-		this.queueIndex++;
-
-		// 요약 정보
-		this.totalFileCount++;
-		this.totalFileSize += fileObj.size;
-
-		var summary = this.obj.find('p.summary');
-		summary.next('div.hr').andSelf().show();
-		summary.find('.filecount').text(this.totalFileCount);
-		summary.find('.filesize').text(this.formatSize(this.totalFileSize));
-	},
-	onFileDelete : function(obj) {
-		var summary = this.obj.find('p.summary');
-
-		obj.parent().remove();
-
-		if (this.obj.find('dl > dd').length == 0) {
-			summary.next('div.hr').andSelf().hide();
-		}
-	},
-	onReloadFileList : function(upload_target_srl) {
-		var self = this;
-        if(upload_target_srl && upload_target_srl != 0) {
-            editorRelKeys[this.editor.seq]["primary"].value = upload_target_srl;
-        }
-
-		this.obj.find('dl > dd').each(function(){
-			var dd  = $(this);
-			var srl = dd.attr('class').match(self.rxSrl);
-			var cls;
-
-			if (!srl) return;
-			cls = srl[0];
-			srl = parseInt(srl[1]);
-
-			if (srl <= 0) {
-				var fileObj = orderedFiles[Math.abs(srl)];
-
-				if (!fileObj) return;
-
-				// 기존 파일 시퀀스를 지우고 새 시퀀스 추가
-				dd.removeClass(cls).addClass('filesrl_'+fileObj.file_srl);
-
-				// 삭제버튼 보여주기
-				dd.find('button.buttonDelete').show();
-			}
-		});
-	}
-}).extend(dr.baseWriter);
-
-dr.hrWriter = $.Class({
-	name : 'hr',
-	oRadio : null,
-	$init : function(writeArea, oEditor) {
-		this.oRadio = this.obj.find('input[type=radio]');
-		this.oMore  = this.obj.find('input[type=text]:first');
-		this.oLess  = this.obj.find('input[type=text]:last');
-	},
-	getData : function() {
-		var type = this.oRadio.filter('[checked]').val();
-		switch (type) {
-			case 'hline':
-				return '<hr noshade="noshade" />';
-			case 'fold_from':
-				return '<span class="more">'+this.oMore.val()+'</span><span class="less">'+this.oLess.val()+'</span>';
-			case 'fold_to':
-				return '<span class="more_end"></span>';
-		}
-
-		return '';
-	},
-	setData : function(eArea) {
-
-	},
-	reset : function() {
-
-	}
-}).extend(dr.baseWriter);
-
-dr.indexWriter = $.Class({
-	name   : 'index',
-	$init  : function(writeArea, oEditor) {
-	},
-	reset : function() {
-		this.obj.find('ul').html(this.getIndexHTML());
-	},
-	getData : function() {
-		return '<ul class="toc">'+this.getIndexHTML()+'</ul>';
-	},
-	setData : function(eArea) {
-	},
-	getIndexHTML : function() {
-		var html = [];
-		var rand = (new Date).getTime();
-		this.editor.editArea.find('div.xe_dr_hx>h3,div.xe_dr_hx>h4,div.xe_dr_hx>h5').each(function(idx){
-			var id = $(this).attr('id') || rand+'-'+idx;
-			var hx = $(this).attr('id', id);
-			html.push('<li class="toc'+this.nodeName.replace(/[^0-9]/,'')+'"><a href="#'+id+'">'+hx.text()+'</a></li>');
-		});
-
-		return html.join('');
-	},
-	$ON_ADD_CONTENT : function(type) {
-		if (type != 'hx') return;
-		this.editor.editArea.find('div.xe_dr_index ul.toc').html(this.getIndexHTML());
-	},
-	$ON_DEL_CONTENT : function(type) {
-		if (type != 'hx') return;
-		this.editor.editArea.find('div.xe_dr_index ul.toc').html(this.getIndexHTML());
-	},
-	$ON_SORT_STOP : function(type) {
-		this.editor.editArea.find('div.xe_dr_index ul.toc').html(this.getIndexHTML());
-	}
-}).extend(dr.baseWriter);
-
-dr.materialWriter = $.Class({
-	name     : 'material',
-	tpl      : null,
-	selected : null,
-
-	$init : function(writeArea, oEditor) {
-		var self = this;
-
-		this.obj.find('button._close').click(function(e){ self.cancel(); });
-
-		// 리로드 버튼
-		this.obj.find('button._reload').click(function(){ self.loadMaterial()});
-
-		// 글감 읽어오기
-		this.tpl = this.obj.find('div._container > dl').remove(); // 템플릿을 미리 떼놓는다.
-		this.loadMaterial();
-	},
-	getData : function() {
-		if (this.selected) {
-			return this.selected.html();
-		} else {
-			return '';
-		}
-	},
-	setData : function(eArea) { },
-	save : function(e) {
-		this.selected = $(e.target).parents('dd').find('> div.eArea > div.eArea');
-		
-		var cls = this.selected.attr('class').match(/xe_dr_([a-z]+)/);
-		if (!cls) cls = ['xe_dr_txt','txt'];
-
-		var name = this.name;
-		this.name = cls[1];
-
-		this.$super.save(e);
-
-		this.name = name;
-
-		this.selected = null;
-	},
-	loadMaterialNext : function(){
-		if(++this.next_page>=this.total_page) this.next_page=this.total_page;
-		this.next_page = this.next_page>0?this.next_page:1;
-		this.loadMaterial(this.next_page);
-	},
-	loadMaterialPrev : function(){
-		this.prev_page = --this.prev_page>0?this.prev_page:1;
-		this.loadMaterial(this.prev_page);
-	},
-	loadMaterial : function(page) {
-		var self = this;
-		var area = this.obj.find('div._container');
-		var paginate = this.obj.find('div.paginate');
-
-		if (!page) page = 1;
-
-		function callback(data){
-			if(data.page_navigation.total_count) self.obj.find('p.noData').css('display','none');
-
-			// 글감 목록 전부 삭제
-			area.children().remove();
-
-			// 페이징
-			paginate.find('> span').text(data.page_navigation.cur_page+'/'+data.page_navigation.total_page);
-
-			self.prev_page  = data.page_navigation.cur_page;
-			self.next_page  = data.page_navigation.cur_page;
-			self.total_page = data.page_navigation.total_page;
-			
-			if(!self.loaded){
-				paginate.find('> button.prev').bind('click',$.fnBind(self.loadMaterialPrev,self));
-				paginate.find('> button.next').bind('click',$.fnBind(self.loadMaterialNext,self));
-			}
-
-			// 컨텐트 추가
-			$.each(data.material_list, function(){
-				var tpl = self.tpl.clone();
-
-				tpl.addClass('xe_dr_'+this.type);
-				tpl.find('dt').text(this.regdate.substring(0,4)+'.'+this.regdate.substring(4,6)+'.'+this.regdate.substring(6,8)+' '+this.regdate.substring(8,10)+':'+this.regdate.substring(10,12));
-				tpl.find('dd > div.eArea').html(this.content);
-				tpl.find('dd > span.buttonDrEditor > button').click(function(e){ self.save(e) });
-
-				area.append(tpl);
+	API_GETTING_CONTENT : function(sender, params) {
+		var seq = params[0];
+		var obj = params[1];
+
+		obj.children('div._list')
+			.each(function() {
+				var list = $(this).children('ul,ol');
+				list.parent().before(list).remove();
 			});
+	},
+	API_OPEN_LIST_EDITOR : function(sender, params) {
+		var seq = params[0];
+		var box = params[1];
+		var bef = params[2];
+		var cfg = this.configs[seq];
 
-			self.loaded =true;
+		if (!cfg) cfg = this.create(seq);
+
+		this.cast('RESET_EDITOR', [seq, cfg.editor, 'LIST']);
+
+		if(box) {
+			box.hide().after(cfg.editor)
+				.children('ul,ol').clone()
+				.appendTo(cfg.list.empty())
+				.find('li')
+				.each(function(){
+					var t = $(this);
+					var v = $.trim(t.text());
+					var c = t.children('ul,ol').remove();
+					t.empty().append( $('<input type="text">').val(v) ).append(c);
+				});
+		} else if (bef) {
+			bef.after(cfg.editor);
+		} else {
+			cfg.editor.prependTo(configs[seq].writeArea);
 		}
 
-		if(area.length) $.exec_json('material.dispMaterialList',{page:page, list_count:4}, callback);
+		this.add_event(seq);
+		cfg.editor.show().find('input[type=text]:first').focus();
 	},
-	createContentFromMaterial : function(obj) {
-		var div = $('<div class="eArea xe_content"></div>');
-		var cls = obj.attr('class').match(/xe_dr_([a-z]+)/);
-		var ctn = obj.find('dd');
+	API_CLOSE_LIST_EDITOR : function(sender, params) {
+		var seq  = params[0];
+		var save = params[1];
+		var cfg  = this.configs[seq];
+		var box  = cfg.editor.prev('div._list:hidden');
 
-		if (!cls) cls = ['xe_dr_txt','txt'];
+		if (save) {
+			var newBox = $('<div class="eArea _list">').attr('type', 'list');
+			var list   = cfg.list.children('ul,ol').appendTo(newBox);
+			var div    = $('<div>');
+			list.find('input[type=text]').each(function(){
+				var t = $(this);
+				var v = $.trim(t.val());
 
-		ctn.find('img').removeAttr('width');
+				if (v || t.parent().children('ul,ol').length) {
+					div.text(v);
+					t.parent().prepend(div[0].firstChild);
+					t.remove();
+				} else {
+					t.parent().remove();
+				}
+			});
+			list.find('ul:not(:has(li)),ol:not(:has(li))').remove();
 
-		return div.html(ctn.html()).addClass(cls[0]);
+			if (list.children('li').length) {
+				box.remove();
+				cfg.editor.before(box=newBox);
+			}
+		}
+
+		if(!box.length) box = cfg.editor.prev('div.eArea');
+		box.show();
+
+		cfg.editor.hide().appendTo(configs[seq].writeArea);
+
+		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
+	},
+	API_AFTER_RESET_EDITOR : function(sender, params) {
+		var seq  = params[0];
+		var edit = params[1];
+		var type = params[2];
+		var cfg  = this.configs[seq];
+
+		if (type == 'LIST') {
+			cfg.list.html('<ul><li><input type="text" /></li></ul>');
+		}
 	}
-}).extend(dr.baseWriter);
+});
+editor.registerPlugin(new ListWriter);
+
+// Link Writer
+var LinkWriter = xe.createPlugin('LinkWriter', {
+	configs : {},
+	init : function() {
+		this.configs = {};
+	},
+	create : function(seq) {
+		var self = this;
+		var _editor = configs[seq].writeArea.find('>div.link');
+		var _inputs = _editor.find('input[type=text]');
+		var _text   = _inputs.eq(0);
+		var _url    = _inputs.eq(1);
+		var _desc   = _inputs.eq(2);
+
+		this.cast('ADD_DEFAULT_EDITOR_ACTION', [seq, _editor, 'LINK']);
+
+		this.configs[seq] = {
+			editor : _editor,
+			text   : _text,
+			url    : _url,
+			desc   : _desc
+		};
+
+		return this.configs[seq];
+	},
+	API_SETTING_CONTENT : function(sender, params) {
+		var seq = params[0];
+		var obj = params[1];
+
+		obj.children('div.xe_dr_link,p.link')
+			.each(function(){
+				var t = $(this);
+				if (t.is('div.xe_dr_link')) {
+					var p = t.children('p');
+					if (p.length > 1) p.eq(0).append('<br />').append( $('<span class="desc"></span>').text(p.eq(1).text()) );
+				} else {
+					t = t.wrap('<div>').parent();
+				}
+				t.attr('class', 'eArea _link').attr('type', 'link');
+			});
+	},
+	API_GETTING_CONTENT : function(sender, params) {
+		var seq = params[0];
+		var obj = params[1];
+
+		obj.children('div._link')
+			.each(function(){
+				var p = $(this).children('p');
+				p.parent().before(p).remove();
+			});
+	},
+	API_OPEN_LINK_EDITOR : function(sender, params) {
+		var seq = params[0];
+		var box = params[1];
+		var bef = params[2];
+		var cfg = this.configs[seq];
+
+		if (!cfg) cfg = this.create(seq);
+
+		this.cast('RESET_EDITOR', [seq, cfg.editor, 'LINK']);
+
+		if(box) {
+			box.hide().after(cfg.editor);
+			cfg.text.val( box.find('strong').text() );
+			cfg.url.val( box.find('a').attr('href') );
+
+			var desc = $.trim(box.find('span').text());
+			if (desc) cfg.desc.val( desc );
+		} else if (bef) {
+			bef.after(cfg.editor);
+		} else {
+			cfg.editor.prependTo(configs[seq].writeArea);
+		}
+
+		cfg.editor.show();
+	},
+	API_CLOSE_LINK_EDITOR : function(sender, params) {
+		var seq  = params[0];
+		var save = params[1];
+		var cfg  = this.configs[seq];
+		var box  = cfg.editor.prev('div._link:hidden');
+
+		var text = $.trim(cfg.text.val());
+		var url  = $.trim(cfg.url.val());
+		var desc = $.trim(cfg.desc.val());
+
+		if (save && text && url) {
+			var newBox = $('<div class="eArea _link">').attr('type', 'link');
+			var para   = $('<p class="link">').appendTo(newBox)
+					.append( $('<strong>').text( text ) )
+					.append( $('<a>').attr('href', url).text(url) );
+
+			if (desc) para.append('<br>').append( $('<span class="desc">').text(desc) );
+
+			box.remove();
+			cfg.editor.before(box=newBox);
+		}
+
+		cfg.editor.hide().appendTo(configs[seq].writeArea);
+		if(!box.length) box = cfg.editor.prev('div.eArea');
+		box.show();
+		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
+	}
+});
+editor.registerPlugin(new LinkWriter);
 
 // Help
-dr.helpWriter = $.Class({
-	name : 'help',
-	$init : function() {
+var HelpViewer = xe.createPlugin('Help', {
+	views : {},
+	init : function() {
+		this.views = {};
+	},
+	create : function(seq) {
 		var self = this;
-		this.obj.find('span.buttonDrEditor > button').click(function(e){ self.cancel(); });
+
+		this.views[seq] = configs[seq].writeArea.find('div.help');
+		this.views[seq].find('button').click(function(){ self.cast('CLOSE_HELP_EDITOR', [seq, false]); });
 	},
-	getData : function() {
-		return '';
+	API_OPEN_HELP_EDITOR : function(sender, params) {
+		var seq = params[0];
+		var box = params[1];
+		var bef = params[2];
+
+		if(!this.views[seq]) this.create(seq);
+
+		if(box) {
+			box.after(this.views[seq]);
+		} else if (bef) {
+			bef.after(this.views[seq]);
+		} else {
+			configs[seq].writeArea.prepend(this.views[seq]);
+		}
+		this.views[seq].show().find('button').focus();
 	},
-	setData : function(eArea) { }
-}).extend(dr.baseWriter);
+	API_CLOSE_HELP_EDITOR : function(sender, params) {
+		if( (sender != this) ) return false;
+
+		var seq = params[0];
+		var box = this.views[seq].prev('div.eArea');
+
+		this.views[seq].hide();
+		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
+	}
+});
+editor.registerPlugin(new HelpViewer);
+
+// More
+var More = xe.createPlugin('More', {
+	API_BEFORE_CLICK_TOOLBUTTON : function(sender, params) {
+		var seq    = params[0];
+		var button = $(params[1]);
+
+		if(!button.parent().is('li.more')) return true;
+
+		button.parents('div.wToolbarContainer:first').toggleClass('more');
+
+		this.cast('TOOLBAR_REPOSITION', [seq]);
+
+		return false;
+	}
+});
+editor.registerPlugin(new More);
 
 // Utility function
 var table = {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'};
@@ -1897,7 +2148,7 @@ function translate(str) {
 function translateCite(str) {
 	var s = str.replace(/<(\/)?([abi]|em|strong|cite)(.*?)>|<|>|&|"/ig, function(m0,m1,m2,m3) {
 		m1 = m1 || '';
-		m2 = m2.toLowerCase();
+		m2 = (m2 || '' ).toLowerCase();
 		m3 = m3 || '';
 
 		if (table[m0]) return table[m0];
@@ -1908,6 +2159,11 @@ function translateCite(str) {
 	});
 
 	return s;
+}
+
+function is_left_click(event) {
+	var ie = $.browser.msie; 
+	return (typeof(event.button)=='undefined' || (ie && event.button == 1) || (!ie && event.button == 0));
 }
 
 })(jQuery);

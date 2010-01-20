@@ -1,0 +1,11 @@
+.wToolbar.fold button{ opacity:.5; filter:alpha(opacity=50);}
+.wToolbar.fold li.fold button{ opacity:1; filter:alpha(opacity=100);}
+.wToolbar li.fold button{ background:transparent url(fold.png) no-repeat center center; }
+
+.editorArea ._fold { padding:5px; background-color:#ffcc00;  }
+.editorArea ._fold span { cursor:pointer;  }
+.editorArea ._fold_last span { display:none; }
+.editorArea ._fold span.more { display:none; }
+.editorArea ._fold_more span.less { display:none; }
+.editorArea ._fold_more span.more { display:inline; }
+.editorArea ._fold_hide { display:none; }

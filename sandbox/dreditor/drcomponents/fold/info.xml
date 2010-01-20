@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<drcomponent name="fold">
+    <title xml:lang="ko">접기</title>
+    <title xml:lang="en">Fold</title>
+    <description xml:lang="ko">접고 펼치는 블럭을 추가할 수 있습니다.</description>
+    <description xml:lang="en">접고 펼치는 블럭을 추가할 수 있습니다.</description>
+    <date>2010-01-20</date>
+
+    <author email_address="gonom9@gmail.com" link="http://mygony.com">
+        <name xml:lang="ko">행복한고니</name>
+        <name xml:lang="en">taggon</name>
+    </author>
+</drcomponent>

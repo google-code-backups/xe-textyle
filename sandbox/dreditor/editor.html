@@ -19,6 +19,11 @@
     {@$material_exists = false}
 <!--@end-->
 
+{@$cookie_tool=explode(',', $_COOKIE['DrEditorToolbar'])}
+{@$default_tool=explode(',', 'hx,txt,material,link,list,quote,img,movie,file,hr,index')}
+{@$external_components=array_keys($drComponentList)}
+{@$enable_tool=array_unique(array_merge($cookie_tool, $default_tool, $external_components))}
+
 <!-- 자동저장용 폼 -->
 <!--@if($enable_autosave)-->
 <input type="hidden" name="_saved_doc_title" value="{htmlspecialchars($saved_doc->title)}" />
@@ -27,8 +32,7 @@
 <div style="display:none"><p class="editor_autosaved_message" id="editor_autosaved_message_{$editor_sequence}" style="display:none"></p></div>
 <!--@end-->
 <!-- 폼을 알아내기 위한 더미 -->
-<input type="hidden" id="dreditor_dummy_{$editor_sequence}" value="" />
-
+<input type="hidden" name="editor_sequence" id="dreditor_dummy_{$editor_sequence}" value="{$editor_sequence}" />
 <!-- 에디터 -->
 <div id="DrEditor{$editor_sequence}" class="textyleEditor">
 <!-- class="textyleEditor" | class="textyleEditor keepClose" -->
@@ -320,7 +324,7 @@
 				</fieldset>
 			</div>
 
-			<div class="wArea blockquote">
+			<div class="wArea quote">
 			<!-- class="wArea blockquote" | class="wArea blockquote open" -->
 				<fieldset>
 					<legend>{$lang->edit->blockquote}</legend>
@@ -348,6 +352,16 @@
 					<div class="image">
 						<img src="" alt="{$lang->edit->uploaded_image}" />
 					</div>
+					<div class="align">
+						<dl>
+							<dt>{$lang->edit->image_align} :</dt>
+							<dd>
+								<input type="radio" name="align" id="img_align_left" value="left" /><label for="img_align_left">{$lang->edit->align_left}</label>
+								<input type="radio" name="align" id="img_align_center" value="center" /><label for="img_align_center">{$lang->edit->align_center}</label>
+								<input type="radio" name="align" id="img_align_right" value="right" /><label for="img_align_right">{$lang->edit->align_right}</label>
+							</dd>
+						</dl>
+					</div>
 					<div class="resize">
 						<dl>
 							<dt>{$lang->edit->image_width} :</dt>
@@ -356,7 +370,6 @@
 						<p class="resizeError">{$lang->edit->resize_error}</p>
 					</div>
 					<input name="" type="text" class="inputText desc" value="" title="{$lang->edit->insert_image_explain}" />
-					<input name="" type="text" class="inputText cite" value="" title="{$lang->edit->insert_cite}" />
 					<div class="buttonArea">
 						<span class="buttonGray medium strong"><button type="button"><img src="img/iconCheckSmall.gif" width="12" height="8" alt="" class="icon" />{$lang->cmd_confirm}</button></span>
 						<span class="buttonGray medium"><button type="button"><img src="img/buttonCloseLayerX.gif" width="7" height="7" alt="" class="icon" />{$lang->cmd_cancel}</button></span>
@@ -368,7 +381,7 @@
 				</fieldset>
 			</div>
 
-			<div class="wArea mov">
+			<div class="wArea movie">
 			<!-- class="wArea mov" | class="wArea mov open" -->
 				<fieldset>
 					<legend>{$lang->edit->mov}</legend>
@@ -536,45 +549,46 @@
 			</div>
 			<!-- /wArea blank-->
 
+			<!-- External Components -->
+			<!--@foreach($drComponentList as $k=>$v)-->
+			{$v->html}
+			<!--@endforeach-->
+			<!-- /External Components -->
+
 			<!-- wToolbar -->
 			<div class="wToolbarContainer">
 			<!-- class="wToolbarContainer" | class="wToolbarContainer more" -->
 				<div class="wToolbar">
-				<!-- class="wToolbar" | class="wToolbar wtActive" -->
+				<!-- class="wToolbar" | class="wToolbar hx | txt | link | list | quote | img | movie | file | hr | index | material | help" -->
 					<ul>
-						<!--@if($_COOKIE['DrEditorToolbar'])-->
-							{@$_DrEditorToolbar=$_COOKIE['DrEditorToolbar'];}
-						<!--@else-->
-							{@$_DrEditorToolbar='hx,txt,material,link,list,blockquote,img,mov,file,hr,index';}
-						<!--@end-->
-						<!--@foreach(explode(',',$_DrEditorToolbar) as $k => $v)-->
+						<!--@foreach($enable_tool as $k => $v)-->
 							<!--@if($v=='hx')-->
-							<li><button type="button"><img src="drcomponents/hx/button.gif" alt="{$lang->edit->title_title}" /><span>{$lang->edit->title_title}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<li class="hx"><button type="button"><span>{$lang->edit->title_title}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@elseif($v=='txt')-->
-							<li><button type="button"><img src="drcomponents/txt/button.gif" alt="{$lang->edit->text}" /><span>{$lang->edit->text}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<li class="txt"><button type="button"><span>{$lang->edit->text}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@elseif($v=='link')-->
-							<li><button type="button"><img src="drcomponents/link/button.gif" alt="{$lang->edit->link}" /><span>{$lang->edit->link}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<li class="link"><button type="button"><span>{$lang->edit->link}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@elseif($v=='list')-->
-							<li><button type="button"><img src="drcomponents/list/button.gif" alt="{$lang->edit->list}" /><span>{$lang->edit->list}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
-							<!--@elseif($v=='blockquote')-->
-							<li><button type="button"><img src="drcomponents/blockquote/button.gif" alt="{$lang->edit->blockquote}" /><span>{$lang->edit->blockquote}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<li class="list"><button type="button"><span>{$lang->edit->list}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<!--@elseif($v=='quote')-->
+							<li class="quote"><button type="button"><span>{$lang->edit->blockquote}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@elseif($v=='img')-->
-							<li><button type="button"><img src="drcomponents/img/button.gif" alt="{$lang->edit->image}" /><span>{$lang->edit->image}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
-							<!--@elseif($v=='mov')-->
-							<li><button type="button"><img src="drcomponents/mov/button.gif" alt="{$lang->edit->mov}" /><span>{$lang->edit->mov}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
-							<!--@elseif($v=='file')-->
-							<!--@if($allow_fileupload)-->
-							<li><button type="button"><img src="drcomponents/file/button.gif" alt="{$lang->edit->file}" /><span>{$lang->edit->file}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
-							<!--@end-->
+							<li class="img"><button type="button"><span>{$lang->edit->image}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<!--@elseif($v=='movie')-->
+							<li class="movie"><button type="button"><span>{$lang->edit->mov}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<!--@elseif($v=='file' && $allow_fileupload)-->
+							<li class="file"><button type="button"><span>{$lang->edit->file}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@elseif($v=='hr')-->
-							<li><button type="button"><img src="drcomponents/hr/button.gif" alt="{$lang->edit->hr}" /><span>{$lang->edit->hr}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<li class="hr"><button type="button"><span>{$lang->edit->hr}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@elseif($v=='index')-->
-							<li><button type="button"><img src="drcomponents/index/button.gif" alt="{$lang->edit->toc}" /><span>{$lang->edit->toc}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<li class="index"><button type="button"><span>{$lang->edit->toc}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@elseif($v=='material')-->
-							<li><button type="button"><img src="drcomponents/material/button.gif" alt="{$lang->edit->material}" /><span>{$lang->edit->material}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<li class="material"><button type="button"><span>{$lang->edit->material}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
+							<!--@elseif($drComponentList[$v])-->
+							<li class="{$v}"><button type="button"><span>{$drComponentList[$v]->title}</span></button><span class="dragable">{$lang->edit->move_button}</span></li>
 							<!--@end-->
 						<!--@end-->
-						<li><button type="button"><img src="drcomponents/help/button.gif" alt="{$lang->edit->help}" /><span>{$lang->edit->help}</span></button></li>
+						<li class="help"><button type="button"><span>{$lang->edit->help}</span></button></li>
 						<li class="more"><button type="button"><span>{$lang->edit->more}</span></button></li>
 					</ul>
 					<span class="cap capLeft"></span>
@@ -592,14 +606,26 @@
 
 <!-- 에디터 활성화 -->
 <script type="text/javascript">//<![CDATA[
-	var editor_path = "{$editor_path}";
-	var auto_saved_msg = "{$lang->msg_auto_saved}";
-	var delete_dr_confirm_msg = "{$lang->edit->msg_dr_delete_confirm}";
-	var no_selected_object_msg = "{$lang->edit->msg_no_selected_object}";
-	var insert_value_msg = "{$lang->edit->msg_insert_value}";
-	var submit_without_saving_msg = "{$lang->edit->confirm_submit_without_saving}";
-	var msg_close_before_write = "{$lang->msg_close_before_write}";
+var editor_path = "{$editor_path}";
 
-	var oEditor = null;
-	jQuery(function() { oEditor = editorStart_xe("{$editor_sequence}", "{$editor_primary_key_name}", "{$editor_content_key_name}", "{$editor_height}", "{$colorset}", "{$content_style}",'{$content_font}','{$content_font_size}'); } );
+var auto_saved_msg = "{$lang->msg_auto_saved}";
+var delete_dr_confirm_msg = "{$lang->edit->msg_dr_delete_confirm}";
+var no_selected_object_msg = "{$lang->edit->msg_no_selected_object}";
+var insert_value_msg = "{$lang->edit->msg_insert_value}";
+var submit_without_saving_msg = "{$lang->edit->confirm_submit_without_saving}";
+var msg_close_before_write = "{$lang->msg_close_before_write}";
+
+if (typeof(xe.lang) == 'undefined') xe.lang = {};
+xe.lang.attached_files = '{$lang->edit->attached_files}';
+
+editorStart_xe(
+	'{$editor_sequence}',
+	'{$editor_primary_key_name}',
+	'{$editor_content_key_name}',
+	'{$editor_height}',
+	'{$colorset}',
+	'{$content_style}',
+	'{$content_font}',
+	'{$content_font_size}'
+);
 //]]></script>
