@@ -61,7 +61,7 @@ var DrEditor = xe.createApp('DrEditor', {
 
 			// form submit event
 			$(configs[seq].form).submit(function(){
-				if (_editArea.children('div.wArea:visible').length || _writerArea.children('div.wArea:visible').length) {
+				if (_editArea.children('div.wArea:visible').length || _writeArea.children('div.wArea:visible').length) {
 					return confirm(submit_without_saving_msg);
 				}
 			});
