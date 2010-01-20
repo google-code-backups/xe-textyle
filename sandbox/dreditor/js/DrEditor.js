@@ -1281,6 +1281,21 @@ var ImageWriter = xe.createPlugin('ImageWriter', {
 
 			this.reset_fileform(cfg.file);
 		}
+	},
+	API_AFTER_DELETE_PARAGRAPH : function(sender, params) {
+		var self   = this;
+		var seq    = params[0];
+		var target = params[1];
+
+		if (target && target.length) {
+			var srl = [];
+			target.filter('div._img').each(function(){
+				var s = $(this).find('img[class^=xe_filesrl]').attr('class').replace('xe_filesrl_','');
+				if(s) srl.push(s);
+			});
+
+			if(srl.length) exec_xml('file','procFileDelete',{file_srls:srl.join(','),editor_sequence:seq});
+		}
 	}
 });
 editor.registerPlugin(new ImageWriter);
@@ -1689,7 +1704,25 @@ var FileWriter = xe.createPlugin('FileWriter', {
 			cfg.summary.hide();
 			cfg.files.empty().hide();
 		}
+	},
+	API_AFTER_DELETE_PARAGRAPH : function(sender, params) {
+		var self   = this;
+		var seq    = params[0];
+		var target = params[1];
+
+		if (target && target.length) {
+			var srl = [];
+			target.filter('div._file').each(function(){
+				$(this).find('dd[class^=filesrl_]').each(function(){
+					var s = $(this).attr('class').replace('filesrl_','');
+					if(s) srl.push(s);
+				});
+			});
+
+			if(srl.length) exec_xml('file','procFileDelete',{file_srls:srl.join(','),editor_sequence:seq});
+		}
 	}
+
 });
 editor.registerPlugin(new FileWriter);
 
