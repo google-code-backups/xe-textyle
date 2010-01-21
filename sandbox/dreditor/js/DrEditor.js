@@ -999,12 +999,16 @@ var MovieWriter = xe.createPlugin('MovieWriter', {
 	},
 	create : function(seq) {
 		var self = this;
-		var _editor = configs[seq].writeArea.find('>div.movie');
+		var _editor   = configs[seq].writeArea.find('>div.movie');
+		var _textarea = _editor.find('textarea');
 
 		self.cast('ADD_DEFAULT_EDITOR_ACTION', [seq, _editor, 'MOVIE']);
 
 		this.configs[seq] = {
-			editor : _editor
+			editor : _editor,
+			embed  : _textarea.eq(0),
+			desc   : _textarea.eq(1),
+			source : _editor.find('input[type=text]')
 		};
 
 		return this.configs[seq];
@@ -1043,12 +1047,21 @@ var MovieWriter = xe.createPlugin('MovieWriter', {
 		self.cast('RESET_EDITOR', [seq, cfg.editor, 'MOVIE']);
 
 		if (box) {
-			box.hide().html();
+			var embed  = $.trim( box.find('>div.embed').html() );
+			var desc   = $.trim( box.find('>p.desc').html() );
+			var source = $.trim( box.find('>cite').html() );
+
+			cfg.embed.val( embed );
+			cfg.desc.val( desc );
+			cfg.source.val( source );
+
+			box.hide().after(cfg.editor);
 		} else if (bef) {
 			bef.after(cfg.editor);
 		} else {
-			self.cast('RESET_EDITOR', [seq, cfg.editor, 'MOVIE']);
+			cfg.editor.appendTo(configs[seq].editArea);
 		}
+
 		cfg.editor.show().find('textarea:first').focus();
 	},
 	API_CLOSE_MOVIE_EDITOR : function(sender, params) {
@@ -1056,10 +1069,19 @@ var MovieWriter = xe.createPlugin('MovieWriter', {
 		var save = params[1];
 		var cfg  = this.configs[seq];
 		var box  = cfg.editor.prev('div._movie:hidden');
-		var val;
+		var val  = $.trim(cfg.embed.val());
 
-		if (save && (val=$.trim(cfg.textarea.val())) ) {
-			var newBox = $('<div>').html( val );
+		if (save && val) {
+			var newBox = $('<div>').append( $('<div class="embed">').html(val) );
+			var desc   = $.trim(cfg.desc.val());
+			var source = $.trim(cfg.source.val());
+
+			if (desc == cfg.desc.attr('title')) desc = '';
+			if (source == cfg.source.attr('title')) source = '';
+
+			if (desc) newBox.append( $('<p class="desc">').text(desc) );
+			if (source) newBox.append( $('<cite>').html(translateCite(source)) );
+
 			box.remove();
 			this.cast('SAVE_PARAGRAPH', [seq, cfg.editor, box=newBox, 'MOVIE']);
 		} else {
@@ -2198,6 +2220,7 @@ var LinkWriter = xe.createPlugin('LinkWriter', {
 			var newBox = $('<div>');
 			var para   = $('<p class="link">').appendTo(newBox)
 					.append( $('<strong>').text( text ) )
+					.append( $('<br />') )
 					.append( $('<a>').attr('href', url).text(url) );
 
 			if (desc) para.append('<br>').append( $('<span class="desc">').text(desc) );
@@ -2213,6 +2236,46 @@ var LinkWriter = xe.createPlugin('LinkWriter', {
 	}
 });
 editor.registerPlugin(new LinkWriter);
+
+// HR Writer
+var HRWriter = xe.createPlugin('HRWriter', {
+	API_SETTING_CONTENT : function(sender, params) {
+		var seq = params[0];
+		var obj = params[1];
+
+		obj.children('hr,div.xe_dr_hr').each(function(){
+			var t = $(this);
+			if (!t.is('div')) t = t.wrap('<div>').parent();
+			t.attr('class', 'eArea _hr').attr('type', 'hr');
+		});
+	},
+	API_GETTING_CONTENT : function(sender, params) {
+		var seq = params[0];
+		var obj = params[1];
+
+		obj.children('div._hr').each(function(){
+			var hr = $(this).find('hr');
+			hr.parent().before(hr).remove();
+		});
+	},
+	API_OPEN_HR_EDITOR : function(sender, params) {
+		var seq = params[0];
+		var box = params[1];
+		var bef = params[2];
+
+		if (box && box.length) {
+			box.show(300);
+		} else if (bef && bef.length) {
+			bef.after($('<div class="eArea _hr"><hr /></div>').attr('type', 'hr'));
+		} else {
+			var newBox = $('<div class="eArea _hr" />').attr('type', 'hr');
+			var hr = $('<hr />'), btn=$('<button type="button" style="overflow:hidden;height:1px;width:1px;">');
+			configs[seq].editArea.append(newBox.append(hr.after(btn)));
+			btn.focus(function(){ var t = $(this); setTimeout(function(){ t.remove() }, 10); }).focus();
+		}
+	}
+});
+editor.registerPlugin(new HRWriter);
 
 // Help
 var HelpViewer = xe.createPlugin('Help', {
