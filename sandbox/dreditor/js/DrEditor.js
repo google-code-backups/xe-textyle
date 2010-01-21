@@ -944,7 +944,10 @@ var QuoteWriter = xe.createPlugin('QuoteWriter', {
 		var obj  = params[1];
 		var quot = obj.children('div._quote').children('blockquote.citation');
 
-		quot.parent().before(quot).remove();
+		obj.children('div._quote').each(function(){
+			var quote = $(this).children('blockquote.citation');
+			quote.parent().before(quote).remove();
+		});
 	},
 	API_OPEN_QUOTE_EDITOR : function(sender, params) {
 		var self = this;
