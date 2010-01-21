@@ -32,7 +32,7 @@ var Fold = xe.createPlugin('Fold', {
 		}
 	},
 	toggle : function(seq, button) {
-		var parent = button.parent();
+		var parent = button.parent().parent();
 		var target = parent.nextAll('div.eArea');
 		var n_fold = target.index(target.filter('div._fold'));
 
@@ -52,9 +52,9 @@ var Fold = xe.createPlugin('Fold', {
 		var container = obj.children('div.fold_container');
 
 		if (button.length && container.length) {
-			var more = button.find('span.more').text(); // copy only text
-			var less = button.find('span.less').text();
-			var fold = $('<div class="eArea _fold"><span class="more"></span><span class="less"></span></div>').attr('type', 'fold');
+			var more = button.find('button.more').text(); // copy only text
+			var less = button.find('button.less').text();
+			var fold = $('<div class="eArea _fold"><div>&raquo; <span class="more"></span><span class="less"></span></div></div>').attr('type', 'fold');
 			
 			fold.find('span.more').click(function(){ self.toggle(seq,$(this)) }).text(more);
 			fold.find('span.less').click(function(){ self.toggle(seq,$(this)) }).text(less);
@@ -90,7 +90,7 @@ var Fold = xe.createPlugin('Fold', {
 		var more = fold.find('span.more').html();
 		var less = fold.find('span.less').html();
 
-		var button = $('<div class="fold_button"><span class="more" onclick="jQuery(this).hide().next(\'span\').show().parent().next(\'div.fold_container\').show();">'+more+'</span><span class="less" onclick="jQuery(this).hide().prev(\'span\').show().parent().next(\'div.fold_container\').hide();" style="display:none">'+less+'</span></div>');
+		var button = $('<div class="fold_button"><button type="button" class="more" onclick="jQuery(this).hide().next(\'button\').show().parent().next(\'div.fold_container\').show();">'+more+'</button><button type="button" class="less" onclick="jQuery(this).hide().prev(\'button\').show().parent().next(\'div.fold_container\').hide();" style="display:none">'+less+'</button></div>');
 		div.before(button);
 	},
 	API_OPEN_FOLD_EDITOR : function(sender, params) {

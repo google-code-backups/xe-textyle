@@ -9,7 +9,7 @@
 .textyleEditor .editorContainer .writeArea{ position:relative; *zoom:1;}
 
 /* Writing Toolbar */
-.wToolbarContainer{ position:relative; margin:20px 0 40px 0; height:72px; overflow:hidden;z-index:1000; opacity:0.2; filter:alpha(opacity=20);}
+.wToolbarContainer{ position:relative; margin:20px 0 40px 0; height:72px; overflow:hidden;z-index:1000; opacity:0.3; filter:alpha(opacity=30);}
 .wToolbarContainer.more{ height:141px;}
 .wToolbarContainer.hover{ opacity:1; filter:alpha(opacity=100); }
 .wToolbar{ position:relative; height:72px; margin:0 10px; *zoom:1; background-image:url(../img/bgWritingToolbarCenter.gif); background-repeat:repeat-x; }
