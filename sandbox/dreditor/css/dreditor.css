@@ -56,7 +56,7 @@
 .wToolbar .shortcut{ position:absolute; width:100%; top:0; left:0; z-index:3;}
 .wToolbar .shortcut ul{ height:0;}
 .wToolbar .shortcut li{ height:1px; font-size:10px; font-weight:bold; color:#fff;}
-.wToolbar .shortcut li span{ position:absolute; text-align:center; left:52%; top:8px; width:18px; height:18px; background:url(../img/bgShortcut.png) no-repeat center top; _background:none; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='img/bgShortcut.png', sizingMethod='crop');}
+.wToolbar .shortcut li span{ position:absolute; text-align:center; left:52%; top:8px; width:18px; height:18px; background:url(../img/bgShortcut.png) no-repeat center top; _background:none; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='./modules/editor/skins/dreditor/img/bgShortcut.png', sizingMethod='crop');}
 
 /* Writing Area + Material Area */
 .wArea,
