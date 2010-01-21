@@ -933,7 +933,7 @@ var QuoteWriter = xe.createPlugin('QuoteWriter', {
 				if (t.is('div.xe_dr_blockquote')) {
 					t.find('>blockquote').attr('class', 'citation');
 				} else if (t.is('blockquote')) {
-					t = t.wrap('<blockquote class="citation"></blockquote>').parent();
+					t = t.wrap('<div>').parent();
 				}
 				t.attr('class', 'eArea _quote').attr('type', 'quote');
 			});
@@ -942,7 +942,6 @@ var QuoteWriter = xe.createPlugin('QuoteWriter', {
 		var self = this;
 		var seq  = params[0];
 		var obj  = params[1];
-		var quot = obj.children('div._quote').children('blockquote.citation');
 
 		obj.children('div._quote').each(function(){
 			var quote = $(this).children('blockquote.citation');
