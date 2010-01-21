@@ -1,3 +1,3 @@
 <?PHP
-	$lang->edit->fold = '접기';
+	$lang->edit->fold = 'Fold';
 ?>
