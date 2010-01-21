@@ -53,7 +53,7 @@
 .wToolbarContainer.more li.hover .dragable{ _display:block;}
 .wToolbarContainer.more li:hover .dragable{ display:block;}
 
-.wToolbar .shortcut{ position:absolute; width:100%; top:0; left:0; z-index:3;}
+.wToolbar .shortcut{ position:absolute; width:100%; top:0; left:0; z-index:3; opacity:.6; filter:alpha(opacity=60);}
 .wToolbar .shortcut ul{ height:0;}
 .wToolbar .shortcut li{ height:1px; font-size:10px; font-weight:bold; color:#fff;}
 .wToolbar .shortcut li span{ position:absolute; text-align:center; left:52%; top:8px; width:18px; height:18px; background:url(../img/bgShortcut.png) no-repeat center top; _background:none; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='./modules/editor/skins/dreditor/img/bgShortcut.png', sizingMethod='crop');}
@@ -86,7 +86,6 @@
 
 /* Writing Area */
 .wArea .buttonArea{ position:relative; text-align:left; *zoom:1;}
-.wArea .buttonArea .buttonGray{ display:none;}
 .wArea .buttonArea .buttonGray button{ _top:0;}
 .wArea .buttonArea .info{ display:inline; padding:0 0 0 15px; color:#777;}
 .wArea .inputTitle{ width:98%; border:1px solid #ddd; background:#fff url(../img/bgInputText.gif) no-repeat; color:#767676; padding:6px 0 0 10px; height:21px; font-size:14px; margin-bottom:10px;}
