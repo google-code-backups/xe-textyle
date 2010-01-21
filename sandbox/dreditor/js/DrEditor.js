@@ -53,8 +53,12 @@ var DrEditor = xe.createApp('DrEditor', {
 				.sortable({items  : '>li'})
 				.bind('sortstop', function(){
 					var tools = [];
-					_toolbar.find('li').each(function(){
-						tools.push($(this).attr('class'));
+					_toolbar.find('li').each(function(i){
+						var t = $(this);
+						tools.push(t.attr('class'));
+
+						var title = (i < 9)?xe.lang.shortcut+'('+(i+1)+')':'';
+						t.find('>button').attr('title', title);
 					});
 
 					tools = tools.join(',');
@@ -85,6 +89,8 @@ var DrEditor = xe.createApp('DrEditor', {
 						_editArea.prepend(_draggables);
 					}
 					_draggables.css({visibility:'',overflow:'',height:''});
+					
+					setTimeout(function(){ self.cast('ONMOVE_PARAGRPH', [seq]) }, 0);
 				});
 
 			// focus hook event
@@ -92,7 +98,6 @@ var DrEditor = xe.createApp('DrEditor', {
 				.focus (function(){
 					if(!_editArea.children('div.eFocus,div.wArea:visible').length) self.cast('SELECT_PARAGRAPH', [seq, _editArea.find('>div:first')]);
 					self.last_seq = seq;
-					this.blur();
 				});
 
 			// form submit event
@@ -302,6 +307,10 @@ var DrEditor = xe.createApp('DrEditor', {
 					t.prepend('<div class="drag_handle right" />');
 				}
 			});
+		}
+
+		if ($.browser.msie) {
+			try { document.selection.createRange().collapse(true) } catch(e) {};
 		}
 	},
 	API_UNSELECT_PARAGRAPH : function(sender, params) {
@@ -530,6 +539,8 @@ var DrEditor = xe.createApp('DrEditor', {
 		this.cast('OPEN_'+type.toUpperCase()+'_EDITOR', [seq, box, bef]);
 		configs[seq].last_type = type;
 		configs[seq].blankBox.hide();
+
+		this.cast('TOOLBAR_REPOSITION', [seq]);
 	},
 	API_CLOSE_EDITOR : function(sender, params) {
 		var seq  = params[0];
@@ -543,6 +554,8 @@ var DrEditor = xe.createApp('DrEditor', {
 		} else {
 			configs[seq].blankBox.show();
 		}
+
+		this.cast('TOOLBAR_REPOSITION', [seq]);
 	}
 });
 var editor = new DrEditor;
@@ -783,7 +796,10 @@ var TextWriter = xe.createPlugin('TextWriter', {
 
 		// Ctrl+Enter를 입력하면 현재 문단 저장 후 새 텍스트 문단을 보여준다.
         pHotkey.add(pHotkey.normalize('ctrl+enter'), function(){ 
-			setTimeout(function() { self.cast('CLOSE_TXT_EDITOR', [seq, true]) }, 1);
+			setTimeout(function() { self.cast('CLOSE_EDITOR', [seq, true, 'TXT']) }, 1);
+		});
+		pHotkey.add(pHotkey.normalize('esc'), function(){ 
+			setTimeout(function() { self.cast('CLOSE_EDITOR', [seq, false, 'TXT']) }, 1);
 		});
 
 		// 에디터 시작

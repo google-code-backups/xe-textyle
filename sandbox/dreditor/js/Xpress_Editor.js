@@ -2349,7 +2349,7 @@ xe.Hotkey = jQuery.Class({
 		if (event.altKey)   key.push('alt');
 		if (event.ctrlKey)  key.push('ctrl');
 		if (event.metaKey)  key.push('meta');
-		if (!key.length && code != 13) return;
+		if (!key.length && code != kh.enter && code != kh.esc) return;
 		if (key.length == 1 && event.metaKey) key = ['ctrl', 'meta'];
 
 		key.push(code);
