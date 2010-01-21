@@ -29,8 +29,6 @@ var DrEditor = xe.createApp('DrEditor', {
 
 			//  toolbar buttons
 			_toolbar
-				.mouseenter(function(){ if(!_editArea.children('div.wArea:visible').length) _toolbar.parent().addClass('hover'); })
-				.mouseleave(function(){ _toolbar.parent().removeClass('hover'); })
 				.find('button')
 				.hover(
 					function(){ $(this).parent().addClass('hover'); },
