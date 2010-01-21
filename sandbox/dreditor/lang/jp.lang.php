@@ -65,7 +65,8 @@
     $lang->edit->no_materials = '保存されているネタはありません。';
     $lang->edit->msg_no_selected_object = '選択されたものがありません。';
     $lang->edit->msg_insert_value = '値を入力して下さい。';
-	$lang->edit->help_first_title = '도움말';
+
+	$lang->edit->help_first_title = '도움말';
 	$lang->edit->help_shortcut = '단축키';
 	$lang->edit->close_toolbar = '도구모음 닫기';
 	$lang->edit->help_first_dt_1 = '새 단락 쓰기(1~9)';
@@ -76,8 +77,8 @@
 	$lang->edit->help_first_dd_3 = '단락 선택 후 Enter 또는 더블클릭으로 편집할 수 있습니다. ESC키를 이용하여 편집을 취소할 수 있습니다.';
 	$lang->edit->help_first_dt_4 = '단락 이동(Ctrl+&uarr;&darr;, Click-Drag-Drop)';
 	$lang->edit->help_first_dd_4 = '단락 선택 후 Ctrl+방향키(&uarr;&darr;)를 조작하거나 \'클릭-드래그-드롭\'으로 이동할 수 있습니다.';
-	$lang->edit->help_first_dt_5 = '단락 저장 및 삭제(Ctrl+Enter, Del)';
-	$lang->edit->help_first_dd_5 = '\'확인\'버튼을 누르면 단락이 임시저장 됩니다. Ctrl+Enter를 이용하여 저장 후 새 단락을 생성할 수 있습니다. Del키를 이용하여 선택된 단락을 삭제할 수 있습니다.';
+	$lang->edit->help_first_dt_5 = '단락 저장 및 삭제(Ctrl+Enter, Del)';	$lang->edit->help_first_dd_5 = '\'확인\'버튼을 누르거나 Ctrl+Enter 명령으로 저장할 수 있습니다. Del키를 이용하여 선택된 단락을 삭제할 수 있습니다.';
+
 
 
 
