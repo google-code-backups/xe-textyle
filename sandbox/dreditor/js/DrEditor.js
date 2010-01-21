@@ -975,9 +975,10 @@ var QuoteWriter = xe.createPlugin('QuoteWriter', {
 		if (save && txt) {
 			var newBox = $('<div>');
 			var quote  = $('<blockquote class="citation" />').append( $('<p>').text(txt) ).appendTo(newBox);
-			var src;
+			var src = $.trim(cfg.source.val());
 
-			if(src=$.trim(cfg.source.val())) $('<cite>').html(translateCite(src)).appendTo(quote);
+			if(src == cfg.source.attr('title')) src = '';
+			if(src) $('<cite>').html(translateCite(src)).appendTo(quote);
 
 			box.remove();
 			this.cast('SAVE_PARAGRAPH', [seq, cfg.editor, box=newBox, 'QUOTE']);
