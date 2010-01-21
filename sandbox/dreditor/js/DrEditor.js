@@ -64,6 +64,28 @@ var DrEditor = xe.createApp('DrEditor', {
 					}
 				});
 
+			// container
+			var _draggables = [];
+			_editArea
+				.sortable({
+					axis   : 'y',
+					items  : '>div.eArea',
+					handle : '>div.drag_handle',
+					placeholder : 'xe_dr_placeholder',
+					forcePlaceholderSize : true
+				})
+				.bind('sortstart', function(event,originalEvent,ui){
+					_draggables = _editArea.children('div.eFocus:not(.ui-sortable-helper)');
+				})
+				.bind('sortstop', function(event,originalEvent,ui){
+					var prev = ui.item.prev();
+					if (prev.length) {
+						prev.after(_draggables);
+					} else {
+						ui.item.prepend(_draggables);
+					}
+				});
+
 			// focus hook event
 			_hookerBtn
 				.focus (function(){
@@ -90,7 +112,6 @@ var DrEditor = xe.createApp('DrEditor', {
 				hookerBtn : _hookerBtn,
 				selFirst  : null,
 				selLast   : null,
-				content   : '',
 				last_type : ''
 			});
 
@@ -193,24 +214,6 @@ var DrEditor = xe.createApp('DrEditor', {
 				self.cast('ONSCROLL');
 			}, 10);
 		});
-
-		// before unload
-		window.onbeforeunload = function(e) {
-			var msg = '';
-			$.each(configs, function(){
-				var content = self.cast('GET_CONTENT', [this.sequence]);
-
-				if (content != this.content) {
-					msg = msg_close_before_write;
-					return false;
-				}
-			});
-
-			if (msg) {
-				if ($.browser.msie) window.event.returnValue = msg;
-				else return msg;
-			}
-		};
 	},
 	API_ONLOAD : function(sender, params) {
 		var self = this;
@@ -226,7 +229,7 @@ var DrEditor = xe.createApp('DrEditor', {
 		var box = configs[seq].editArea.contents().clone();
 		var dum = $('<div>').append(box);
 
-		box.filter('div.wArea').remove();
+		box.filter('div.wArea,div.drag_handle').remove();
 
 		// getting content
 		this.cast('GETTING_CONTENT', [seq, dum]);
@@ -247,7 +250,6 @@ var DrEditor = xe.createApp('DrEditor', {
 		// set content
 		if(configs[seq] && configs[seq].editArea) {
 			configs[seq].editArea.append(dum.children()).find('>div.eArea');
-			configs[seq].content = this.cast('GET_CONTENT', [seq]);
 		}
 	},
 	API_AFTER_SET_CONTENT : function(sender, params) {
@@ -289,6 +291,10 @@ var DrEditor = xe.createApp('DrEditor', {
 
 		if (par.length) {
 			configs[seq].hookerBtn.focus();
+			if (!par.children('div.drag_handle:first').length) {
+				par.prepend('<div class="drag_handle left" />');
+				par.prepend('<div class="drag_handle right" />');
+			}
 		}
 	},
 	API_UNSELECT_PARAGRAPH : function(sender, params) {
@@ -316,8 +322,6 @@ var DrEditor = xe.createApp('DrEditor', {
 
 		if (_type) _box.addClass('eArea _'+_type).attr('type', _type);
 		if (_editor && _box) _editor.before(_box);
-
-		configs[seq].blankBox.hide();
 	},
 	API_DELETE_PARAGRAPH : function(sender, params) {
 		var self   = this;
@@ -447,7 +451,7 @@ var DrEditor = xe.createApp('DrEditor', {
 		if (48 <= key && key <= 58) {
 			var buttons = configs[seq].toolbar.find('button');
 			if (key == 48) key = buttons.length+48;
-			buttons.eq(key-49).mousedown();
+			buttons.eq(key-49).click();
 
 			return true;
 		}
@@ -526,6 +530,7 @@ var DrEditor = xe.createApp('DrEditor', {
 		var type = params[2];
 
 		this.cast('CLOSE_'+type.toUpperCase()+'_EDITOR', [seq, save]);
+
 		if (configs[seq].editArea.children('div.eArea').length) {
 			configs[seq].blankBox.hide();
 		} else {
@@ -783,7 +788,7 @@ var TextWriter = xe.createPlugin('TextWriter', {
 		var seq = params[0];
 		var obj = params[1];
 
-		obj.children(':not(div.eArea)')
+		obj.children(':not(div.eArea),div.xe_dr_txt')
 			.each(function(){
 				var t = $(this);
 				if(!t.is('div.xe_dr_txt')) t = t.wrap('<div>').parent();
@@ -944,12 +949,14 @@ var QuoteWriter = xe.createPlugin('QuoteWriter', {
 		var save = params[1];
 		var cfg  = this.configs[seq];
 		var box  = cfg.editor.prev('div._quote:hidden');
+		var txt  = $.trim(cfg.textarea.val());
 
-		if (save && $.trim(cfg.textarea.val())) {
+		if (save && txt) {
 			var newBox = $('<div>');
-			var quote  = $('<blockquote class="citation"></blockquote>').append( $('<p>').text(cfg.textarea.val()) ).appendTo(newBox);
+			var quote  = $('<blockquote class="citation" />').append( $('<p>').text(txt) ).appendTo(newBox);
+			var src;
 
-			if($.trim(cfg.source.val())) quote.append('<cite>').html(translateCite(cfg.source.val()));
+			if(src=$.trim(cfg.source.val())) $('<cite>').html(translateCite(src)).appendTo(quote);
 
 			box.remove();
 			this.cast('SAVE_PARAGRAPH', [seq, cfg.editor, box=newBox, 'QUOTE']);
@@ -1369,7 +1376,7 @@ var MaterialWriter = xe.createPlugin('MaterialWriter', {
 		var _editor  = configs[seq].writeArea.find('>div.material:first');
 		var _buttons = _editor.find('div.controls button');
 		_buttons.eq(0).click(function(){ self.load_material(seq, 1); });
-		_buttons.eq(1).click(function(){ self.cast('CLOSE_MATERIAL_EDITOR', [seq, false]); });
+		_buttons.eq(1).click(function(){ self.cast('CLOSE_EDITOR', [seq, false, 'MATERIAL']); });
 	
 		this.configs[seq] = {
 			editor     : _editor,
@@ -1840,6 +1847,7 @@ var ListWriter = xe.createPlugin('ListWriter', {
 		return returnObj?$(html):html;
 	},
 	onkeydown : function(seq, event) {
+		var self = this;
 		var meta = ((navigator.platform||'').indexOf('Mac')<0)?true:e.metaKey;
 		var ctrl = event.ctrlKey && meta;
 		var cfg  = this.configs[seq];
@@ -1853,12 +1861,16 @@ var ListWriter = xe.createPlugin('ListWriter', {
 				if (!$.trim(obj.val())) return obj.focus() && false;
 
 				if (ctrl) {
-					self.cast('CLOSE_LIST_EDITOR', [seq, true]);
+					setTimeout(function(){ self.cast('CLOSE_EDITOR', [seq, true, 'LIST']) }, 1);
 				} else {
 					li.after(item = this.new_item(true));
 					this.add_event(seq);
 					item.find('>input').focus();
 				}
+				break;
+			case 27: // ESC
+				stop = true;
+				setTimeout(function(){ self.cast('CLOSE_EDITOR', [seq, false, 'LIST']) }, 1);
 				break;
 			case 37: // left
 				if (!ctrl) break;
@@ -2032,7 +2044,7 @@ var ListWriter = xe.createPlugin('ListWriter', {
 		var box  = cfg.editor.prev('div._list:hidden');
 
 		if (save) {
-			var newBox = $('<div');
+			var newBox = $('<div>');
 			var list   = cfg.list.children('ul,ol').appendTo(newBox);
 			var div    = $('<div>');
 			list.find('input[type=text]').each(function(){
@@ -2191,7 +2203,7 @@ var HelpViewer = xe.createPlugin('Help', {
 		var self = this;
 
 		this.views[seq] = configs[seq].writeArea.find('div.help');
-		this.views[seq].find('button').click(function(){ self.cast('CLOSE_HELP_EDITOR', [seq, false]); });
+		this.views[seq].find('button').click(function(){ self.cast('CLOSE_EDITOR', [seq, false, 'HELP']); });
 	},
 	API_OPEN_HELP_EDITOR : function(sender, params) {
 		var seq = params[0];
@@ -2210,8 +2222,6 @@ var HelpViewer = xe.createPlugin('Help', {
 		this.views[seq].show().find('button').focus();
 	},
 	API_CLOSE_HELP_EDITOR : function(sender, params) {
-		if( (sender != this) ) return false;
-
 		var seq = params[0];
 		var box = this.views[seq].prev('div.eArea');
 

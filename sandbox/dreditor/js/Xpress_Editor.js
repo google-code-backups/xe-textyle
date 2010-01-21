@@ -2341,6 +2341,7 @@ xe.Hotkey = jQuery.Class({
 
 	keydown : function(event) {
 		var key  = [], kh = this.keyhash;
+		var code = event.keyCode;
 
 		if (jQuery.inArray(event.keyCode, [kh.shift, kh.ctrl, kh.alt, kh.meta]) >= 0) return;
 
@@ -2348,15 +2349,19 @@ xe.Hotkey = jQuery.Class({
 		if (event.altKey)   key.push('alt');
 		if (event.ctrlKey)  key.push('ctrl');
 		if (event.metaKey)  key.push('meta');
-		if (!key.length) return;
+		if (!key.length && code != 13) return;
 		if (key.length == 1 && event.metaKey) key = ['ctrl', 'meta'];
 
-		key.push(event.keyCode);
+		key.push(code);
 		key = key.join('+');
 
 		if (!this.storage[key]) return;
 
 		jQuery.each(this.storage[key], function(){ this(); });
+
+		event.preventDefault();
+		event.stopPropagation();
+		event.keyCode = 0;
 
 		return false;
 	},

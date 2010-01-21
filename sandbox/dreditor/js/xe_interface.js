@@ -37,13 +37,17 @@ function _create(editor_sequence, primary_key, content_key, editor_height, color
 			primary : form[primary_key],
 			content : form[content_key],
 			editor  : null,
-			func      : function(content){ return editor.cast('GET_CONTENT', [seq]) },
+			func      : function(){ return editor.cast('GET_CONTENT', [seq]) },
 			pasteHTML : function(content){ editor.cast('SET_CONTENT', [seq, content]); }
 		};
 	}
 
 	editor.cast('CREATE_EDITOR', [seq, form]); // create new editor
-	$(function(){ editor.cast('SET_CONTENT', [seq, content]) });
+
+	jQuery(function(){
+		editor.cast('SET_CONTENT', [seq, content]);
+		if (editorRelKeys) editorRelKeys[seq].content.value = editorRelKeys[seq].func();
+	});
 
 	// Auto save
 	if (form._disable_autosaved) {
@@ -72,9 +76,28 @@ function _create(editor_sequence, primary_key, content_key, editor_height, color
 	}
 }
 
+// before unload
+window.onbeforeunload = function(e) {
+	var msg = '';
+	$.each(editorRelKeys, function(seq, obj){
+		if (!obj) return  true;
+
+		var content = obj.func();
+
+		if (content != obj.content.value) {
+			msg = msg_close_before_write;
+			return false;
+		}
+	});
+
+	if (msg) {
+		if ($.browser.msie) window.event.returnValue = msg;
+		else return msg;
+	}
+};
+
 // register as global function
 window.editorStart_xe = _create;
 window.editorGetContentTextarea_xe = _get_content;
 
 })(jQuery);
-
