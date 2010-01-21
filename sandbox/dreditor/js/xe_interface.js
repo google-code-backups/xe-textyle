@@ -43,24 +43,31 @@ function _create(editor_sequence, primary_key, content_key, editor_height, color
 	}
 
 	editor.cast('CREATE_EDITOR', [seq, form]); // create new editor
-	jQuery(function(){ editor.cast('SET_CONTENT', [seq, content]) });
+	$(function(){ editor.cast('SET_CONTENT', [seq, content]) });
 
 	// Auto save
 	if (form._disable_autosaved) {
 		editorRemoveSavedDoc();
-	} else if (typeof(form._saved_doc_title)=='string') { // Check auto-saved document
-		var saved_title = form._saved_doc_title.value;
-		var saved_content = form._saved_doc_content.value;
+	} else {
+		if (form._saved_doc_title.value) { // Check auto-saved document
+			var saved_title = form._saved_doc_title.value;
+			var saved_content = form._saved_doc_content.value;
 
-		if (saved_title || saved_content) {
-			// 자동저장된 문서 활용여부를 물은 후 사용하지 않는다면 자동저장된 문서 삭제
-			if(confirm(form._saved_doc_message.value)) {
-				if(typeof(form.title)!='undefined') form.title.value = saved_title;
-			} else {
-				editorRemoveSavedDoc();
+			if (saved_title || saved_content) {
+				// 자동저장된 문서 활용여부를 물은 후 사용하지 않는다면 자동저장된 문서 삭제
+				if(confirm(form._saved_doc_message.value)) {
+					if(typeof(form.title)!='undefined') form.title.value = saved_title;
+					if(editorRelKeys){
+						$(function(){
+							editorRelKeys[seq].content.value = saved_content;
+							editorRelKeys[seq].pasteHTML(saved_content);
+						});
+					}
+				} else {
+					editorRemoveSavedDoc();
+				}
 			}
 		}
-
 		editorEnableAutoSave(form, editor_sequence);
 	}
 }
@@ -70,3 +77,4 @@ window.editorStart_xe = _create;
 window.editorGetContentTextarea_xe = _get_content;
 
 })(jQuery);
+
