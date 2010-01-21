@@ -336,7 +336,7 @@
 .txEditor .toolbar .font36px { font-size:36px }
 
 /* Drag and Drop */
-.xe_dr_placeholder { background-color:#F8F4CE; padding:10px 0; z-index:0; -moz-border-radius:5px; -webkit-border-radius:5px; z-index:1; opacity:.5; filter:alpha(opacity=50);}
+.xe_dr_placeholder { background-color:#F8F4CE; margin:5px 0; height:20px; padding:10px 0; z-index:0; -moz-border-radius:5px; -webkit-border-radius:5px; z-index:1; }
 .drag_handle { position:absolute; height:100%; width:10px; top:0; background:#eee url(../img/iconDragHandler.gif) no-repeat center; cursor:n-resize; margin:0 2px;}
 .drag_handle.left { left:0; }
 .drag_handle.right { right:0; }

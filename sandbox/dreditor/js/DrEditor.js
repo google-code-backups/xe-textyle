@@ -71,19 +71,20 @@ var DrEditor = xe.createApp('DrEditor', {
 					axis   : 'y',
 					items  : '>div.eArea',
 					handle : '>div.drag_handle',
-					placeholder : 'xe_dr_placeholder',
-					forcePlaceholderSize : true
+					placeholder : 'xe_dr_placeholder'
 				})
 				.bind('sortstart', function(event,originalEvent,ui){
 					_draggables = _editArea.children('div.eFocus:not(.ui-sortable-helper)');
+					_draggables.filter(':visible').css({visibility:'hidden',overflow:'hidden',height:'1px'});
 				})
 				.bind('sortstop', function(event,originalEvent,ui){
 					var prev = ui.item.prev();
 					if (prev.length) {
 						prev.after(_draggables);
 					} else {
-						ui.item.prepend(_draggables);
+						_editArea.prepend(_draggables);
 					}
+					_draggables.css({visibility:'',overflow:'',height:''});
 				});
 
 			// focus hook event
@@ -137,7 +138,10 @@ var DrEditor = xe.createApp('DrEditor', {
 			if(target.parents('div.wToolbar:first').length) return true;
 
 			var para = target.parents('div').andSelf().filter('div.eArea:first');
-			if(!para.length) return true;
+			if(!para.length) {
+				self.cast('CLEAR_SELECTION', [seq]);
+				return true;
+			}
 
 			var seq = para.parents('form:first')[0].elements['editor_sequence'].value;
 			
@@ -291,10 +295,13 @@ var DrEditor = xe.createApp('DrEditor', {
 
 		if (par.length) {
 			configs[seq].hookerBtn.focus();
-			if (!par.children('div.drag_handle:first').length) {
-				par.prepend('<div class="drag_handle left" />');
-				par.prepend('<div class="drag_handle right" />');
-			}
+			par.each(function(){
+				var t = $(this);
+				if (!t.children('div.drag_handle:first').length) {
+					t.prepend('<div class="drag_handle left" />');
+					t.prepend('<div class="drag_handle right" />');
+				}
+			});
 		}
 	},
 	API_UNSELECT_PARAGRAPH : function(sender, params) {
