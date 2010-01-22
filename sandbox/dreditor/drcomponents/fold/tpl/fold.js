@@ -27,7 +27,8 @@ var Fold = xe.createPlugin('Fold', {
 		this.configs[seq] = {
 			editor : _editor,
 			text   : _text,
-			marker : []
+			marker : [],
+			before : null
 		};
 
 		return this.configs[seq];
@@ -113,6 +114,7 @@ var Fold = xe.createPlugin('Fold', {
 		}
 
 		this.cast('RESET_EDITOR', [seq, cfg.editor, 'FOLD']);
+		cfg.before = null;
 
 		if (box) {
 			var more = box.find('span.more').text();
@@ -121,6 +123,7 @@ var Fold = xe.createPlugin('Fold', {
 			cfg.text.val(more+'|'+less);
 			box.hide().after(cfg.editor);
 		} else if (bef) {
+			cfg.before = bef;
 			$(bef).after(cfg.editor);
 		} else {
 			cfg.editor.appendTo(editor.getConfig(seq).editArea);
@@ -134,25 +137,30 @@ var Fold = xe.createPlugin('Fold', {
 		var cfg  = this.configs[seq];
 		var txt  = $.trim(cfg.text.val());
 		var box  = editor.getConfig(seq).editArea.children('div._fold:hidden');
-		var fold = null;
+		var fold = null, fold2 = null;
 
-		if (txt == cfg.text.attr('title')) txt = '';
-		if (txt == '') txt = 'more|less';
+		if (txt == '') txt = cfg.text.attr('title');
 
 		if (save) {
 			txt = txt.split('|');
 			if (box.length) {
 				fold = editor.getConfig(seq).editArea.children('div._fold');
 
-				fold.find('span.more').text( txt[0] || 'more...' );
+				fold.find('span.more').text( txt[0] );
 				fold.find('span.less').text( txt[1] || '' );
 			} else {
 				fold = $('<div class="eArea _fold"><div class="_fold_cap">&raquo; <span class="more"></span><span class="less"></span></div></div>').attr('type', 'fold');
 			
-				fold.find('span.more').click(function(){ self.toggle(seq,$(this)) }).text( txt[0] || 'more..' );
+				fold.find('span.more').click(function(){ self.toggle(seq,$(this)) }).text( txt[0] );
 				fold.find('span.less').click(function(){ self.toggle(seq,$(this)) }).text( txt[1] || '' );
 
-				cfg.editor.before(box=fold).before(fold.clone(true));
+				fold2 = (box=fold).clone(true);
+
+				if (cfg.before) {
+					cfg.before.before(fold).after(fold2);
+				} else {
+					cfg.editor.before(fold).before(fold2);
+				}
 
 				fold = editor.getConfig(seq).editArea.children('div._fold');
 			}
