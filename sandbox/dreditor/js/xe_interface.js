@@ -57,7 +57,7 @@ function _create(editor_sequence, primary_key, content_key, editor_height, color
 	if (form._disable_autosaved) {
 		editorRemoveSavedDoc();
 	} else {
-		if (form._saved_doc_title.value) { // Check auto-saved document
+		if (form._saved_doc_title && form._saved_doc_title.value) { // Check auto-saved document
 			var saved_title = form._saved_doc_title.value;
 			var saved_content = form._saved_doc_content.value;
 
