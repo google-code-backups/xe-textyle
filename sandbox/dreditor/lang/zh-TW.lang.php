@@ -13,14 +13,14 @@
 	$lang->edit->insert_explain = '請輸入說明';
 
 
-	$lang->edit->text = 'Text';
+	$lang->edit->text = '文字';
 	$lang->edit->link = '連結';
 	$lang->edit->blockquote = '引用';
 	$lang->edit->insert_blockquote = '請輸入引用';
-	$lang->edit->insert_cite = 'You can input the origin source. <a>, <strong>, <em> tags are available.';
+	$lang->edit->insert_cite = '請輸入來源，可輸入 <a>, <strong>, <em> 等標籤。';
 
 	$lang->edit->image = '圖片';
-	$lang->edit->find_image = '尋找圖片';
+	$lang->edit->find_image = '選擇圖片';
 	$lang->edit->uploading = '上傳中...';
 	$lang->edit->uploading_info = '最大可上傳 %sMB';
 	$lang->edit->uploaded_image = 'User Uploaded Image';
@@ -28,17 +28,17 @@
 	$lang->edit->image_width = '圖片寬度';
 	$lang->edit->resize = 'Resize';
 	$lang->edit->resize_info = 'A new copy of image in inputted size will be created. Original image will still remain';
-	$lang->edit->resize_error = 'Please input smaller size than original image size';
+	$lang->edit->resize_error = '請輸入比原始圖片要小的數值';
 	$lang->edit->insert_image_explain = '請輸入圖片簡介。可使用 <a>, <strong>, <em> 等標籤。';
 
 	$lang->edit->mov ='影片';
-	$lang->edit->insert_mov = 'Please input multimedia insertion code starts with <object> or <embed>';
+	$lang->edit->insert_mov = '請輸入 <object> 或 <embed> 開頭的影片原始碼。';
 	$lang->edit->insert_mov_explain = '請輸入影片簡介。可使用 <a>, <strong>, <em> 等標籤。';
 
 	$lang->edit->file = '檔案';
-	$lang->edit->file_select = 'Please select a file to upload';
-	$lang->edit->file_uploadinfo = 'You can upload to maximum %sMB each, %sMB total';
-	$lang->edit->file_total ='Total <strong class="filecount">{total_filecount}</strong>file(s)';
+	$lang->edit->file_select = '請選擇要上傳的檔案';
+	$lang->edit->file_uploadinfo = '每個檔案上傳的大小 %s MB，總共 %s MB';
+	$lang->edit->file_total ='總共 <strong class="filecount">{total_filecount}</strong>個檔案';
 	$lang->edit->insert_file_explain ='請輸入檔案簡介。';
 
 	$lang->edit->hr = 'HR';
