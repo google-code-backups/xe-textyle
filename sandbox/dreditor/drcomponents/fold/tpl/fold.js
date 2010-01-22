@@ -61,7 +61,7 @@ var Fold = xe.createPlugin('Fold', {
 		if (button.length && container.length) {
 			var more = button.find('button.more').text(); // copy only text
 			var less = button.find('button.less').text();
-			var fold = $('<div class="eArea _fold"><div>&raquo; <span class="more"></span><span class="less"></span></div></div>').attr('type', 'fold');
+			var fold = $('<div class="eArea _fold"><div class="_fold_cap">&raquo; <span class="more"></span><span class="less"></span></div></div>').attr('type', 'fold');
 			
 			fold.find('span.more').click(function(){ self.toggle(seq,$(this)) }).text(more);
 			fold.find('span.less').click(function(){ self.toggle(seq,$(this)) }).text(less);
@@ -147,7 +147,7 @@ var Fold = xe.createPlugin('Fold', {
 				fold.find('span.more').text( txt[0] || 'more...' );
 				fold.find('span.less').text( txt[1] || '' );
 			} else {
-				fold = $('<div class="eArea _fold"><div>&raquo; <span class="more"></span><span class="less"></span></div></div>').attr('type', 'fold');
+				fold = $('<div class="eArea _fold"><div class="_fold_cap">&raquo; <span class="more"></span><span class="less"></span></div></div>').attr('type', 'fold');
 			
 				fold.find('span.more').click(function(){ self.toggle(seq,$(this)) }).text( txt[0] || 'more..' );
 				fold.find('span.less').click(function(){ self.toggle(seq,$(this)) }).text( txt[1] || '' );

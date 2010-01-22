@@ -49,7 +49,7 @@
 .wToolbar li.more button{ background-position:center -2070px;}
 .wToolbarContainer.more li.more button{ background-position:center -1870px;}
 
-.wToolbar li .dragable{ position:absolute; display:none; bottom:48px; right:0; padding:0; border:0; width:20px; height:20px; overflow:hidden; background:url(../img/iconMovable.gif) no-repeat center center !important; cursor:move; font-size:0; line-height:0;}
+.wToolbar li .dragable{ position:absolute; display:none; bottom:48px; right:0; padding:0; border:0; width:20px; height:20px; overflow:hidden; background:url(../img/iconMovable.gif) no-repeat center center !important; cursor:move; font-size:0; line-height:0; text-indent:-200%;}
 .wToolbarContainer.more li.hover .dragable{ _display:block;}
 .wToolbarContainer.more li:hover .dragable{ display:block;}
 
@@ -336,7 +336,7 @@
 
 /* Drag and Drop */
 .xe_dr_placeholder { background-color:#F8F4CE; margin:5px 0; height:20px; padding:10px 0; z-index:0; -moz-border-radius:5px; -webkit-border-radius:5px; z-index:1; }
-.drag_handle { position:absolute; height:100%; width:10px; top:0; opacity:.5; filter:alpha(opacity=50); background:#ddd url(../img/iconDragHandler.gif) no-repeat center; cursor:n-resize; margin:0 2px !important; padding:0 !important; border:0 !important;}
+.drag_handle { position:absolute; height:100%; width:10px; top:0; opacity:.5; filter:alpha(opacity=50); background:#ddd url(../img/iconDragHandler.gif) no-repeat center; cursor:n-resize; margin:0 2px !important; padding:0 !important; border:0 !important; _zoom:1;}
 .drag_handle.left { left:0; }
 .drag_handle.right { right:0; }
 .eArea .drag_handle {display:none}
