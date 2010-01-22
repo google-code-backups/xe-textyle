@@ -1384,6 +1384,7 @@ var ImageWriter = xe.createPlugin('ImageWriter', {
 		}
 
 		cfg.editor.show();
+		cfg.file.focus();
 	},
 	API_CLOSE_IMG_EDITOR : function(sender, params) {
 		var seq  = params[0];
@@ -1790,6 +1791,7 @@ var FileWriter = xe.createPlugin('FileWriter', {
 		}
 
 		cfg.editor.show();
+		cfg.desc.focus();
 
 		if (init) {
 			// if you use firebug, this code will crash your firefox browser.
@@ -2251,6 +2253,7 @@ var LinkWriter = xe.createPlugin('LinkWriter', {
 		}
 
 		cfg.editor.show();
+		cfg.text.focus();
 	},
 	API_CLOSE_LINK_EDITOR : function(sender, params) {
 		var seq  = params[0];
