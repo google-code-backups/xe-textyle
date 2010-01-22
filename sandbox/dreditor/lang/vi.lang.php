@@ -14,7 +14,6 @@
 
 
 	$lang->edit->text='Văn bản';
-	$lang->edit->text_explain = 'Bấm tổ hợp Ctrl+Enter để chuyển sang đoạn văn bản kế tiếp.';
 	$lang->edit->link = 'Liên kết';
 	$lang->edit->blockquote = 'Trích dẫn';
 	$lang->edit->insert_blockquote = 'Hãy nhập văn bản trích dẫn.';

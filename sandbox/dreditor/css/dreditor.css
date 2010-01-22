@@ -206,7 +206,7 @@
 .wArea.hr .hRule{ position:absolute; width:100%; top:50%; left:0; display:block; border-top:1px solid #e6e6e6; border-bottom:1px solid #fff; font-size:0; line-height:0; overflow:hidden; height:0;}
 
 /* Edit Area */
-.eArea{ position:relative; padding:0 20px; margin:0; font-size:12px; border:1px solid #fff; overflow:visible !important;}
+.eArea{ position:relative; padding:0 20px; margin:0; font-size:12px; border:1px solid #fff; overflow:visible !important; _zoom:1;}
 .eArea.xe_dr_hr{ padding-top:1em; padding-bottom:1em;}
 .eArea a{ color:#648AB9;}
 .eArea button.holder{ position:absolute; left:-2000px; top:0px; }

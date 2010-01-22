@@ -14,7 +14,6 @@
 
 
 	$lang->edit->text='テキスト';
-	$lang->edit->text_explain = '「CTRL+ENTER」を押すと段落内の改行が出来ます。';
 	$lang->edit->link = 'リンク';
 	$lang->edit->blockquote = '引用';
 	$lang->edit->insert_blockquote = '引用文を入力して下さい。';

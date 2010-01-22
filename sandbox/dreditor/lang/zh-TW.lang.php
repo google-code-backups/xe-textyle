@@ -14,7 +14,6 @@
 
 
 	$lang->edit->text = 'Text';
-	$lang->edit->text_explain = 'You can continue post with new paragraph by pressing CTRL+ENTER';
 	$lang->edit->link = '連結';
 	$lang->edit->blockquote = '引用';
 	$lang->edit->insert_blockquote = '請輸入引用';

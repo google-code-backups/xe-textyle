@@ -14,7 +14,6 @@
 
 
 	$lang->edit->text='文本';
-	$lang->edit->text_explain = '利用CTRL+ENTER组合键可另起段落。';
 	$lang->edit->link = '链接';
 	$lang->edit->blockquote = '引用';
 	$lang->edit->insert_blockquote = '请输入要引用的内容。';

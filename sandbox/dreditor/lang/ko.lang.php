@@ -14,7 +14,6 @@
 
 
 	$lang->edit->text='텍스트';
-	$lang->edit->text_explain = 'CTRL+ENTER를 누르면 이어지는 텍스트 단락으로 넘어갑니다';
 	$lang->edit->link = '링크';
 	$lang->edit->blockquote = '인용';
 	$lang->edit->insert_blockquote = '인용 문구를 입력해 주세요';
