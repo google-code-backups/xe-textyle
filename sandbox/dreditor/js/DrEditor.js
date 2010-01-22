@@ -236,7 +236,8 @@ var DrEditor = xe.createApp('DrEditor', {
 		var box = configs[seq].editArea.contents().clone();
 		var dum = $('<div>').append(box);
 
-		box.filter('div.wArea,div.drag_handle').remove();
+		// remove no-content area
+		box.find('div.wArea,div.drag_handle').remove();
 
 		// getting content
 		this.cast('GETTING_CONTENT', [seq, dum]);
@@ -618,6 +619,8 @@ var HeaderWriter = xe.createPlugin('HeaderWriter', {
 		// Create this editor if it doesn't exists
 		if(!cfg) cfg = this.create(seq);
 
+		this.cast('RESET_EDITOR', [seq, cfg.editor, 'HX']);
+
 		if(box) {
 			var tagName = box.children(header_tag)[0].tagName.toLowerCase();
 
@@ -812,7 +815,19 @@ var TextWriter = xe.createPlugin('TextWriter', {
 		obj.children(':not(div.eArea),div.xe_dr_txt')
 			.each(function(){
 				var t = $(this);
-				if(!t.is('div.xe_dr_txt')) t = t.wrap('<div>').parent();
+
+				// clean contentless paragraph {{{
+				if (
+					( this.nodeType == 3 && !$.trim(this.nodeValue) ) ||
+					( t.is('p') && /^\s*(<br ?\/?>)?\s*$/i.test(t.html()) )
+				) {
+					t.remove();
+					return true;
+				}
+				// }}} clean contentless paragraph
+
+				if(this.nodeType == 3) t = t.wrap('<p />').parent();
+				if(!t.is('div.xe_dr_txt')) t = t.wrap('<div />').parent();
 
 				t.attr('class', 'eArea _txt').attr('type', 'txt');
 			});
