@@ -2199,7 +2199,7 @@ var LinkWriter = xe.createPlugin('LinkWriter', {
 			cfg.text.val( box.find('strong').text() );
 			cfg.url.val( box.find('a').attr('href') );
 
-			var desc = $.trim(box.find('span').text());
+			var desc = $.trim(box.find('span.desc').text());
 			if (desc) cfg.desc.val( desc );
 		} else if (bef) {
 			bef.after(cfg.editor);
@@ -2226,7 +2226,7 @@ var LinkWriter = xe.createPlugin('LinkWriter', {
 					.append( $('<br />') )
 					.append( $('<a>').attr('href', url).text(url) );
 
-			if (desc) para.append('<br>').append( $('<span class="desc">').text(desc) );
+			if (desc) para.append('<br />').append( $('<span class="desc" />').text(desc) );
 
 			box.remove();
 			this.cast('SAVE_PARAGRAPH', [seq, cfg.editor, box=newBox, 'LINK']);
