@@ -52,7 +52,7 @@
 .wToolbar li.more button{ background-position:center -2075px;}
 .wToolbarContainer.more li.more button{ background-position:center -1855px;}
 
-.wToolbar li .dragable{ position:absolute; display:none; bottom:48px; right:0; padding:0; border:0; width:20px; height:20px; overflow:hidden; background:url(../img/iconMovable.gif) no-repeat center center !important; cursor:move; font-size:0; line-height:0; text-indent:-200%;}
+.wToolbar li .dragable{ position:absolute; display:none; bottom:38px; right:0; padding:0; border:0; width:20px; height:20px; overflow:hidden; background:url(../img/iconMovable.gif) no-repeat center center !important; cursor:move; font-size:0; line-height:0; text-indent:-200%;}
 .wToolbarContainer.more li.hover .dragable{ _display:block;}
 .wToolbarContainer.more li:hover .dragable{ display:block;}
 
