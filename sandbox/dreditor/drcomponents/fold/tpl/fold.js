@@ -14,8 +14,15 @@ var Fold = xe.createPlugin('Fold', {
 		var config  = editor.getConfig(seq);
 		var _editor = config.writeArea.find('>div.fold');
 		var _text   = _editor.find('input[type=text]');
+		var next = _text.next();
 
+		_text.remove();
 		this.cast('ADD_DEFAULT_EDITOR_ACTION', [seq, _editor, 'FOLD']);
+		next.before(_text);
+
+		_text
+			.blur(function(){ if(!$.trim(this.value)) this.value = this.title });
+			.val(_text.attr('title'));
 
 		this.configs[seq] = {
 			editor : _editor,
@@ -116,7 +123,7 @@ var Fold = xe.createPlugin('Fold', {
 		} else if (bef) {
 			$(bef).after(cfg.editor);
 		} else {
-			cfg.editor.appendTo(configs[seq].editArea);
+			cfg.editor.appendTo(editor.getConfig(seq).editArea);
 		}
 		cfg.editor.show().find('input[type=text]:first').focus();
 	},
