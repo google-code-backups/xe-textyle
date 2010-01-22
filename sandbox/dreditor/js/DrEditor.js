@@ -1431,7 +1431,7 @@ var MaterialWriter = xe.createPlugin('MaterialWriter', {
 			loaded     : false,
 			prev_page  : 0,
 			next_page  : 0,
-			total_page : 0,
+			total_page : 0
 		};
 
 		this.load_material(seq, 1);

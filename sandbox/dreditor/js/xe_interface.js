@@ -29,7 +29,11 @@ function _create(editor_sequence, primary_key, content_key, editor_height, color
 	var target_src = request_uri+'modules/editor/styles/'+content_style+'/editor.html';
 	var content = form[content_key].value;
 
-	form.setAttribute('editor_sequence', seq);
+	try {
+		form.setAttribute('editor_sequence', seq);
+	} catch(e) {
+		form.edtior_sequence = seq;
+	}
 
 	// Set Standard API
 	if (editorRelKeys) {
