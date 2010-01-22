@@ -21,7 +21,7 @@ var Fold = xe.createPlugin('Fold', {
 		next.before(_text);
 
 		_text
-			.blur(function(){ if(!$.trim(this.value)) this.value = this.title });
+			.blur(function(){ if(!$.trim(this.value)) this.value = this.title })
 			.val(_text.attr('title'));
 
 		this.configs[seq] = {
