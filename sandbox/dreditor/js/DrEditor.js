@@ -451,6 +451,9 @@ var DrEditor = xe.createApp('DrEditor', {
 				this.cast('SELECT_PARAGRAPH', [seq, para, para, para]);
 			}
 
+			selection = this.cast('GET_SELECTED_PARAGRAPH', [seq]);
+			this.cast('SCROLL_INTO_VIEW', [seq, selection, (key==UP)?'top':'bottom']);
+
 			return true;
 		}
 
@@ -555,6 +558,31 @@ var DrEditor = xe.createApp('DrEditor', {
 		}
 
 		this.cast('TOOLBAR_REPOSITION', [seq]);
+	},
+	API_SCROLL_INTO_VIEW : function(sender, params) {
+		var seq  = params[0];
+		var sel  = params[1];
+		var edge = params[2];
+
+		if (!sel || !sel.length || !edge) return;
+		if (edge != 'top' && edge != 'bottom') edge = 'top';
+
+		var pos, view_height = $(window).height(), scroll_top = $(window).scrollTop();
+
+		if (edge == 'top') {
+			pos = sel.eq(0).offset();
+			if (pos.top-5 < scroll_top) $(window).scrollTop(pos.top-5);
+		} else {
+			sel = sel.eq(sel.length - 1);
+			pos = sel.offset();
+			pos.height  = sel.height();
+			pos.toolbar = 0;
+
+			if (configs[seq].toolbar.parent().is(':visible')) pos.toolbar = configs[seq].toolbar.parent().height()+10;
+			if (pos.top+pos.height > scroll_top+view_height-pos.toolbar-5) {
+				$(window).scrollTop( pos.top+pos.height-view_height+pos.toolbar+5);
+			}
+		}
 	}
 });
 var editor = new DrEditor;
