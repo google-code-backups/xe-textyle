@@ -79,4 +79,5 @@
 	$lang->edit->help_first_dt_5 = '단락 저장 및 삭제(Ctrl+Enter, Del)';
 	$lang->edit->help_first_dd_5 = '\'확인\'버튼을 누르거나 Ctrl+Enter 명령으로 저장할 수 있습니다. Del키를 이용하여 선택된 단락을 삭제할 수 있습니다.';
 
+	$lang->edit->drag_this = '단락을 드래그하여 이동하세요.';
 ?>

@@ -302,8 +302,8 @@ var DrEditor = xe.createApp('DrEditor', {
 			par.each(function(){
 				var t = $(this);
 				if (!t.children('div.drag_handle:first').length) {
-					t.prepend('<div class="drag_handle left" />');
-					t.prepend('<div class="drag_handle right" />');
+					t.prepend('<div class="drag_handle left" title="'+xe.lang.drag_this+'" />');
+					t.prepend('<div class="drag_handle right" title="'+xe.lang.drag_this+'" />');
 				}
 			});
 		}
