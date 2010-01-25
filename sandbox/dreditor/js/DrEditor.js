@@ -237,7 +237,7 @@ var DrEditor = xe.createApp('DrEditor', {
 		var dum = $('<div>').append(box);
 
 		// remove no-content area
-		box.find('div.wArea,div.drag_handle').remove();
+		dum.find('>div.wArea,>div.eArea>div.drag_handle').remove();
 
 		// getting content
 		this.cast('GETTING_CONTENT', [seq, dum]);
