@@ -80,7 +80,6 @@
             }
 
             $args->material_srl = $material_srl ? $material_srl : getNextSequence();
-            $args->module_srl = $this->module_srl;
             $args->member_srl = $member_srl;
             $args->type = $var->type;
             $args->content = $var->content;
@@ -131,34 +130,6 @@
             // trigger 호출 (after)
             if($output->toBool()) {
                 $trigger_output = ModuleHandler::triggerCall('material.deleteMaterial', 'after', $obj);
-                if(!$trigger_output->toBool()) {
-                    return $trigger_output;
-                }
-            }
-            return $output;
-        }
-
-
-        function procMaterialsDelete(){
-            $module_srl = Context::get('module_srl');
-            if(!$module_srl) return new Object(-1, 'msg_invalid_request');
-
-            // 권한 체크
-            $oModuleModel = &getModel('module');
-            $logged_info = $logged_info = Context::get('logged_info');
-            if(!$oModuleModel->isSiteAdmin($logged_info)) return new Object(-1, 'msg_not_permitted');
-
-            return $this->deleteMaterials($module_srl);
-        }
-
-        function deleteMaterials($module_srl){
-            $args->module_srl = $module_srl;
-            $output = executeQuery('material.deleteMaterials', $args);
-            $this->setMessage('success_deleted');
-
-            // trigger 호출 (after)
-            if($output->toBool()) {
-                $trigger_output = ModuleHandler::triggerCall('material.deleteMaterials', 'after', $args);
                 if(!$trigger_output->toBool()) {
                     return $trigger_output;
                 }

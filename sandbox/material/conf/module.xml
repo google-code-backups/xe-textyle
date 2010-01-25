@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
     <actions>
-		<action name="procMaterialsDelete" type="controller" />
 		<action name="procMaterialDelete" type="controller" />
 		<action name="procMaterialInsert" type="controller" />
 		<action name="dispMaterialList" type="view" />

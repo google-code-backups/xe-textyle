@@ -69,10 +69,13 @@
         /**
          * @brief bookmark url return 
          **/
-		function getBookmarkUrl($vid, $member_srl) {
+		function getBookmarkUrl($member_srl) {
 			if(!$member_srl) return '';
 
-			$html_url = str_replace('&amp;','&',getFullSiteUrl($vid,'','module','material','act','dispMaterialPopup'));
+			$base_url = Context::getDefaultUrl();
+			if(!$base_url) $base_url = Context::getRequestUrl();
+
+			$html_url = str_replace('&amp;','&', $base_url .'?act=dispMaterialPopup&module=material');
 			$js_url = Context::getRequestUri().'modules/material/tpl/js/material_grabber.js';
 
 			$auth = $this->getAuthByMemberSrl($member_srl);
@@ -82,7 +85,6 @@
 				$output = $oMaterialController->insertMaterialAuth($member_srl);
 				$auth = $this->getAuthByMemberSrl($member_srl);
 			}
-//$bookmark_url="javascript:(function(){var ifm,w=window,d=document,s=d.createElement('script'),ie=('\v'=='v');if((ifm=d.getElementsByName('XE_materialGrabWin')) && ifm.length>0){ifm=ifm[0];ifm.setAttribute('src','');}else{if(ie){ifm=d.createElement('<iframe src=\'\' name=\'XE_materialGrabWin\' allowtransparency=\'true\' frameborder=\'0\' style=\'position:absolute;top:0;right:0;width:640px;height:450px;z-index:10000;\'></iframe>');}else{ifm=d.createElement('iframe');ifm.setAttribute('allowtransparency','true');ifm.setAttribute('name','XE_materialGrabWin');ifm.setAttribute('frameborder','0');ifm.style.position='absolute';ifm.style.top='0';ifm.style.right='0';ifm.style.width='650px';ifm.style.height='430px';ifm.style.zIndex='10000';}d.body.appendChild(ifm);}s.setAttribute('src','".$js_url."');w.__xe_auth='".$auth."';w.__xe_root='".$html_url."';d.body.appendChild(s);})();";
 
 			$bookmark_url = "javascript:(function(){var w=window,d=document,x=w.open('about:blank','XE_materialGrabWin','width=300,height=0,location=0,scrollbars=0,toolbar=0,status=0,menubar=0,resizable'),s=d.createElement('script');s.setAttribute('src','".$js_url."');w.auth='".$auth."';w.__xe_root='".$html_url."';d.body.appendChild(s);w.setTimeout(function(){x.focus()},100);})();";
 			return $bookmark_url;
