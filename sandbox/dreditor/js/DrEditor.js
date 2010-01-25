@@ -1280,9 +1280,9 @@ var ImageWriter = xe.createPlugin('ImageWriter', {
 		var self = this;
 		var cfg  = this.configs[seq];
 
-        if(fileObj.upload_target_srl && fileObj.upload_target_srl != 0) {
-            editorRelKeys[seq]['primary'].value = fileObj.upload_target_srl;
-        }
+		if(fileObj.upload_target_srl && fileObj.upload_target_srl != 0) {
+			editorRelKeys[seq]['primary'].value = fileObj.upload_target_srl;
+		}
 
 		// show resize
 		cfg.image
@@ -1384,7 +1384,7 @@ var ImageWriter = xe.createPlugin('ImageWriter', {
 		}
 
 		cfg.editor.show();
-		cfg.file.focus();
+		(($.browser.msie||$.browser.opera)?cfg.desc:cfg.file).focus();
 	},
 	API_CLOSE_IMG_EDITOR : function(sender, params) {
 		var seq  = params[0];
