@@ -1944,7 +1944,7 @@ var ListWriter = xe.createPlugin('ListWriter', {
 		var cfg  = this.configs[seq];
 		var obj  = $(event.target);
 		var li   = obj.parent('li');
-		var item, ul, stop = false;
+		var item, ul, prev, next, val='', stop = false;
 
 		switch(event.keyCode) {
 			case 13: // enter
@@ -1954,9 +1954,15 @@ var ListWriter = xe.createPlugin('ListWriter', {
 				if (ctrl) {
 					setTimeout(function(){ self.cast('CLOSE_EDITOR', [seq, true, 'LIST']) }, 1);
 				} else {
+					var start = this.get_pos(obj, 'start');
+					var end   = this.get_pos(obj, 'end');
+					var val   = obj.val().substr(end);
+
+					obj.val( obj.val().substr(0, start) );
+
 					li.after(item = this.new_item(true));
 					this.add_event(seq);
-					item.find('>input').focus();
+					this.set_pos( item.find('>input').focus().val(val), 0 );
 				}
 				break;
 			case 27: // ESC
@@ -2001,9 +2007,77 @@ var ListWriter = xe.createPlugin('ListWriter', {
 				this.move_down(obj, li);
 				setTimeout(function(){obj.focus()}, 1);
 				break;
+			case 8: // backspace
+				if (this.get_pos(obj, 'start') == 0) {
+					var lis  = cfg.editor.find('li > input[type=text]');
+					var n_li = lis.index(obj);
+
+					if (n_li > 0) {
+						stop = true;
+						prev = lis.eq(n_li - 1);
+						val  = prev.val();
+
+						prev.focus().val( val + ($.browser.opera?' ':'') + obj.val() );
+						this.set_pos(prev, val.length + ($.browser.opera?1:0));
+
+						// remove current item
+						obj.parent().remove();
+					}
+				}
+				break;
+			case 46: // delete
+				if (this.get_pos(obj, 'end') == obj.val().length) {
+					var lis  = cfg.editor.find('li > input[type=text]');
+					var n_li = lis.index(obj);
+
+					if (n_li < lis.length-1) {
+						stop = true;
+						next = lis.eq(n_li + 1);
+						val  = obj.val();
+
+						obj.val( val + ($.browser.opera?' ':'') + next.val() );
+						this.set_pos(obj, val.length);
+						
+						// remove next item
+						next.parent().remove();
+					}
+				}
+				break;
 		}
 
 		return !stop;
+	},
+	get_pos : function(obj, type) {
+		var n_before, n_after;
+
+		if (typeof obj[0].selectionStart == 'number') {
+			n_before = obj[0].selectionStart;
+			n_after  = obj[0].selectionEnd;
+		} else if(document.selection) {
+			var before = document.selection.createRange().duplicate();
+			var after  = document.selection.createRange().duplicate();
+			var n_before, n_after;
+
+			before.moveEnd('character', obj.val().length);
+			after.moveStart('character', -obj.val().length);
+
+			n_before = (before.text=='')?obj.val().length:obj.val().lastIndexOf(before.text);
+			n_after  = after.text.length;
+		}
+
+		if (n_before == n_after || type == 'start') return n_before;
+		else if (type == 'end') return n_after;
+	},
+	set_pos : function(obj, pos) {
+		if (typeof obj[0].setSelectionRange == 'function') {
+			obj[0].setSelectionRange(pos, pos);
+		} else if(obj[0].createTextRange) {
+			var range = obj[0].createTextRange();
+	
+			range.moveStart('character', pos);
+			range.collapse(true);
+			range.select();
+		}
 	},
 	move_up : function(obj, li) {
 		if (li.prev('li').length) return li.prev('li').before(li);
@@ -2087,6 +2161,12 @@ var ListWriter = xe.createPlugin('ListWriter', {
 	API_SETTING_CONTENT : function(sender, params) {
 		var seq = params[0];
 		var obj = params[1];
+
+		obj.children('ul,ol,div.xe_dr_list').each(function(){
+			var t = $(this);
+			if (!t.is('div')) t = t.wrap('<div />').parent();
+			t.attr('class', 'eArea _list').attr('type', 'list');
+		});
 	},
 	API_GETTING_CONTENT : function(sender, params) {
 		var seq = params[0];
