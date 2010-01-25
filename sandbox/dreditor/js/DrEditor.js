@@ -1939,8 +1939,8 @@ var ListWriter = xe.createPlugin('ListWriter', {
 	},
 	onkeydown : function(seq, event) {
 		var self = this;
-		var meta = ((navigator.platform||'').indexOf('Mac')<0)?true:e.metaKey;
-		var ctrl = event.ctrlKey && meta;
+		var meta = event.metaKey;
+		var ctrl = event.ctrlKey;
 		var cfg  = this.configs[seq];
 		var obj  = $(event.target);
 		var li   = obj.parent('li');
