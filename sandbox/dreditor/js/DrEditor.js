@@ -235,7 +235,7 @@ var DrEditor = xe.createApp('DrEditor', {
 		// getting content
 		this.cast('GETTING_CONTENT', [seq, dum]);
 
-		return html;
+		return dum.html();
 	},
 	API_SET_CONTENT : function(sender, params) {
 		var seq = params[0];
