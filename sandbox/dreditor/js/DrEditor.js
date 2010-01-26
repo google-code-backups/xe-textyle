@@ -44,7 +44,7 @@ var DrEditor = xe.createApp('DrEditor', {
 				);
 
 			// _blankBox
-			_blankBox.dblclick(function(){ self.cast('OPEN_EDITOR', [seq, null, null, 'HX']); });
+			//_blankBox.dblclick(function(){ self.cast('OPEN_EDITOR', [seq, null, null, 'HX']); });
 
 			// toolbar button sortable
 			_toolbar.children('ul:first')
