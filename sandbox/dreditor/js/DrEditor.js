@@ -1027,7 +1027,7 @@ var QuoteWriter = xe.createPlugin('QuoteWriter', {
 			var src = $.trim(cfg.source.val());
 
 			if(src == cfg.source.attr('title')) src = '';
-			if(src) $('<cite>').html(translateCite(src)).appendTo(quote);
+			if(src) $('<cite>').html(translate_cite(src)).appendTo(quote);
 
 			box.remove();
 			this.cast('SAVE_PARAGRAPH', [seq, cfg.editor, box=newBox, 'QUOTE']);
@@ -1131,7 +1131,7 @@ var MovieWriter = xe.createPlugin('MovieWriter', {
 			if (source == cfg.source.attr('title')) source = '';
 
 			if (desc) newBox.append( $('<p class="desc">').text(desc) );
-			if (source) newBox.append( $('<cite>').html(translateCite(source)) );
+			if (source) newBox.append( $('<cite>').html(translate_cite(source)) );
 
 			box.remove();
 			this.cast('SAVE_PARAGRAPH', [seq, cfg.editor, box=newBox, 'MOVIE']);
@@ -1409,7 +1409,7 @@ var ImageWriter = xe.createPlugin('ImageWriter', {
 			if (rawsrc) img.attr('rawsrc', rawsrc);
 
 			var desc = $.trim(cfg.desc.val());
-			if (desc && desc != cfg.desc.attr('title')) img.after(translateCite(desc)).after('<br />');
+			if (desc && desc != cfg.desc.attr('title')) img.after(translate_cite(desc)).after('<br />');
 
 			var filesrl = cfg.image.attr('filesrl');
 			if (filesrl) img.addClass('xe_filesrl_'+filesrl);
@@ -2500,7 +2500,7 @@ function translate(str) {
 
 	return s;
 }
-function translateCite(str) {
+function translate_cite(str) {
 	var s = str.replace(/<(\/)?([abi]|em|strong|cite)(.*?)>|<|>|&|"/ig, function(m0,m1,m2,m3) {
 		m1 = m1 || '';
 		m2 = (m2 || '' ).toLowerCase();
@@ -2520,5 +2520,9 @@ function is_left_click(event) {
 	var ie = $.browser.msie; 
 	return (typeof(event.button)=='undefined' || (ie && event.button == 1) || (!ie && event.button == 0));
 }
+
+editor.translate = translate;
+editor.translate_cite = translate_cite;
+editor.is_left_click = is_left_click;
 
 })(jQuery);
