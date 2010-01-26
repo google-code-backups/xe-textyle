@@ -557,7 +557,12 @@ var DrEditor = xe.createApp('DrEditor', {
 		var sel  = params[1];
 		var edge = params[2];
 
-		if (!sel || !sel.length || !edge) return;
+		if (!sel || !sel.length) return;
+		if (!edge) {
+			this.cast('SCROLL_INTO_VIEW', [seq, sel, 'bottom']);
+			this.cast('SCROLL_INTO_VIEW', [seq, sel, 'top']);
+			return;
+		}
 		if (edge != 'top' && edge != 'bottom') edge = 'top';
 
 		var pos, view_height = $(window).height(), scroll_top = $(window).scrollTop();
@@ -568,10 +573,10 @@ var DrEditor = xe.createApp('DrEditor', {
 		} else {
 			sel = sel.eq(sel.length - 1);
 			pos = sel.offset();
-			pos.height  = sel.height();
+			pos.height  = sel.outerHeight();
 			pos.toolbar = 0;
 
-			if (configs[seq].toolbar.parent().is(':visible')) pos.toolbar = configs[seq].toolbar.parent().height()+10;
+			if (configs[seq].toolbar.parent().is(':visible')) pos.toolbar = configs[seq].toolbar.parent().outerHeight()+10;
 			if (pos.top+pos.height > scroll_top+view_height-pos.toolbar-5) {
 				$(window).scrollTop( pos.top+pos.height-view_height+pos.toolbar+5);
 			}
@@ -655,6 +660,8 @@ var HeaderWriter = xe.createPlugin('HeaderWriter', {
 			cfg.editor.appendTo(configs[seq].editArea);
 		}
 		cfg.editor.show().find('input[type=text]:first').focus();
+
+		this.cast('SCROLL_INTO_VIEW', [seq, cfg.editor]);
 	},
 	API_CLOSE_HX_EDITOR : function(sender, params) {
 		var seq  = params[0];
@@ -734,6 +741,7 @@ var IndexWriter = xe.createPlugin('IndexWriter', {
 			configs[seq].editArea.append(box = this.createIndex(seq));
 		}
 		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
+		this.cast('SCROLL_INTO_VIEW', [seq, box]);
 	},
 	API_AFTER_CLOSE_HX_EDITOR : function(sender, params) {
 		var seq  = params[0];
@@ -911,6 +919,8 @@ var TextWriter = xe.createPlugin('TextWriter', {
 			try {
 				meanless = cfg.iframe[0].contentWindow.document.body.firstChild;
 				cfg.xpress = self.createXpressEditor(seq);
+
+				self.cast('SCROLL_INTO_VIEW', [seq, cfg.editor]);
 			} catch(e) {
 				setTimeout(arguments.callee, 10);
 			}
@@ -1002,6 +1012,7 @@ var QuoteWriter = xe.createPlugin('QuoteWriter', {
 			cfg.editor.appendTo(configs[seq].editArea);
 		}
 		cfg.editor.show().find('textarea').focus();
+		this.cast('SCROLL_INTO_VIEW', [seq, cfg.editor]);
 	},
 	API_CLOSE_QUOTE_EDITOR : function(sender, params) {
 		var seq  = params[0];
@@ -1102,6 +1113,7 @@ var MovieWriter = xe.createPlugin('MovieWriter', {
 		}
 
 		cfg.editor.show().find('textarea:first').focus();
+		this.cast('SCROLL_INTO_VIEW', [seq, cfg.editor]);
 	},
 	API_CLOSE_MOVIE_EDITOR : function(sender, params) {
 		var seq  = params[0];
@@ -1378,6 +1390,7 @@ var ImageWriter = xe.createPlugin('ImageWriter', {
 
 		cfg.editor.show();
 		(($.browser.msie||$.browser.opera)?cfg.desc:cfg.file).focus();
+		this.cast('SCROLL_INTO_VIEW', [seq, cfg.editor]);
 	},
 	API_CLOSE_IMG_EDITOR : function(sender, params) {
 		var seq  = params[0];
@@ -1554,6 +1567,7 @@ var MaterialWriter = xe.createPlugin('MaterialWriter', {
 		}
 
 		cfg.editor.show();
+		this.cast('SCROLL_INTO_VIEW', [seq, cfg.editor]);
 	},
 	API_CLOSE_MATERIAL_EDITOR : function(sender, params) {
 		var seq  = params[0];
@@ -1785,6 +1799,7 @@ var FileWriter = xe.createPlugin('FileWriter', {
 
 		cfg.editor.show();
 		cfg.desc.focus();
+		this.cast('SCROLL_INTO_VIEW', [seq, cfg.editor]);
 
 		if (init) {
 			// if you use firebug, this code will crash your firefox browser.
@@ -2200,6 +2215,7 @@ var ListWriter = xe.createPlugin('ListWriter', {
 
 		this.add_event(seq);
 		cfg.editor.show().find('input[type=text]:first').focus();
+		this.cast('SCROLL_INTO_VIEW', [seq, cfg.editor]);
 	},
 	API_CLOSE_LIST_EDITOR : function(sender, params) {
 		var seq  = params[0];
@@ -2327,6 +2343,7 @@ var LinkWriter = xe.createPlugin('LinkWriter', {
 
 		cfg.editor.show();
 		cfg.text.focus();
+		this.cast('SCROLL_INTO_VIEW', [seq, cfg.editor]);
 	},
 	API_CLOSE_LINK_EDITOR : function(sender, params) {
 		var seq  = params[0];
@@ -2395,6 +2412,7 @@ var HRWriter = xe.createPlugin('HRWriter', {
 			configs[seq].editArea.append(newBox.append(hr.after(btn)));
 			btn.focus(function(){ var t = $(this); setTimeout(function(){ t.remove() }, 10); }).focus();
 		}
+		this.cast('SCROLL_INTO_VIEW', [seq, box]);
 	}
 });
 editor.registerPlugin(new HRWriter);
@@ -2426,6 +2444,7 @@ var HelpViewer = xe.createPlugin('Help', {
 			configs[seq].writeArea.prepend(this.views[seq]);
 		}
 		this.views[seq].show().find('button').focus();
+		this.cast('SCROLL_INTO_VIEW', [seq, this.views[seq]]);
 	},
 	API_CLOSE_HELP_EDITOR : function(sender, params) {
 		var seq = params[0];
@@ -2433,6 +2452,7 @@ var HelpViewer = xe.createPlugin('Help', {
 
 		this.views[seq].hide();
 		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
+		
 	}
 });
 editor.registerPlugin(new HelpViewer);

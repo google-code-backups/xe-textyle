@@ -129,6 +129,7 @@ var Fold = xe.createPlugin('Fold', {
 			cfg.editor.appendTo(editor.getConfig(seq).editArea);
 		}
 		cfg.editor.show().find('input[type=text]:first').focus();
+		this.cast('SCROLL_INTO_VIEW', [seq, cfg.editor]);
 	},
 	API_CLOSE_FOLD_EDITOR : function(sender, params) {
 		var self = this;
