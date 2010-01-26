@@ -235,7 +235,7 @@ var DrEditor = xe.createApp('DrEditor', {
 		// getting content
 		this.cast('GETTING_CONTENT', [seq, dum]);
 
-		return dum.html();
+		return html;
 	},
 	API_SET_CONTENT : function(sender, params) {
 		var seq = params[0];
@@ -673,6 +673,8 @@ var HeaderWriter = xe.createPlugin('HeaderWriter', {
 			var newBox  = $('<div>');
 			var id      = box.children(header_tag).attr('id');
 			var tagName = cfg.inputLevel.filter(':checked').val();
+
+			if (!id) id = 'h'+(new Date).getTime();
 
 			newBox.html('<'+tagName+' id="'+id+'"></'+tagName+'>').children(':first').text(cfg.inputHead.val());
 
