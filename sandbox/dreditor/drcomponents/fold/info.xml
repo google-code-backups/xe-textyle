@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component name="fold">
+<drcomponent name="fold">
     <title xml:lang="ko">접기</title>
     <title xml:lang="en">Fold</title>
     <title xml:lang="zh-TW">Fold</title>
@@ -14,4 +14,4 @@
         <name xml:lang="en">taggon</name>
         <name xml:lang="zh-TW">taggon</name>
     </author>
-</component>
+</drcomponent>
