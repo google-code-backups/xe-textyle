@@ -98,13 +98,6 @@ var DrEditor = xe.createApp('DrEditor', {
 					self.last_seq = seq;
 				});
 
-			// form submit event
-			$(configs[seq].form).submit(function(){
-				if (_editArea.children('div.wArea:visible').length || _writeArea.children('div.wArea:visible').length) {
-					return confirm(submit_without_saving_msg);
-				}
-			});
-
 			configs[seq] = $.extend(configs[seq], {
 				sequence  : seq,
 				container : _container,
@@ -2460,6 +2453,23 @@ var More = xe.createPlugin('More', {
 	}
 });
 editor.registerPlugin(new More);
+
+// Validator plugin
+var ValidatorHook = xe.createPlugin('ValidatorHook', {
+	API_BEFORE_VALIDATE : function(sender, params) {
+		var form = $(params[0]);
+		var seq  = form.attr('editor_sequence');
+		var wArea_e = configs[seq].editArea.children('div.wArea:visible').filter(':not(.blank)');
+		var wArea_w = configs[seq].writeArea.children('div.wArea:visible').filter(':not(.blank)');
+
+		if (wArea_e.length || wArea_w.length) {
+			return !!confirm(submit_without_saving_msg);
+		}
+
+		return true;
+	}
+});
+xe.getApp('Validator')[0].registerPlugin(new ValidatorHook);
 
 // Utility function
 var table = {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'};
