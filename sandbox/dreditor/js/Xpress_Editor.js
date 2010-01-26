@@ -2350,7 +2350,7 @@ xe.Hotkey = jQuery.Class({
 		if (event.ctrlKey)  key.push('ctrl');
 		if (event.metaKey)  key.push('meta');
 		if (!key.length && code != kh.enter && code != kh.esc) return;
-		//if (key.length == 1 && event.metaKey) key = ['ctrl', 'meta'];
+		if (key.length == 1 && event.metaKey) key = ['ctrl', 'meta'];
 
 		key.push(code);
 		key = key.join('+');
@@ -2389,7 +2389,7 @@ xe.Hotkey = jQuery.Class({
 		if (shift) keys.push('shift');
 		if (alt) keys.push('alt');
 		if (ctrl) keys.push('ctrl');
-		//if (meta || (ctrl && !shift && !alt)) keys.push('meta');
+		if (meta || (ctrl && !shift && !alt)) keys.push('meta');
 
 		keys.push(this.keyhash[key] || key.toUpperCase().charCodeAt(0));
 
