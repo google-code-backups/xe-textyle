@@ -9,33 +9,34 @@
 .textyleEditor .editorContainer .writeArea{ position:relative; *zoom:1;}
 
 /* Writing Toolbar */
-.wToolbarContainer{ position:relative; margin:20px 0 40px 0; height:62px; overflow:hidden;z-index:1000;}
-.wToolbarContainer.more{ height:121px;}
+.wToolbarContainer{ position:relative; margin:20px 0 40px 0; height:62px; overflow:hidden; z-index:1000; _zoom:1;}
+.wToolbarContainer.more{ height:auto;}
 .wToolbarContainer.hover{}
-.wToolbar{ position:relative; height:62px; margin:0 10px 0 25px; *zoom:1; background-image:url(../img/bgWritingToolbarCenter.gif); background-repeat:repeat-x; }
-.wToolbarContainer.more .wToolbar{ height:121px; background-position:0 -100px;}
-.wToolbar .cap{ position:absolute; top:0; height:72px; background-repeat:no-repeat; font-size:0; line-height:0; overflow:hidden; background:url(../img/bgWritingToolbar.gif) no-repeat; z-index:1;}
-.wToolbarContainer.more .cap{ height:141px; background:url(../img/bgWritingToolbarMore.gif) no-repeat;}
-.wToolbar .cap.capLeft{ width:25px; left:-25px; background-position:left top;}
-.wToolbar .cap.capRight{ width:10px; right:-10px; background-position:right top;}
+.wToolbar{ position:relative; height:62px; margin:0 10px; *zoom:1; background-image:url(../img/bgWritingToolbarCenter.gif); background-repeat:repeat-x; }
+.wToolbarContainer.more .wToolbar{ height:auto; padding:0 0 5px 0; background-position:0 bottom; border-top:1px solid #bec2ca;}
+.wToolbar .cap{ position:absolute; top:0; height:62px; background-repeat:no-repeat; font-size:0; line-height:0; background:url(../img/bgWritingToolbar.gif) no-repeat; z-index:1;}
+.wToolbar .top{ display:none; position:absolute; top:-1px; width:10px; height:7px; background:url(../img/bgWritingToolbarMore.gif) no-repeat; z-index:2;}
+.wToolbarContainer.more .cap{ height:100%; _top:auto; _bottom:0; _height:300px; background:url(../img/bgWritingToolbarMore.gif) no-repeat;}
+.wToolbarContainer.more .top{ display:block;}
+.wToolbar .capLeft{ width:10px; left:-10px; background-position:left top;}
+.wToolbar .topLeft{ left:-10px; background-position:left top;}
+.wToolbarContainer.more .cap.capLeft{ background-position:left bottom;}
+.wToolbar .capRight{ width:10px; right:-10px; background-position:right top;}
+.wToolbar .topRight{ right:-10px; background-position:right top;}
+.wToolbarContainer.more .capRight{ background-position:right bottom;}
 
-.wToolbar ul{ position:relative; margin:0 70px 0 0; padding:1px 0 0 0; *zoom:1; height:58px; z-index:2;}
-.wToolbarContainer.more ul{ height:115px; background:url(../img/hrToolbarMore.gif) repeat-x left center;}
+.wToolbar ul{ position:relative; margin:0 70px 0 0; padding:0; *zoom:1; height:58px; z-index:2;}
+.wToolbarContainer.more ul{ height:auto; _height:58px; background:url(../img/hrToolbarMore.gif);}
 .wToolbar ul:after{ content:""; display:block; clear:both;}
 .wToolbar li{ position:relative; float:left; list-style:none; width:11.1%; *width:11%; _margin-top:0; _margin-right:-1px;}
-.wToolbar li button{ position:relative; padding:0; width:100%; height:57px; border:0; background:transparent; cursor:pointer; font-size:11px; color:#44506a; background-image:url(../img/iconWritingToolbar.gif); background-repeat:no-repeat;}
+.wToolbar li button{ position:relative; padding:0; width:100%; height:57px; *height:59px; border:0; background:transparent; cursor:pointer; font-size:11px; color:#44506a; background-image:url(../img/iconWritingToolbar.gif); background-repeat:no-repeat;}
 .wToolbar li button span{ display:inline-block; padding-top:37px; height:20px;}
-.wToolbar li.more{ float:none; position:absolute; top:1px; right:-70px; width:60px; height:auto; background:url(../img/vrToolbarMore.gif) repeat-y;}
+.wToolbar li.more{ float:none; position:absolute; top:1px; right:-70px; width:60px; background:url(../img/vrToolbarMore.gif) repeat-y; _zoom:1;}
 .wToolbar li.more button{ width:60px;}
 .wToolbar li.more button span{ padding-top:20px;}
-.wToolbarContainer.more li.more button{ height:116px;}
-.wToolbarContainer.more li.more button span{ padding-top:47px; padding-bottom:39px; _padding-bottom:35px;}
-/*
-.wToolbar li.close{ position:absolute; left:-25px; top:1px; width:25px; background:url(../img/vrToolbarMore.gif) repeat-y right top;}
-.wToolbar li.close button{ background:url(../img/buttonCloseLayerX.gif) no-repeat center;}
-.wToolbarContainer.more li.close button{ height:116px;}
-.wToolbarContainer.more li.close button span{ padding-bottom:49px; _padding-bottom:45px;}
-*/
+.wToolbarContainer.more li.more{ height:100%;}
+.wToolbarContainer.more li.more button{ height:100%; _height:114px; background:url(../img/iconWritingToolbarFolder.gif) no-repeat center !important;}
+.wToolbarContainer.more li.more button span{ padding:0;}
 
 .wToolbar li.hx button{ background-position:center top;}
 .wToolbar li.txt button{ background-position:center -100px;}
@@ -46,11 +47,10 @@
 .wToolbar li.movie button{ background-position:center -600px;}
 .wToolbar li.file button{ background-position:center -700px;}
 .wToolbar li.hr button{ background-position:center -800px;}
-.wToolbar li.index button{ background-position:center -1000px;}
-.wToolbar li.material button{ background-position:center -1100px;}
-.wToolbar li.help button{ background-position:center -1800px;}
-.wToolbar li.more button{ background-position:center -2075px;}
-.wToolbarContainer.more li.more button{ background-position:center -1855px;}
+.wToolbar li.index button{ background-position:center -900px;}
+.wToolbar li.material button{ background-position:center -1000px;}
+.wToolbar li.help button{ background-position:center -1100px;}
+.wToolbar li.more button{ background-position:center -1187px;}
 
 .wToolbar li .dragable{ position:absolute; display:none; bottom:38px; right:0; padding:0; border:0; width:20px; height:20px; overflow:hidden; background:url(../img/iconMovable.gif) no-repeat center center !important; cursor:move; font-size:0; line-height:0; text-indent:-200%;}
 .wToolbarContainer.more li.hover .dragable{ _display:block;}
