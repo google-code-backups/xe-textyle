@@ -194,8 +194,7 @@ var DrEditor = xe.createApp('DrEditor', {
 
 		$(document).keydown(function(event){
 			var target = $(event.target);
-
-			if(!event.shiftKey && !event.altKey && !event.ctrlKey && !event.metaKey && target.is(':input:not(button._hookerBtn)')) return true;
+			if(!event.altKey && !event.ctrlKey && !event.metaKey && target.is(':input:not(button._hookerBtn)')) return true;
 			if(event.keyCode == 16 && event.shiftKey) return true; // only shift key
 			if(event.keyCode == 17 && event.ctrlKey)  return true; // only ctrl key
 			if(event.keyCode == 18 && event.altKey)   return true; // only alt key
