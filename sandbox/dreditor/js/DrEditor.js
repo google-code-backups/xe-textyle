@@ -249,7 +249,7 @@ var DrEditor = xe.createApp('DrEditor', {
 
 		// set content
 		if(configs[seq] && configs[seq].editArea) {
-			configs[seq].editArea.append(dum.children()).find('>div.eArea');
+			configs[seq].editArea.append(dum.children('div.eArea'));
 		}
 	},
 	API_AFTER_SET_CONTENT : function(sender, params) {
