@@ -486,7 +486,6 @@ var DrEditor = xe.createApp('DrEditor', {
 		// set default checkbox and radio button
 		editor.find('input[type=checkbox],input[type=radio]').filter(':checked').addClass('_default_check');
 
-		
 		editor.find('input,textarea').keydown(function(event){
 			var ESC = 27, ENTER = 13;
 
@@ -1276,7 +1275,11 @@ var ImageWriter = xe.createPlugin('ImageWriter', {
 	},
 	onfileuploaded : function(seq, callback_id, fileObj) {
 		// remove callback function
-		delete window[callback_id];
+		try {
+			delete window[callback_id];
+		} catch(e) {
+			window[callback_id] = null;
+		}
 
 		if(fileObj.error==-1){
 			alert(fileObj.message);
