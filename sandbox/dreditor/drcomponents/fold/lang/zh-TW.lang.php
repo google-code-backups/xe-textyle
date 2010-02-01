@@ -1,5 +1,5 @@
 <?PHP
-	$lang->edit->fold = '접기';
-	$lang->edit->title2 = '타이틀2';
-	$lang->edit->title3 = '타이틀3';
+	$lang->edit->fold = '摺疊';
+	$lang->edit->title2 = '標題2';
+	$lang->edit->title3 = '標題3';
 ?>
