@@ -138,6 +138,7 @@ var DrEditor = xe.createApp('DrEditor', {
 				self.cast('CLEAR_SELECTION', [seq]);
 				return true;
 			}
+			if(para.parents('div.material:first').length) return true;
 
 			var seq = para.parents('form:first')[0].elements['editor_sequence'].value;
 			
