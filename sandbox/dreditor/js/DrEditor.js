@@ -1332,13 +1332,16 @@ var ImageWriter = xe.createPlugin('ImageWriter', {
 				if(t.is('img')) t = t.wrap('<p class="img"></p>');
 				if(t.is('p.img')) t = t.wrap('<div></div>').parent();
 				if(t.is('div.xe_dr_img')) {
-					var img  = t.children('p:has(img)').attr('class', 'img');
-					var desc = t.children('p.desc').remove();
-					var cite = t.children('p.cite').remove();
-					var div = $('<div>').text(desc.html());
+					var img    = t.children('p:has(img)').attr('class', 'img');
+					var desc   = t.children('p.desc').remove();
+					var cite   = t.children('p.cite').remove();
+					var s_desc = $.trim(desc.html() || '');
+					var s_cite = $.trim(cite.html() || '');
+					var s_text = [];
 
-					if(cite.text()) div.text( div.text() + ' - ' + cite.text());
-					if(desc.length) img.append('<br>').append(div[0].firstChild);
+					if (s_desc) s_text.push(s_desc);
+					if (s_cite) s_text.push(s_cite);
+					if (s_text.length) img.append('<br>').append($('<div>').html(s_text.join(' - ')).contents());
 				}
 
 				t.attr('class', 'eArea _img').attr('type', 'img');
