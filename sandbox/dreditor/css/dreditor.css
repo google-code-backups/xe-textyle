@@ -158,7 +158,8 @@
 .wArea.list .listArea input{ border:0; border-bottom:1px solid #ddd; background:transparent; width:96%; padding:3px 4px;}
 
 /* Writing Area Image */
-.wArea.img .image{ position:relative; width:100%; margin-bottom:10px; background:#fff; padding:0; overflow:hidden; display:table; table-layout:fixed;}
+.wArea.img .image{ position:relative; margin-bottom:10px; background:#fff; padding:0; _width:100%; overflow:hidden;}
+.wArea.img .image img{ max-width:100%;}
 .wArea.img .uploading{ display:none; padding:0 0 0 20px; background:url(../img/iconLoading.gif) no-repeat left center;}
 .wArea.img .uploading button{ border:2px solid #ccc; background:#eee; cursor:pointer; font-size:11px; font-weight:bold; padding:0; overflow:visible; vertical-align:middle; margin:0 10px;}
 .wArea.img .info{ font-size:11px; color:#737fa1; margin:0;}
