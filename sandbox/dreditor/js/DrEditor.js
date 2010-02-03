@@ -1965,11 +1965,12 @@ var ListWriter = xe.createPlugin('ListWriter', {
 		switch(event.keyCode) {
 			case 13: // enter
 				stop = true;
-				if (!$.trim(obj.val())) return obj.focus() && false;
 
 				if (ctrl) {
 					setTimeout(function(){ self.cast('CLOSE_EDITOR', [seq, true, 'LIST']) }, 1);
 				} else {
+					if (!$.trim(obj.val())) return obj.focus() && false;
+
 					var start = this.get_pos(obj, 'start');
 					var end   = this.get_pos(obj, 'end');
 					var val   = obj.val().substr(end);
@@ -2235,14 +2236,14 @@ var ListWriter = xe.createPlugin('ListWriter', {
 			var newBox = $('<div>');
 			var list   = cfg.list.children('ul,ol').appendTo(newBox);
 			var div    = $('<div>');
+
 			list.find('input[type=text]').each(function(){
 				var t = $(this);
 				var v = $.trim(t.val());
 
 				if (v || t.parent().children('ul,ol').length) {
 					div.text(v);
-					t.parent().prepend(div[0].firstChild);
-					t.remove();
+					t.before(div[0].firstChild).remove();
 				} else {
 					t.parent().remove();
 				}
@@ -2362,6 +2363,9 @@ var LinkWriter = xe.createPlugin('LinkWriter', {
 		var text = $.trim(cfg.text.val());
 		var url  = $.trim(cfg.url.val());
 		var desc = $.trim(cfg.desc.val());
+
+		if (url  == cfg.url.attr('title')) url = '';
+		if (desc == cfg.desc.attr('title')) desc = '';
 
 		if (save && text && url) {
 			var newBox = $('<div>');
