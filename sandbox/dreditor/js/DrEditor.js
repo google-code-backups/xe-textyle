@@ -2212,8 +2212,8 @@ var ListWriter = xe.createPlugin('ListWriter', {
 				.find('li')
 				.each(function(){
 					var t = $(this);
-					var v = $.trim(t.text());
 					var c = t.children('ul,ol').remove();
+					var v = $.trim(t.text());
 					t.empty().append( $('<input type="text">').val(v) ).append(c);
 				});
 		} else if (bef) {
