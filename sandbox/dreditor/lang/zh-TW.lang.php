@@ -63,21 +63,21 @@
 	$lang->edit->close_materials = '關閉';
     $lang->edit->no_materials = 'There is no writting ingredient.';
     $lang->edit->msg_no_selected_object = 'There is no selected object.';
-    $lang->edit->msg_insert_value = 'Please input the value.';
+    $lang->edit->msg_insert_value = '請輸入數值';
 
-	$lang->edit->help_first_title = '도움말';
-	$lang->edit->help_shortcut = '단축키';
-	$lang->edit->close_toolbar = '도구모음 닫기';
-	$lang->edit->help_first_dt_1 = '새 단락 쓰기(1~9)';
-	$lang->edit->help_first_dd_1 = '도구모음 버튼을 클릭함으로써 새 단락 쓰기를 시작할 수 있습니다. 도구모음 버튼에는 배치된 순서대로 왼쪽으로부터 1~9까지 단축키가 할당되어 있습니다.';
-	$lang->edit->help_first_dt_2 = '단락 선택(Click, Ctrl+Click, Shift+Click)';
-	$lang->edit->help_first_dd_2 = '클릭 또는 클릭 후 방향키(&uarr;&darr;)를 조작함으로써 원하는 단락을 선택할 수 있습니다. 단일선택(Click)과 다중선택(Ctrl+Click, Shift+Click)이 가능합니다';
-	$lang->edit->help_first_dt_3 = '단락 편집 및 취소(Enter, Double Click, ESC)';
-	$lang->edit->help_first_dd_3 = '단락 선택 후 Enter 또는 더블클릭으로 편집할 수 있습니다. ESC키를 이용하여 편집을 취소할 수 있습니다.';
-	$lang->edit->help_first_dt_4 = '단락 이동(Ctrl+&uarr;&darr;, Click-Drag-Drop)';
-	$lang->edit->help_first_dd_4 = '단락 선택 후 Ctrl+방향키(&uarr;&darr;)를 조작하거나 \'클릭-드래그-드롭\'으로 이동할 수 있습니다.';
-	$lang->edit->help_first_dt_5 = '단락 저장 및 삭제(Ctrl+Enter, Del)';
-	$lang->edit->help_first_dd_5 = '\'확인\'버튼을 누르거나 Ctrl+Enter 명령으로 저장할 수 있습니다. Del키를 이용하여 선택된 단락을 삭제할 수 있습니다.';
+	$lang->edit->help_first_title = '使用說明';
+	$lang->edit->help_shortcut = '快速鍵';
+	$lang->edit->close_toolbar = '關閉';
+	$lang->edit->help_first_dt_1 = '快速鍵(1~9)';
+	$lang->edit->help_first_dd_1 = '藉由點選工具列的按鈕可以編寫新的內容。 工具列的快速鍵是由鍵盤左邊的 1~9 按鍵。';
+	$lang->edit->help_first_dt_2 = '段落選擇(Click, Ctrl+Click, Shift+Click)';
+	$lang->edit->help_first_dd_2 = '利用滑鼠選取或方向鍵(&uarr;&darr;)移動的方式選取想要的段落。 可單選(Click)或複選(Ctrl+Click, Shift+Click)段落。';
+	$lang->edit->help_first_dt_3 = '段落編輯、取消(Enter, Double Click, ESC)';
+	$lang->edit->help_first_dd_3 = '按 Enter 鍵或 Double-Click 段落可進行編輯。按 ESC 鍵可取消編輯動作。';
+	$lang->edit->help_first_dt_4 = '段落移動(Ctrl+&uarr;&darr;, Click-Drag-Drop)';
+	$lang->edit->help_first_dd_4 = '選取段落後按 Ctrl+方向鍵(&uarr;&darr;)可進行操作，或是用滑鼠\'click-drag-drop\'進行操作。';
+	$lang->edit->help_first_dt_5 = '段落儲存、刪除(Ctrl+Enter, Del)';
+	$lang->edit->help_first_dd_5 = '按\'確認\'按鈕或是 Ctrl+Enter 可儲存內容。按 Del 鍵可刪除所選取的段落。';
 
-	$lang->edit->drag_this = '단락을 드래그하여 이동하세요.';
+	$lang->edit->drag_this = '將段落移到';
 ?>
