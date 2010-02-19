@@ -6,9 +6,12 @@
 
 var configs = {};
 
+var TOOLSET_LENGTH = 9;
+
 var DrEditor = xe.createApp('DrEditor', {
 	loaded   : false,
 	last_seq : 0,
+	toolset_offset : 0,
 	init : function() {
 	},
 	getConfig : function(seq) {
@@ -465,6 +468,26 @@ var DrEditor = xe.createApp('DrEditor', {
 			buttons.eq(key-49).click();
 
 			return true;
+		}
+
+		// change toolset
+		if (key == 192) {
+			var ul   = configs[seq].toolbar.find('ul:first');
+			var lis  = ul.find('>li');
+			var more = lis.eq(lis.length-1);
+
+			if ((lis.length-1) % TOOLSET_LENGTH) {
+				var empty_len = TOOLSET_LENGTH - ((lis.length-1) % TOOLSET_LENGTH);
+				for(;empty_len--;) more.before('<li class="blank" style="height:57px;" />');
+				lis = ul.find('>li');
+			}
+
+			var toolset_count = (lis.length-1) / 9
+
+			this.toolset_offset++;
+			if (this.toolset_offset >= toolset_count) this.toolset_offset = 0;
+
+			more.before( lis.slice(0,TOOLSET_LENGTH) );
 		}
 	},
 	API_ADD_DEFAULT_EDITOR_ACTION : function(sender, params) {
