@@ -842,14 +842,17 @@ var TextWriter = xe.createPlugin('TextWriter', {
 		var seq = params[0];
 		var obj = params[1];
 
-		obj.children(':not(div.eArea),div.xe_dr_txt')
+		obj.contents()
 			.each(function(){
 				var t = $(this);
+
+				if (t.is('div.eArea')) return true;
 
 				// clean contentless paragraph {{{
 				if (
 					( this.nodeType == 3 && !$.trim(this.nodeValue) ) ||
-					( t.is('p') && /^\s*(<br ?\/?>)?\s*$/i.test(t.html()) )
+					( t.is('p') && /^\s*(<br ?\/?>)?\s*$/i.test(t.html()) ) ||
+					( t.is('br') )
 				) {
 					t.remove();
 					return true;
@@ -2182,7 +2185,7 @@ var ListWriter = xe.createPlugin('ListWriter', {
 		obj.children('ul,ol,div.xe_dr_list').each(function(){
 			var t = $(this);
 			if (!t.is('div')) t = t.wrap('<div />').parent();
-			t.attr('class', 'eArea _list').attr('type', 'list');
+			t.attr('class', 'eArea _list').attr('type', 'list').find('ol>br,ul>br').remove();
 		});
 	},
 	API_GETTING_CONTENT : function(sender, params) {
