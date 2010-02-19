@@ -682,10 +682,11 @@ var HeaderWriter = xe.createPlugin('HeaderWriter', {
 		} else {
 			box.show();
 		}
-		cfg.editor.hide().appendTo(configs[seq].writeArea);
 
 		if(!box.length) box = cfg.editor.prev('div.eArea');
 		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
+
+		cfg.editor.hide().appendTo(configs[seq].writeArea);
 	}
 });
 editor.registerPlugin(new HeaderWriter);
@@ -943,10 +944,11 @@ var TextWriter = xe.createPlugin('TextWriter', {
 		} else {
 			box.show();
 		}
-		cfg.editor.hide().appendTo(configs[seq].writeArea);
 
 		if(!box.length) box = cfg.editor.prev('div.eArea');
 		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
+
+		cfg.editor.hide().appendTo(configs[seq].writeArea);
 	}
 });
 editor.registerPlugin(new TextWriter);
@@ -1038,10 +1040,11 @@ var QuoteWriter = xe.createPlugin('QuoteWriter', {
 		} else {
 			box.show();
 		}
-		cfg.editor.hide().appendTo(configs[seq].writeArea);
 
 		if(!box.length) box = cfg.editor.prev('div.eArea');
 		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
+
+		cfg.editor.hide().appendTo(configs[seq].writeArea);
 	}
 });
 editor.registerPlugin(new QuoteWriter);
@@ -1142,10 +1145,11 @@ var MovieWriter = xe.createPlugin('MovieWriter', {
 		} else {
 			box.show();
 		}
-		cfg.editor.hide().appendTo(configs[seq].writeArea);
 
 		if(!box.length) box = cfg.editor.prev('div.eArea');
 		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
+
+		cfg.editor.hide().appendTo(configs[seq].writeArea);
 	}
 });
 editor.registerPlugin(new MovieWriter);
@@ -1430,10 +1434,11 @@ var ImageWriter = xe.createPlugin('ImageWriter', {
 		} else {
 			box.show();
 		}
-		cfg.editor.hide().appendTo(configs[seq].writeArea);
 		
 		if(!box.length) box = cfg.editor.prev('div.eArea');
 		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
+
+		cfg.editor.hide().appendTo(configs[seq].writeArea);
 	},
 	API_BEFORE_RESET_EDITOR : function(sender, params) {
 		var seq  = params[0];
@@ -1595,10 +1600,10 @@ var MaterialWriter = xe.createPlugin('MaterialWriter', {
 			box = cfg.editor.prev('div.eArea');
 		}
 
-		cfg.editor.hide().appendTo(configs[seq].writeArea);
-
 		if(!box.length) box = cfg.editor.prev('div.eArea');
 		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
+
+		cfg.editor.hide().appendTo(configs[seq].writeArea);
 	}
 });
 editor.registerPlugin(new MaterialWriter);
@@ -1861,10 +1866,10 @@ var FileWriter = xe.createPlugin('FileWriter', {
 			box.show();
 		}
 
-		cfg.editor.hide().appendTo(configs[seq].writeArea);
-
 		if(!box.length) box = cfg.editor.prev('div.eArea');
 		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
+
+		cfg.editor.hide().appendTo(configs[seq].writeArea);
 	},
 	API_BEFORE_RESET_EDITOR : function(sender, params) {
 		var seq  = params[0];
@@ -2383,10 +2388,11 @@ var LinkWriter = xe.createPlugin('LinkWriter', {
 			this.cast('SAVE_PARAGRAPH', [seq, cfg.editor, box=newBox, 'LINK']);
 		}
 
-		cfg.editor.hide().appendTo(configs[seq].writeArea);
 		if(!box.length) box = cfg.editor.prev('div.eArea');
 		box.show();
 		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
+
+		cfg.editor.hide().appendTo(configs[seq].writeArea);
 	}
 });
 editor.registerPlugin(new LinkWriter);
