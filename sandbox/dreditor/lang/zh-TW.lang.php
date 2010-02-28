@@ -69,11 +69,11 @@
 	$lang->edit->help_shortcut = '快速鍵';
 	$lang->edit->close_toolbar = '關閉';
 	$lang->edit->help_first_dt_1 = '快速鍵(1~9)';
-	$lang->edit->help_first_dd_1 = '藉由點選工具列的按鈕可以編寫新的內容。 工具列的快速鍵是由鍵盤左邊的 1~9 按鍵。';
+	$lang->edit->help_first_dd_1 = '藉由點選工具列的按鈕可以編寫新的內容。 工具列的快速鍵是鍵盤的 1~9 數字鍵。';
 	$lang->edit->help_first_dt_2 = '段落選擇(Click, Ctrl+Click, Shift+Click)';
 	$lang->edit->help_first_dd_2 = '利用滑鼠選取或方向鍵(&uarr;&darr;)移動的方式選取想要的段落。 可單選(Click)或複選(Ctrl+Click, Shift+Click)段落。';
 	$lang->edit->help_first_dt_3 = '段落編輯、取消(Enter, Double Click, ESC)';
-	$lang->edit->help_first_dd_3 = '按 Enter 鍵或 Double-Click 段落可進行編輯。按 ESC 鍵可取消編輯動作。';
+	$lang->edit->help_first_dd_3 = '按 Enter 鍵或點兩下段落就可進行編輯。按 ESC 鍵可取消編輯動作。';
 	$lang->edit->help_first_dt_4 = '段落移動(Ctrl+&uarr;&darr;, Click-Drag-Drop)';
 	$lang->edit->help_first_dd_4 = '選取段落後按 Ctrl+方向鍵(&uarr;&darr;)可進行操作，或是用滑鼠\'click-drag-drop\'進行操作。';
 	$lang->edit->help_first_dt_5 = '段落儲存、刪除(Ctrl+Enter, Del)';
