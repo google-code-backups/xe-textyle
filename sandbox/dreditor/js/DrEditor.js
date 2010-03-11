@@ -2522,7 +2522,7 @@ editor.registerPlugin(new More);
 var ValidatorHook = xe.createPlugin('ValidatorHook', {
 	API_BEFORE_VALIDATE : function(sender, params) {
 		var form = $(params[0]);
-		var seq  = form.attr('editor_sequence');
+		var seq  = form[0].elements['editor_sequence'].value;
 		var wArea_e = configs[seq].editArea.children('div.wArea:visible').filter(':not(.blank)');
 		var wArea_w = configs[seq].writeArea.children('div.wArea:visible').filter(':not(.blank)');
 
