@@ -2,10 +2,10 @@
     /**
      * @file   zh-TW.lang.php
      * @author sol(sol@ngleader.com) 翻譯：royallin
-     * @brief  Ingredients Collector正體中文語言
+     * @brief  素材蒐集器正體中文語言
      **/
 
-    $lang->material->popup_title   = 'Textyle writting Ingredients Collector';
+    $lang->material->popup_title   = 'Textyle 素材蒐集器';
     $lang->material->text   = '文字';
     $lang->material->images = '圖片';
     $lang->material->link   = '連結';
@@ -42,11 +42,11 @@
     $lang->material->about_codedescription  = '請輸入影片說明。';
 
 
-	$lang->material->error_msg_title = "對不起，因為Bookmarklet發生錯誤無法使用。請檢查下列可能因素。";
+	$lang->material->error_msg_title = "對不起，因為書籤發生錯誤無法使用。請檢查下列可能因素。";
 	$lang->material->error_msg_list = array(
 		"伺服器或主機是否正常運作？",
 		"是否退出或會員資料被刪除？",
-		"Bookmarklet連結錯誤"
+		"書籤連結錯誤"
 		);
 
 

@@ -5,7 +5,7 @@
     <title xml:lang="zh-TW">摺疊</title>
     <description xml:lang="ko">접고 펼치는 블럭을 추가할 수 있습니다.</description>
     <description xml:lang="en">접고 펼치는 블럭을 추가할 수 있습니다.</description>
-    <description xml:lang="zh-TW">可新增一個能展開與摺疊的段落。</description>
+    <description xml:lang="zh-TW">新增一個可展開與摺疊的段落。</description>
     <date>2010-01-22</date>
     <version>0.2</version>
 

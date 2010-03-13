@@ -6,7 +6,7 @@
 	 **/
 
 
-	$lang->edit->msg_dr_delete_confirm = 'Do you want to remove selected paragraph?';
+	$lang->edit->msg_dr_delete_confirm = '想要移除所選擇的段落？';
 	$lang->edit->insert_dr_title = '請輸入標題';
 	$lang->edit->richtext_area = 'Richtext Area';
 	$lang->edit->insert_site_name = '請輸入網站名稱';
@@ -23,11 +23,11 @@
 	$lang->edit->find_image = '選擇圖片';
 	$lang->edit->uploading = '上傳中...';
 	$lang->edit->uploading_info = '最大可上傳 %sMB';
-	$lang->edit->uploaded_image = 'User Uploaded Image';
+	$lang->edit->uploaded_image = '已上傳的圖片';
 
 	$lang->edit->image_width = '圖片寬度';
-	$lang->edit->resize = 'Resize';
-	$lang->edit->resize_info = 'A new copy of image in inputted size will be created. Original image will still remain';
+	$lang->edit->resize = '圖片縮放';
+	$lang->edit->resize_info = '輸入要建立的圖片大小，原始圖片將會保留。';
 	$lang->edit->resize_error = '請輸入比原始圖片要小的數值';
 	$lang->edit->insert_image_explain = '請輸入圖片簡介。可使用 <a>, <strong>, <em> 等標籤。';
 
@@ -56,10 +56,10 @@
 	$lang->edit->toc_explain ='It makes an index with created straplines, and will be renewed automatically.';
 
 	$lang->edit->more = '更多';
-	$lang->edit->move_button = 'Move Button';
+	$lang->edit->move_button = '移動鈕';
 
-	$lang->edit->material = 'Ingredients';
-	$lang->edit->insert = 'Insert the ingredient to content';
+	$lang->edit->material = '素材';
+	$lang->edit->insert = '插入素材到內容中';
 	$lang->edit->close_materials = '關閉';
     $lang->edit->no_materials = 'There is no writting ingredient.';
     $lang->edit->msg_no_selected_object = 'There is no selected object.';
@@ -75,7 +75,7 @@
 	$lang->edit->help_first_dt_3 = '段落編輯、取消(Enter, Double Click, ESC)';
 	$lang->edit->help_first_dd_3 = '按 Enter 鍵或點兩下段落就可進行編輯。按 ESC 鍵可取消編輯動作。';
 	$lang->edit->help_first_dt_4 = '段落移動(Ctrl+&uarr;&darr;, Click-Drag-Drop)';
-	$lang->edit->help_first_dd_4 = '選取段落後按 Ctrl+方向鍵(&uarr;&darr;)可進行操作，或是用滑鼠\'click-drag-drop\'進行操作。';
+	$lang->edit->help_first_dd_4 = '選取段落後按 Ctrl+方向鍵(&uarr;&darr;)可進行操作，或是用滑鼠拖曳的方式進行操作。';
 	$lang->edit->help_first_dt_5 = '段落儲存、刪除(Ctrl+Enter, Del)';
 	$lang->edit->help_first_dd_5 = '按\'確認\'按鈕或是 Ctrl+Enter 可儲存內容。按 Del 鍵可刪除所選取的段落。';
 
