@@ -1944,7 +1944,7 @@ var ListWriter = xe.createPlugin('ListWriter', {
 		this.cast('ADD_DEFAULT_EDITOR_ACTION', [seq, _editor, 'LIST']);
 
 		_toolbar.find('button').click(function(){
-			var type = $(this).attr('class').match(/type_([a-z]+)/);
+			var type = $(this).attr('class').match(/type_([a-z\-]+)/);
 			if (!type || !type[1]) return false;
 
 			self.ontoolbutton(seq, type[1]);
