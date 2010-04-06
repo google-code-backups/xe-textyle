@@ -843,6 +843,7 @@ var TextWriter = xe.createPlugin('TextWriter', {
 		ed.registerPlugin(new xe.XE_FontColor(elAppContainer));
 		ed.registerPlugin(new xe.XE_BGColor(elAppContainer));
 		ed.registerPlugin(new xe.XE_SCharacter(elAppContainer));
+		ed.registerPlugin(new xe.XE_WYSIWYGEnterKey("BR"));
 		//ed.registerPlugin(new xe.XE_FontSetter(this.getFontFamily(), this.getFontSize()));
 
 		if (!$.browser.msie && !$.browser.opera) {

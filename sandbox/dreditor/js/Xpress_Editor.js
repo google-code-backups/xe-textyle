@@ -5799,9 +5799,11 @@ xe.XE_FormatWithSelectUI = jQuery.Class({
 		this.oApp.exec("CHECK_STYLE_CHANGE", []);
 	}
 });
+
+(function($){
 /**
  * Enhanced Table Fetures
- * @author gony
+ * @author taggon (gonom9@gmail.com)
  */
 
 // 표 편집 확장 기능
@@ -5810,11 +5812,11 @@ xe.XE_Table = jQuery.Class({
 	_endSel   : null,
 
 	$ON_MSG_APP_READY : function() {
-		this._doc = jQuery(this.oApp.getWYSIWYGDocument());
+		this._doc = $(this.oApp.getWYSIWYGDocument());
 
-		this.$FnMouseDown = jQuery.fnBind(this._mousedown, this);
-		this.$FnMouseUp   = jQuery.fnBind(this._mouseup, this);
-		this.$FnMouseMove = jQuery.fnBind(this._mousemove, this);
+		this.$FnMouseDown = $.fnBind(this._mousedown, this);
+		this.$FnMouseUp   = $.fnBind(this._mouseup, this);
+		this.$FnMouseMove = $.fnBind(this._mousemove, this);
 
 		this._doc.mousedown(this.$FnMouseDown);
 
@@ -5869,7 +5871,7 @@ xe.XE_Table = jQuery.Class({
 	},
 
 	$ON_CELL_SPLIT_BY_ROW : function(many) {
-		var cell  = jQuery('.xe_selected_cell', this.oApp.getWYSIWYGDocument()).filter('td,th');
+		var cell  = $('.xe_selected_cell', this.oApp.getWYSIWYGDocument()).filter('td,th');
 		var table = cell.parents('table').eq(0);
 		var self  = this;
 
@@ -5889,7 +5891,7 @@ xe.XE_Table = jQuery.Class({
 
 			return !(rect.bottom <= _top || rect.top >= _bottom);
 		})).filter('.xe_selected_cell').each(function(){
-			var t       = jQuery(this);
+			var t       = $(this);
 			var row     = t.parent('tr');
 			var rowspan = self._getSpan(t, 'row');
 			var rect    = self._getRect(t);
@@ -5967,7 +5969,7 @@ xe.XE_Table = jQuery.Class({
 	},
 
 	$ON_CELL_SPLIT_BY_COL : function(many) {
-		var cell   = jQuery('.xe_selected_cell', this.oApp.getWYSIWYGDocument()).filter('td,th');
+		var cell   = $('.xe_selected_cell', this.oApp.getWYSIWYGDocument()).filter('td,th');
 		var table  = cell.parents('table').slice(0,1);
 		var self   = this;
 		var ie_bug = [], tmpId = (new Date).getTime(), tmpStr = '';
@@ -6042,13 +6044,13 @@ xe.XE_Table = jQuery.Class({
 	},
 
 	_mousedown : function(event) {
-		var cur = jQuery(event.target);
+		var cur = $(event.target);
 		var sel = cur.parents().andSelf().filter('td,th,table');
 		var app = this.oApp;
 		var self = this;
 
 		// 모든 선택영역 해제
-		jQuery('td.xe_selected_cell', this.oApp.getWYSIWYGDocument()).removeClass('xe_selected_cell');
+		$('td.xe_selected_cell', this.oApp.getWYSIWYGDocument()).removeClass('xe_selected_cell');
 
 		this._startSel = null;
 		this._endSel   = null;
@@ -6083,7 +6085,7 @@ xe.XE_Table = jQuery.Class({
 	},
 
 	_mousemove : function(event) {
-		var cur  = jQuery(event.target);
+		var cur  = $(event.target);
 		var cell = cur.parents().andSelf().filter('td,th').eq(0);
 		var self = this;
 
@@ -6106,7 +6108,7 @@ xe.XE_Table = jQuery.Class({
 		var i = 0;
 
 		// 복잡한 모양의 테이블을 위한 반복 처리
-		var selected = jQuery();
+		var selected = $();
 		do {
 			// 선택한 셀로 최대 영역 재계산
 			selected.each(function(){
@@ -6131,7 +6133,7 @@ xe.XE_Table = jQuery.Class({
 		} while(selected.length);
 
 		// 브라우저의 기본 선택영역 해제 : FF 제외 - 기본 기능이 충분히 좋아서 + 이 부분을 실행하면 오류가 발생해서
-		if (!jQuery.browser.mozilla) {
+		if (!$.browser.mozilla) {
 			function delayed() {
 				var sel = self.oApp.getSelection();
 
@@ -6172,13 +6174,13 @@ xe.XE_Table = jQuery.Class({
 	},
 
 	_getSpan : function(obj, type) {
-		var span = parseInt(jQuery(obj).attr(type+'span'));
+		var span = parseInt($(obj).attr(type+'span'));
 
 		return isNaN(span)?1:span;
 	}
 }).extend(xe.XE_Table);
 
-xe.XE_FontSetter = jQuery.Class({
+xe.XE_FontSetter = $.Class({
 	name : "XE_FontSetter",
 	fontFamily : '',
 	fontSize : '',
@@ -6192,3 +6194,113 @@ xe.XE_FontSetter = jQuery.Class({
 		if (this.fontSize) doc.body.style.fontSize = this.fontSize;
 	}
 });
+
+xe.XE_WYSIWYGEnterKey = $.Class({
+	name : "XE_WYSIWYGEnterKey",
+	sLineBreaker : "P",
+	$init : function(sLineBreaker){
+		if(sLineBreaker == "BR"){
+			this.sLineBreaker = "BR";
+		}else{
+			this.sLineBreaker = "P";
+		}
+
+		if(($.browser.msie || $.browser.opera) && this.sLineBreaker == "P"){
+			this.$ON_MSG_APP_READY = function(){};
+		}
+	},
+	$ON_MSG_APP_READY : function(){
+		$(this.oApp.getWYSIWYGDocument()).keydown($.fnBind(this._onKeyDown, this));
+	},
+	_onKeyDown : function(event){	
+		if(event.shiftKey) return;
+		
+		if(event.keyCode == 13){ // enter
+			if(this.sLineBreaker == "BR"){
+				this._insertBR(event);
+			}else{
+				this._wrapBlock(event);
+			}
+		}
+	},
+	_wrapBlock : function(event, sWrapperTagName){
+		var oSelection = this.oApp.getSelection();
+		var sBM = oSelection.placeStringBookmark();
+		var oLineInfo = oSelection.getLineInfo();
+		var oStart = oLineInfo.oStart;
+		var oEnd = oLineInfo.oEnd;
+
+		// line broke by sibling
+		// or
+		// the parent line breaker is just a block container
+		if(!oStart.bParentBreak || oSelection.rxBlockContainer.test(oStart.oLineBreaker.tagName)){
+			event.stopPropagation();
+			event.preventDefault();
+
+			var oSWrapper = this.oApp.getWYSIWYGDocument().createElement(this.sLineBreaker);
+			oSelection.moveToBookmark(sBM);
+			oSelection.setStartBefore(oStart.oNode);
+			oSelection.surroundContents(oSWrapper);
+
+			oSelection.collapseToEnd();
+
+			var oEWrapper = this.oApp.getWYSIWYGDocument().createElement(this.sLineBreaker);
+			oSelection.setEndAfter(oEnd.oNode);
+			oSelection.surroundContents(oEWrapper);
+
+			oSelection.removeStringBookmark(sBM);
+
+			if(oSWrapper.innerHTML == "") oSWrapper.innerHTML = "<br>";
+			if(oEWrapper.innerHTML == "") oEWrapper.innerHTML = "<br>";
+			
+			if(oEWrapper.nextSibling && oEWrapper.nextSibling.tagName == "BR") oEWrapper.parentNode.removeChild(oEWrapper.nextSibling);
+
+			oSelection.selectNodeContents(oEWrapper);
+			oSelection.collapseToStart();
+			oSelection.select();
+			this.oApp.exec("CHECK_STYLE_CHANGE", []);
+		}else{
+			oSelection.removeStringBookmark(sBM);
+		}
+	},
+	
+	_insertBR : function(event){
+		event.stopPropagation();
+		event.preventDefault();
+
+		var oSelection = this.oApp.getSelection();
+
+		var elBR = this.oApp.getWYSIWYGDocument().createElement("BR");
+		oSelection.insertNode(elBR);
+		oSelection.selectNode(elBR);
+		oSelection.collapseToEnd();
+		
+		if(!$.browser.msie){
+			var oLineInfo = oSelection.getLineInfo();
+			var oStart = oLineInfo.oStart;
+			var oEnd = oLineInfo.oEnd;
+
+			if(oEnd.bParentBreak){
+				while(oEnd.oNode && oEnd.oNode.nodeType == 3 && oEnd.oNode.nodeValue == ""){
+					oEnd.oNode = oEnd.oNode.previousSibling;
+				}
+
+				var nTmp = 1;
+				if(oEnd.oNode == elBR || oEnd.oNode.nextSibling == elBR){
+					nTmp = 0;
+				}
+
+				if(nTmp == 0){
+					oSelection.pasteHTML("<br type='_moz'/>");
+					oSelection.collapseToEnd();
+				}
+			}
+		}
+
+		// the text cursor won't move to the next line without this
+		oSelection.insertNode(this.oApp.getWYSIWYGDocument().createTextNode(""));
+		oSelection.select();
+	}
+});
+
+})(jQuery);
