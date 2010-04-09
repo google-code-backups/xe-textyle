@@ -846,10 +846,6 @@ var TextWriter = xe.createPlugin('TextWriter', {
 		ed.registerPlugin(new xe.XE_WYSIWYGEnterKey("BR"));
 		//ed.registerPlugin(new xe.XE_FontSetter(this.getFontFamily(), this.getFontSize()));
 
-		if (!$.browser.msie && !$.browser.opera) {
-			ed.registerPlugin(new xe.XE_WYSIWYGEnterKey(oWYSIWYGIFrame));
-		}
-
 		// Ctrl+Enter를 입력하면 현재 문단 저장 후 새 텍스트 문단을 보여준다.
         pHotkey.add(pHotkey.normalize('ctrl+enter'), function(){ 
 			setTimeout(function() { self.cast('CLOSE_EDITOR', [seq, true, 'TXT']) }, 1);
