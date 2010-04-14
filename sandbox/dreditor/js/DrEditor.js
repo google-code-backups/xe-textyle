@@ -2339,6 +2339,8 @@ var LinkWriter = xe.createPlugin('LinkWriter', {
 				if (t.is('div.xe_dr_link')) {
 					var p = t.children('p');
 					if (p.length > 1) p.eq(0).append('<br />').append( $('<span class="desc"></span>').text(p.eq(1).text()) );
+					p.eq(0).children('a').before('<br />');
+					p.eq(1).remove();
 				} else {
 					t = t.wrap('<div>').parent();
 				}
