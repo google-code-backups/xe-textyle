@@ -2448,14 +2448,12 @@ var HRWriter = xe.createPlugin('HRWriter', {
 		if (box && box.length) {
 			box.show(300);
 		} else if (bef && bef.length) {
-			bef.after($('<div class="eArea _hr"><hr /></div>').attr('type', 'hr'));
+			bef.after(box = $('<div class="eArea _hr"><hr /></div>').attr('type', 'hr'));
 		} else {
-			var newBox = $('<div class="eArea _hr" />').attr('type', 'hr');
-			var hr = $('<hr />'), btn=$('<button type="button" style="overflow:hidden;height:1px;width:1px;">');
-			configs[seq].editArea.append(newBox.append(hr.after(btn)));
-			btn.focus(function(){ var t = $(this); setTimeout(function(){ t.remove() }, 10); }).focus();
+			var newBox = box = $('<div class="eArea _hr" />').attr('type', 'hr');
+			configs[seq].editArea.append(newBox.append('<hr />'));
 		}
-		this.cast('SCROLL_INTO_VIEW', [seq, box]);
+		this.cast('SELECT_PARAGRAPH', [seq, box, box, box]);
 	}
 });
 editor.registerPlugin(new HRWriter);
