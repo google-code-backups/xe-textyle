@@ -1095,11 +1095,13 @@ var MovieWriter = xe.createPlugin('MovieWriter', {
 		var seq  = params[0];
 		var obj  = params[1];
 
-		obj.children('object,embed,div.xe_dr_mov')
+		obj.children('object,embed,div.xe_dr_mov,div:has(div.embed)')
 			.each(function(){
 				var t = $(this);
-				if (!t.is('div.xe_dr_mov')) t = t.wrap('<div>').parent();
+				if (!t.is('div')) t = t.wrap('<div>').parent();
 				t.attr('class', 'eArea _movie').attr('type', 'movie');
+				t.find('>embed,>object').wrap('<div class="embed">');
+				t.find('>p.cite>cite').unwrap();
 			});
 	},
 	API_GETTING_CONTENT : function(sender, params) {
