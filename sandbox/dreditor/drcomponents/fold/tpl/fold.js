@@ -98,7 +98,7 @@ var Fold = xe.createPlugin('Fold', {
 		var more = fold.find('span.more').html();
 		var less = fold.find('span.less').html();
 
-		var button = $('<div class="fold_button"><button type="button" class="more" onclick="jQuery(this).hide().next(\'button\').show().parent().next(\'div.fold_container\').show();">'+more+'</button><button type="button" class="less" onclick="jQuery(this).hide().prev(\'button\').show().parent().next(\'div.fold_container\').hide();" style="display:none">'+less+'</button></div>');
+		var button = $('<div class="fold_button"><button type="button" class="more">'+more+'</button><button type="button" class="less" style="display:none">'+less+'</button></div>');
 		div.before(button);
 	},
 	API_OPEN_FOLD_EDITOR : function(sender, params) {
