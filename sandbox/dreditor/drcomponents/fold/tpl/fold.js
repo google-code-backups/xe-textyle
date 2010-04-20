@@ -180,6 +180,7 @@ var Fold = xe.createPlugin('Fold', {
 	API_AFTER_ONMOVE_PARAGRPH : function(sender, params) {
 		var seq = params[0];
 		var chd = editor.getConfig(seq).editArea.children();
+		if(typeof(this.configs[seq]) == 'undefined') return;
 
 		chd.filter('div._fold_hide').removeClass('_fold_hide');
 		this.configs[seq].marker = chd.filter('div._fold');
