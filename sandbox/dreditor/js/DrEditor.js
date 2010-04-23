@@ -70,28 +70,12 @@ var DrEditor = xe.createApp('DrEditor', {
 				});
 
 			// container
-			var _draggables = [];
 			_editArea
 				.sortable({
 					axis   : 'y',
 					items  : '>div.eArea',
 					handle : '>div.drag_handle',
 					placeholder : 'xe_dr_placeholder'
-				})
-				.bind('sortstart', function(event,originalEvent,ui){
-					_draggables = _editArea.children('div.eFocus:not(.ui-sortable-helper)');
-					_draggables.filter(':visible').css({visibility:'hidden',overflow:'hidden',height:'1px'});
-				})
-				.bind('sortstop', function(event,originalEvent,ui){
-					var prev = ui.item.prev();
-					if (prev.length) {
-						prev.after(_draggables);
-					} else {
-						_editArea.prepend(_draggables);
-					}
-					_draggables.css({visibility:'',overflow:'',height:''});
-					
-					setTimeout(function(){ self.cast('ONMOVE_PARAGRPH', [seq]) }, 0);
 				});
 
 			// focus hook event
