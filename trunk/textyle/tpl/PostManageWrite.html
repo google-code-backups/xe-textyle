@@ -1,0 +1,70 @@
+<!--#include("_tool_header.html")-->
+<!--%load_js_plugin("ui.calendar")-->
+
+<!-- Content -->
+
+<div id="content">
+	<!-- writingHeader -->
+	<div class="contentHeader writingHeader">
+		<h3 class="h3">
+			<!--@if($document_srl)-->
+			{$lang->modify_post}
+			<!--@else-->
+			{$lang->new_post}
+			<!--@end-->
+		</h3>
+	</div>
+	<!-- /writingHeader -->
+	<form action="./" method="post" class="{$editor_skin}">
+		<input type="hidden" name="publish" value="" />
+		<input type="hidden" name="_filter" value="save_post" />
+		<input type="hidden" name="mid" value="{$mid}" />
+		<fieldset>
+			<legend>
+			<!--@if($document_srl)-->
+			{$lang->modify_post}
+			<!--@else-->
+			{$lang->new_post}
+			<!--@end-->
+			</legend>
+			<!-- Post Title -->
+			<div class="wTitle">
+				<fieldset>
+					<legend>{$lang->title}</legend>
+					<div class="title">
+						<input name="title" type="text" class="inputTitle" value="<!--@if($oDocument->getTitleText())-->{htmlspecialchars($oDocument->getTitleText())}<!--@else-->{$lang->insert_title}<!--@end-->" title="{$lang->insert_title}"/>
+						<!-- wPublish -->
+						<div class="wPublish" id="wPublishButtonContainer">
+							<span class="buttonAction actionWhite normal"><button type="submit">{$lang->cmd_save}</button></span>
+							<span class="buttonAction actionWhite _publish"><button type="submit">{$lang->cmd_save_publish}</button></span>
+						</div>
+						<!-- /wPublish -->
+					</div>
+					<span class="cap capLeft"></span> <span class="cap capRight"></span>
+				</fieldset>
+			</div>
+			<!-- /Post Title -->
+			<!-- Textyle Editor -->
+			<input type="hidden" name="msg_close_before_write" value="{$lang->msg_close_before_write}" />
+			<input type="hidden" name="content" value="<!--@if($material_srl && $material_content)-->{htmlspecialchars($material_content)}<!--@else-->{$oDocument->getContentText()}<!--@end-->" />
+			<input type="hidden" name="document_srl" value="{$document_srl}" />
+			<!--@if($document_srl || $material_srl)-->
+			<input type="hidden" name="_disable_autosaved" value="" />
+			<!--@end-->
+			{$editor}
+			
+			<!-- /Textyle Editor -->
+		</fieldset>
+	</form>
+</div>
+<hr />
+<!-- /Content -->
+<!-- Extension -->
+<!--#include("_tool_menu.html")-->
+
+<!--#include("_tool_footer.html")-->
+<script type="text/javascript">//<![[CDATA
+setInterval('isLive()', 30000);
+//]]></script>
+
+
