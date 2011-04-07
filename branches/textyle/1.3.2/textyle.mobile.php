@@ -30,7 +30,6 @@
 
         function initService(&$oModule, $is_other_module = false)
 		{
-			debugPrint('mobile');
 			//모바일일 경우에는 다른모듈이라 하더라도 Texylye Layout이 필요 없슴.
 			parent::initService($oModule, true, true);
 
