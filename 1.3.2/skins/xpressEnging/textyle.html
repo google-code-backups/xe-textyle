@@ -1,0 +1,129 @@
+<div id="xe" class="fixed">
+	<div id="container" class="ce">
+		<div id="header">
+			<a href="#content" class="skipToContent">Skip to content</a>
+				<h1><a href="http://chengzhen.xpressengine.com/blog"><img src="img/xe_logo.gif" width="252" height="43" alt="xe_webmaster's Textyle"></a></h1>
+			<hr />
+				<!-- 20110311_zhujunwu -->
+				<div class="lnb">
+					<ul>
+					<li><a href="http://chengzhen.xpressengine.com/about_xe">XE Hakk inda</a></li>
+					<li><a href="http://chengzhen.xpressengine.com/down_package">indir</a></li>
+					<li><a href="http://chengzhen.xpressengine.com/user_manual">XE kilavuzu</a></li>
+					<li><a href="http://chengzhen.xpressengine.com/general">Forum</a></li>
+					<li class="last"><a href="http://chengzhen.xpressengine.com/extension">Genisletme</a></li>
+					</ul>
+				</div>
+				<a href="{$admin_url}" class="admin" accesskey="A">Admin</a>
+				<div class="search">
+					<form action="{$root_url}" method="get">
+						<input name="vid" type="hidden" value="{$vid}" />
+						<input name="mid" type="hidden" value="{$mid}" />
+						<input name="act" type="hidden" value="dispTextyle" />
+						<input name="search_target" type="hidden" value="title_content" />
+						<fieldset>
+							<legend>{$lang->cmd_search}</legend>
+							<input name="search_keyword" type="text" class="inputText" value="{$search_keyword}" accesskey="S" title="SEARCH" />
+							<input type="image" src="img/btn_search.gif" alt="{$lang->cmd_search}" class="buttonSearch" />
+						</fieldset>
+					</form>
+				</div>
+				<!-- 20110311_zhujunwu -->
+			<hr />
+			<!-- 20110311_zhujunwu -->
+			<div class="extension">
+				<ul>
+					<li<!--@if($act=='dispTextyleProfile')--> class="active m1"<!--@end--> class="m1"><a href="{$profile_url}"><span class="blind">Profile</span></a></li>
+					<li<!--@if($act=='dispTextyleGuestbook')--> class="active m2"<!--@end--> class="m2"><a href="{$guestbook_url}"><span class="blind">GuestBook</span></a></li>
+					<li<!--@if($act=='dispTextyleTag')--> class="active m3"<!--@end--> class="m3"><a href="{$tag_url}"><span class="blind">Tag</span></a></li>
+                    <!--@foreach($extra_menus as $key => $val)-->
+					<li<!--@if($key==$mid || $val==getUrl('','mid',$mid))--> class="active"<!--@end-->><a href="{$val}">{$key}</a></li>
+                    <!--@end-->
+				</ul>
+			</div>
+			<!-- 20110311_zhujunwu -->
+		</div>
+
+        <hr />
+        <div id="body">
+            <div id="content">
+				<div class="content_bg">
+				<div class="main">
+                <!--@if($textyle_mode == 'module')-->
+                    {$content}
+                <!--// Profile -->
+                <!--@elseif($textyle_mode == 'profile')-->
+					<div class="postTitle"><h2>Profile</h2></div>
+                    <div class="textyleContent xe_content">{$profile_content}</div>
+                <!--// GuestBook -->
+                <!--@else if($textyle_mode == 'guestbook')-->
+					<!--#include('guestbook.html')-->
+
+                <!--// Tags -->
+                <!--@else if($textyle_mode=='tags')-->
+					<!--#include('tags.html')-->
+
+                <!--// Comment Reply, Modify -->
+                <!--@else if($textyle_mode=='comment_form')-->
+					<!--#include('comment_form.html')-->
+
+                <!--// display Post list --> 
+                <!--@elseif($textyle_mode=='list')-->
+					<!--#include('post.title_list.html')-->
+
+                <!--// display Post Summary -->
+                <!--@elseif($textyle_mode=='summary')-->
+					<!--#include('post.summary.html')-->
+
+                <!--// display post body or body list -->
+                <!--@else-->
+					<!--#include('post.list.html')-->
+                <!--@end-->
+
+                <!--// display pagenavigation -->
+                <!--@if($page_navigation && $textyle_mode != 'module')-->
+                <div class="pagination paginationNum">
+                    <a href="{getUrl('page','','document_srl','','entry','')}" class="prev">{$lang->first_page}</a><!--@while($page_no = $page_navigation->getNextPage())--><!--@if($page == $page_no)--><strong><span>{$page_no}</span></strong><!--@else--><a href="{getUrl('page',$page_no,'document_srl','','entry','')}"><span>{$page_no}</span></a><!--@end--><!--@end--><a href="{getUrl('page',$page_navigation->last_page,'document_srl','','entry','')}" class="next">{$lang->last_page}</a></div>
+                <!--@end-->
+                </div>
+				</div>
+				<span class="btm"></span>
+            </div>
+            <hr />
+            <!--// Extension (widgets) -->
+            <div class="extension e1">
+			<img class="zbxe_widget_output" widget="counter_status" skin="default" colorset="layout" />
+                <div class="section category">
+                    <h2 class="category"><span class="blind">{$lang->category}</span></h2>
+                    <img class="zbxe_widget_output" widget="category" skin="default" total_title="{$lang->view_all}"  srl="{$textyle->module_srl}" />
+                </div>
+
+                <div class="section">
+                    <h2 class="posts"><span class="blind">{$lang->newest_document}</span></h2>
+                    <img class="zbxe_widget_output" widget="content" markup_type="list" list_count="10" skin="default" content_type="document" option_view="title" show_comment_count="Y" show_trackback_count="Y" show_category="N" show_icon="N" order_target="list_order" order_type="desc" thumbnail_type="crop" page_count="1" subject_cut_size="30" module_srls="{$textyle->module_srl}" />
+                </div>
+
+                <div class="section">
+                    <h2 class="comments"><span class="blind">{$lang->newest_comment}</span></h2>
+                    <img class="zbxe_widget_output" widget="content" markup_type="list" list_count="10" skin="default" content_type="comment" option_view="title" show_comment_count="N" show_trackback_count="N" show_category="N" show_icon="N" order_target="list_order" order_type="desc" thumbnail_type="crop" page_count="1" subject_cut_size="30" module_srls="{$textyle->module_srl}"/>
+                </div>
+
+                <div class="section">
+                    <h2 class="trackbacks"><span class="blind">{$lang->newest_trackback}</span></h2>
+                    <img class="zbxe_widget_output" widget="content" markup_type="list" list_count="5" skin="default" content_type="trackback" option_view="title" show_comment_count="N" show_trackback_count="N" show_category="N" show_icon="N" order_target="list_order" order_type="desc" thumbnail_type="crop" page_count="1" subject_cut_size="30" module_srls="{$textyle->module_srl}"/>
+                </div>
+
+                <div class="section">
+                    <h2 class="tag"><span class="blind">{$lang->tag}</span></h2>
+                    <img class="zbxe_widget_output" widget="tag_list" list_count="20" skin="default" module_srls="{$textyle->module_srl}" />
+                </div>
+            </div>
+        </div>
+        <hr />
+	</div>
+		<div id="footer">
+			<div class="sta_footer">
+				<img src="img/img_xe.gif" width="294" height="18" alt="Copyright NHN Corp. All rights reservedir.">
+			</div>
+		</div>
+</div>
