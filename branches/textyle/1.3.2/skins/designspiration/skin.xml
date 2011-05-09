@@ -9,10 +9,10 @@
         텍스타일의 기본 스킨입니다. 흰색 바탕과 검정색 라인으로 처리된 초절정 심플 스킨. 콘텐츠 영역의 좌우 배치를 변경하려면 HTML 편집창에서 class="ce"를 class="ec"로 변경하세요!
     </description>
     <description xml:lang="en">
-        The skin utilizes white as the background color, with the concise layout and appearance to make the blog easy to read.
+        The skin utilizes concise layout and appearance in order to outstand blog contents.
     </description>
     <description xml:lang="zh-CN">
-        Textyle内置皮肤(侧边栏左右互换class="ce"修改为 class="ec")。
+        皮肤设计简约，轻设计而重内容，风格清新。
     </description>
     <description xml:lang="zh-TW">
         Textyle的預設面板。使用白色背景搭配黑色線條的簡單面板。將class="ce"修改成class="ec"即可左右互換側邊欄。
