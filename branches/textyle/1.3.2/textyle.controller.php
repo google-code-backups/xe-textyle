@@ -704,7 +704,7 @@
             // 기존 설정 유지
             $var->allow_comment = ($oDocument->allowComment()) ? 'Y' : 'N';
             $var->allow_trackback = ($oDocument->allowTrackback()) ? 'Y' : 'N';
-            $var->is_secret = ($oDocument->isSecret()) ? 'Y' : 'N';
+            $var->status = ($oDocument->isSecret()) ? 'SECRET' : 'PUBLIC';
             $var->tags = $oDocument->get('tags');
 
             if($oDocument->isExists()) {
@@ -1168,19 +1168,19 @@
             $document_srl = Context::get('document_srl');
             $set_secret = Context::get('set_secret');
             if(!$document_srl) return new Object(-1,'msg_invalid_request');
-            $set_secret = $set_secret=='Y'?'Y':'N';
+            $status = $set_secret=='Y'?'SECRET':'PUBLIC';
 
             if(preg_match('/^([0-9,]+)$/',$document_srl)) $document_srl = explode(',',$document_srl);
             else $document_srl = array($document_srl);
 
-            $output = $this->setTextylePostItemsSecret($document_srl,$set_secret);
+            $output = $this->setTextylePostItemsSecret($document_srl,$status);
             return $output;
         }
 
-        function setTextylePostItemsSecret($document_srls,$set_secret='Y'){
+        function setTextylePostItemsSecret($document_srls,$status='SECRET'){
             $args->document_srl = join(',',$document_srls);
-            $args->is_secret = $set_secret;
-            $output = executeQuery('document.updateDocumentsSecret',$args);
+            $args->status = $status;
+            $output = executeQuery('document.updateDocumentStatus',$args);
             return $output;
         }
 
