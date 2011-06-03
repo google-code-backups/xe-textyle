@@ -1,0 +1,40 @@
+                <div class="postTitle border0">  
+					<h2>
+                        <!--@if($search_keyword)-->
+                            {$lang->search_result} <em> '{$page_navigation->total_count}'</em>
+                        <!--@elseif($category)-->
+                            {$lang->category_result} <em> '({$page_navigation->total_count})'</em>
+                        <!--@else-->
+                            {$lang->view_all} <em> '{$page_navigation->total_count}'</em>
+                        <!--@end-->
+                    </h2>
+				</div>
+                    <ul class="searchResult xe_content">
+                        <!--@foreach($document_list as $no => $document)-->
+                        <li>
+							<div class="tit">
+                            <!--@if($document->document_srl==$document_srl)-->
+                            <!--@end-->
+                            <a href="{getUrl('document_srl',$document->document_srl, 'listStyle', $listStyle, 'cpage','')}">
+								<strong>
+									{@ $title=mb_strimwidth(strip_tags($document->getTitle()),0,35,"...","UTF-8")}
+									{$title}
+								</strong>
+							</a>
+                            <!--@if($document->document_srl==$document_srl)-->
+                            <!--@end-->
+							<p class="date">
+                            <span class="prev">{zdate($document->get('last_update'),'Y.m.d')}</span>
+							<span>{$category_list[$document->get('category_srl')]->title}</span>
+							<span class="last author  member_{$document->get('member_srl')}">{$document->getNickName()}</span>
+							</p>
+							</div>
+						<p class="txt_content">
+						{@ $test=$document->getContent(false)}
+						{@ $test=mb_strimwidth(strip_tags($test),0,100,"...","UTF-8")}
+						{$test}
+						</p>
+                        </li>
+                        <!--@end-->
+                    </ul>
+
