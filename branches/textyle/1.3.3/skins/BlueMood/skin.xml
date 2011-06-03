@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin version="0.2">
+    <title xml:lang="ko">Bluemood</title>
+	<title xml:lang="en">Bluemood</title>
+    <title xml:lang="zh-CN">Bluemood</title>
+    <title xml:lang="zh-TW">Bluemood</title>
+    <title xml:lang="jp">Bluemood</title>
+    <description xml:lang="ko">
+       모든 유저가 부담 없이 사용할 수 있는 심플한 컨셉의 레이아웃 스킨입니다.
+    </description>
+    <description xml:lang="en">
+       The skin utilizes a concise layout and style，emphasizes the details, makes users easy to read.
+    </description>
+    <description xml:lang="zh-CN">
+       沿用XE简洁、大气的风格，注重细节，给人一种一目了然的感觉。
+    </description>
+    <description xml:lang="zh-TW">
+       沿用XE简洁、大气的风格，注重细节，给人一种一目了然的感觉。
+    </description>
+    <description xml:lang="jp">
+        ...
+    </description>
+    <version>1.2.3</version>
+    <date>2011-05-09</date>
+
+    <author email_address="zhujunw1@nhn.com" link="#">
+        <name xml:lang="ko">zhu junwu</name>
+		<name xml:lang="zh-CN">朱军伍</name>
+		<name xml:lang="zh-TW">zhu junwu</name>
+		<name xml:lang="jp">zhu junwu</name>
+    </author>
+    <author email_address="sunlidan@nhn.com" link="#">
+        <name xml:lang="ko">sun lidan</name>
+		<name xml:lang="zh-CN">孙丽丹</name>
+		<name xml:lang="zh-TW">孙丽丹</name>
+		<name xml:lang="jp">sun lidan</name>
+    </author>
+
+</skin>
