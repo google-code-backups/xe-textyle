@@ -222,8 +222,7 @@
             }
 
             $oModuleModel = &getModel('module');
-			$columnList = array('sites.site_srl');
-            $site_info = $oModuleModel->getSiteInfo($vars->site_srl, $columnList);
+            $site_info = $oModuleModel->getSiteInfo($vars->site_srl);
             if(!$site_info) return new Object(-1,'msg_invalid_request');
 
             $oModuleController = &getController('module');
