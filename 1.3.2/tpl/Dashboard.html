@@ -289,7 +289,7 @@
 		displayMultimedia('{getUrl()}modules/textyle/tpl/swf/MainContainer.swf','100%','170',{
 				'menu':'false',
 				'wmode':'transparent',
-				'flashvars':"width=350&dSet=02&baseURL=modules/textyle/tpl/swf/common/flash/statistics/&total={htmlspecialchars($detail_status->total)}&base64Code="+encodeURIComponent('{htmlspecialchars($xml)}')
+				'flashvars':"width=350&dSet=02&baseURL=modules/textyle/tpl/swf/common/flash/statistics/&total={htmlspecialchars($detail_status->total)}&base64Code="+encodeURIComponent('{$xml}')
 				});
 	</script>
 <!--@else-->
