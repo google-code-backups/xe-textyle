@@ -15,10 +15,10 @@
 		</h3>
 	</div>
 	<!-- /writingHeader -->
-	<form action="./" method="post" class="{$editor_skin}">
+	<form action="./" method="post" class="{htmlspecialchars($editor_skin)}">
 		<input type="hidden" name="publish" value="" />
 		<input type="hidden" name="_filter" value="save_post" />
-		<input type="hidden" name="mid" value="{$mid}" />
+		<input type="hidden" name="mid" value="{htmlspecialchars($mid)}" />
 		<fieldset>
 			<legend>
 			<!--@if($document_srl)-->
@@ -53,7 +53,7 @@
 			<input type="hidden" name="_disable_autosaved" value="" />
 			<!--@end-->
 			{$editor}
-			
+
 			<!-- /Textyle Editor -->
 		</fieldset>
 	</form>

@@ -3,17 +3,17 @@
 
 			<!-- Content -->
 			<div id="content">
-				
+
 				<!-- contentHeader -->
 				<div class="contentHeader publishHeader lineBottom">
 					<h3 class="h3">{$lang->textyle_second_menus[5]['dispTextyleToolConfigCommunication']}</h3>
 				</div>
 				<!-- /contentHeader -->
-				
+
 				<div class="setUp">
 					<form action="./" method="post" onsubmit="return procFilter(this,insert_config_communication)">
-					<input type="hidden" name="mid" value="{$mid}" />
-					
+					<input type="hidden" name="mid" value="{htmlspecialchars($mid)}" />
+
 						<fieldset>
 							<h4 class="h4">{$lang->blog_first_page}</h4>
 							<table border="1" cellspacing="0" class="setupData">
@@ -38,14 +38,14 @@
 							<table border="1" cellspacing="0" class="setupData">
 								<tr>
 									<th scope="row" rowspan="2"><label for="me2userid">{$lang->me2day_userid}</label></th>
-									<td><input name="me2day_userid" type="text" class="inputText" id="me2userid" value="{$textyle->getMe2dayUserID()}" style="width:200px" /></td>
+									<td><input name="me2day_userid" type="text" class="inputText" id="me2userid" value="{htmlspecialchars($textyle->getMe2dayUserID())}" style="width:200px" /></td>
 								</tr>
 								<tr>
 									<td>{$lang->about_me2day_userid}</td>
 								</tr>
 								<tr>
 									<th scope="row" rowspan="2"><label for="me2userkey">{$lang->me2day_userkey}</label></th>
-									<td><input name="me2day_userkey" type="text" class="inputText" id="me2userkey" value="{$textyle->getMe2dayUserKey()}" style="width:200px" /></td>
+									<td><input name="me2day_userkey" type="text" class="inputText" id="me2userkey" value="{htmlspecialchars($textyle->getMe2dayUserKey())}" style="width:200px" /></td>
 								</tr>
 								<tr>
 									<td>{$lang->about_me2day_userkey}</td>
@@ -57,7 +57,7 @@
                                 </tr>
 							</table>
 						</fieldset>
-						
+
 						<fieldset>
 							<h4 class="h4">RSS</h4>
 							<table border="1" cellspacing="0" class="setupData">
@@ -70,7 +70,7 @@
 								</tr>
 							</table>
 						</fieldset>
-					
+
 						<fieldset>
 							<h4 class="h4">{$lang->visitor_editor_style}</h4>
 							<table border="1" cellspacing="0" class="setupData">
@@ -96,7 +96,7 @@
                                         <select name="comment_editor_skin" onchange="getEditorSkinColorList(this.value, null, 'comment')">
                                         <!--@foreach($editor_skin_list as $editor)-->
                                         <!--@if($editor!='dreditor')-->
-                                        <option value="{$editor}" <!--@if($editor==$textyle->get('comment_editor_skin'))-->selected="selected"<!--@end-->>{$editor}</option>
+                                        <option value="{htmlspecialchars($editor)}" <!--@if($editor==$textyle->get('comment_editor_skin'))-->selected="selected"<!--@end-->>{htmlspecialchars($editor)}</option>
                                         <!--@end-->
                                         <!--@end-->
                                         </select>
@@ -109,7 +109,7 @@
                                         <select name="guestbook_editor_skin" onchange="getEditorSkinColorList(this.value, null, 'guestbook')">
                                         <!--@foreach($editor_skin_list as $editor)-->
                                         <!--@if($editor!='dreditor')-->
-                                        <option value="{$editor}" <!--@if($editor==$textyle->get('guestbook_editor_skin'))-->selected="selected"<!--@end-->>{$editor}</option>
+                                        <option value="{htmlspecialchars($editor)}" <!--@if($editor==$textyle->get('guestbook_editor_skin'))-->selected="selected"<!--@end-->>{htmlspecialchars($editor)}</option>
                                         <!--@end-->
                                         <!--@end-->
                                         </select>
@@ -151,9 +151,9 @@
 							</table>
 
                             <script type="text/javascript">
-                                jQuery(window).load(function() { 
-                                    getEditorSkinColorList('{$textyle->get('comment_editor_skin')}','{$textyle->get('comment_editor_colorset')}','comment'); 
-                                    getEditorSkinColorList('{$textyle->get('guestbook_editor_skin')}','{$textyle->get('guestbook_editor_colorset')}','guestbook'); 
+                                jQuery(window).load(function() {
+                                    getEditorSkinColorList('{htmlspecialchars($textyle->get('comment_editor_skin'))}','{htmlspecialchars($textyle->get('comment_editor_colorset'))}','comment');
+                                    getEditorSkinColorList('{htmlspecialchars($textyle->get('guestbook_editor_skin'))}','{htmlspecialchars($textyle->get('guestbook_editor_colorset'))}','guestbook');
                                 } );
                             </script>
 						</fieldset>
@@ -167,7 +167,7 @@
 			</div>
 			<hr />
 			<!-- /Content -->
-				
+
 			<!-- Extension -->
 				<!--#include("_tool_menu.html")-->
 			<!-- Extension -->

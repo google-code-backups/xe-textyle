@@ -2,17 +2,17 @@
 
 			<!-- Content -->
 			<div id="content">
-				
+
 				<!-- contentHeader -->
 				<div class="contentHeader replyHeader">
 					<h3 class="h3">{$lang->textyle_second_menus[2]['dispTextyleToolCommunicationComment']}</h3>
 				</div>
 				<!-- /contentHeader -->
-				
+
 				<!-- Table Data -->
 				<fieldset>
 					<form method="post" onsubmit="return insertCommentItem(this, insert_comment)">
-						<input name="mid" type="hidden" value="{$mid}" />
+						<input name="mid" type="hidden" value="{htmlspecialchars($mid)}" />
 						<input type="hidden" name="document_srl" value="{$oComment->get('document_srl')}" />
 						<input type="hidden" name="comment_srl" value="{$oComment->get('comment_srl')}" />
 						<input type="hidden" name="content" value="{htmlspecialchars($oComment->get('content'))}" />
@@ -33,7 +33,7 @@
                                 <tr>
 									<td class="thumb">
                                         <!--@if($_profile_image)-->
-										<img src="{$_profile_image}" alt="{htmlspecialchars($oSourceComment->getNickName())}" />
+										<img src="{htmlspecialchars($_profile_image)}" alt="{htmlspecialchars($oSourceComment->getNickName())}" />
                                         <!--@else-->
 										<img height="39" width="39" alt="" src="img/iconEmoticonDefault.gif" class="author"/>
                                         <!--@end-->
@@ -41,19 +41,19 @@
 									<td class="replyArea">
 										<dl>
 											<dt>
-                                                <strong>{$oSourceComment->getNickName()}</strong>
+                                                <strong>{htmlspecialchars($oSourceComment->getNickName())}</strong>
                                                 <span class="yymmdd">{$oSourceComment->getRegdate("Y.m.d")}</span> <span class="hhmm">{$oSourceComment->getRegdate("H:i")}</span>
                                             </dt>
 											<dd>{$oSourceComment->getContent(false,false)}</dd>
 										</dl>
 									</td>
-									<td class="email">{$oSourceComment->email_address}&nbsp;</td>
-									<td class="ipAddress">{$oSourceComment->ipaddress}</td>
+									<td class="email">{htmlspecialchars($oSourceComment->email_address)}&nbsp;</td>
+									<td class="ipAddress">{htmlspecialchars($oSourceComment->ipaddress)}</td>
 								</tr>
 								<tr class="replyAction" >
 									<td class="thumb">
 										<!--@if($logged_info->profile_image)-->
-										<img src="{$logged_info->profile_image->src}" alt="{$logged_info->nick_name}" />
+										<img src="{htmlspecialchars($logged_info->profile_image->src)}" alt="{htmlspecialchars($logged_info->nick_name)}" />
 										<!--@else-->
 										<img height="39" width="39" alt="" src="img/iconEmoticonDefault.gif" class="author"/>
 										<!--@end-->
@@ -65,11 +65,11 @@
 										</div>
 										<div class="replyButtonArea">
                                 <!--@if($is_logged)-->
-                                <strong class="name">{$logged_info->nick_name}</strong> <span class="email">{$logged_info->email_address}</span> <span class="url">{$logged_info->homepage}</span>
+                                <strong class="name">{htmlspecialchars($logged_info->nick_name)}</strong> <span class="email">{htmlspecialchars($logged_info->email_address)}</span> <span class="url">{htmlspecialchars($logged_info->homepage)}</span>
                                 <!--@end-->
                                 <input name="is_secret" id="secret1" type="checkbox" value="Y" class="inputCheck" />
                                 <label for="secret1">{$lang->secret}</label>
-								<span class="buttonGray medium strong"><button type="submit"><img height="8" width="12" class="icon" alt="" src="/blog/modules/textyle/tpl/img/iconCheckSmall.gif"/>{$lang->cmd_reply_comment}</button></span>								
+								<span class="buttonGray medium strong"><button type="submit"><img height="8" width="12" class="icon" alt="" src="/blog/modules/textyle/tpl/img/iconCheckSmall.gif"/>{$lang->cmd_reply_comment}</button></span>
 											</div>
 										</div>
 									</td>

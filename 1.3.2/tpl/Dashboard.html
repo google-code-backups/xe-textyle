@@ -16,9 +16,9 @@
 					<h4 class="h4">Textyle NEWS</h4>
 					<button type="button">{$lang->cmd_folding_xe_news}</button>
 					<ul>
-                        {@$i=0;}						
+                        {@$i=0;}
                         <!--@foreach($news as $key => $val)-->
-                        <li<!--@if($i==0)--> class="first"<!--@end-->><a href="{$val->url}" onclick="window.open(this.href);return false;">{$val->title}</a> <span class="date">{zdate($val->date,"Y-m-d")}</span></li>
+                        <li<!--@if($i==0)--> class="first"<!--@end-->><a href="{htmlspecialchars($val->url)}" onclick="window.open(this.href);return false;">{htmlspecialchars($val->title)}</a> <span class="date">{zdate($val->date,"Y-m-d")}</span></li>
                         {@$i++;}
                         <!--@end-->
 					</ul>
@@ -34,7 +34,7 @@
                             <dt>{$lang->today_visitor}</dt>
 
 							<dd>
-								<object title="{$status->visitor}" height="60" width="226" align="middle" id="count_red" class="F1239845427590201480_undefined" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000">
+								<object title="{htmlspecialchars($status->visitor)}" height="60" width="226" align="middle" id="count_red" class="F1239845427590201480_undefined" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000">
 									<param value="{getUrl()}modules/textyle/tpl/swf/count.swf" name="movie"/>
 									<param value="high" name="quality"/>
 									<param value="#FFFFFF" name="bgColor"/>
@@ -42,12 +42,12 @@
 									<param value="transparent" name="wmode"/>
 									<param value="false" name="menu"/>
 									<param value="true" name="allowFullScreen"/>
-									<param value="colorType=red&amp;viewNum={$status->visitor}" name="flashVars"/>
+									<param value="colorType=red&amp;viewNum={htmlspecialchars($status->visitor)}" name="flashVars"/>
 									<!--[if !IE]> <-->
-									<object title="{$status->visitor}" height="60" width="226" align="middle" name="count_red" class="F1239845427590201480_undefined" data="{getUrl()}modules/textyle/tpl/swf/count.swf" type="application/x-shockwave-flash">
-										<param value="colorType=red&amp;viewNum={$status->visitor}" name="flashVars"/>
+									<object title="{htmlspecialchars($status->visitor)}" height="60" width="226" align="middle" name="count_red" class="F1239845427590201480_undefined" data="{getUrl()}modules/textyle/tpl/swf/count.swf" type="application/x-shockwave-flash">
+										<param value="colorType=red&amp;viewNum={htmlspecialchars($status->visitor)}" name="flashVars"/>
 										<param value="transparent" name="wmode"/>
-                                        {$status->visitor}
+                                        {htmlspecialchars($status->visitor)}
 									</object>
 									<!--> <![endif]-->
 								</object>
@@ -56,7 +56,7 @@
 						<dl class="reply">
                             <dt>{$lang->today_comments}</dt>
 							<dd>
-								<object title="{$status->comment_count}" height="60" width="226" align="middle" id="count_blue" class="F1239845427590201480_undefined" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000">
+								<object title="{htmlspecialchars($status->comment_count)}" height="60" width="226" align="middle" id="count_blue" class="F1239845427590201480_undefined" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000">
 									<param value="{getUrl()}modules/textyle/tpl/swf/count.swf" name="movie"/>
 									<param value="high" name="quality"/>
 									<param value="#FFFFFF" name="bgColor"/>
@@ -64,12 +64,12 @@
 									<param value="transparent" name="wmode"/>
 									<param value="false" name="menu"/>
 									<param value="true" name="allowFullScreen"/>
-									<param value="colorType=blue&amp;viewNum={$status->comment_count}" name="flashVars"/>
+									<param value="colorType=blue&amp;viewNum={htmlspecialchars($status->comment_count)}" name="flashVars"/>
 									<!--[if !IE]> <-->
-									<object title="{$status->comment_count}" height="60" width="226" align="middle" name="count_blue" class="F1239845427590201480_undefined" data="{getUrl()}modules/textyle/tpl/swf/count.swf" type="application/x-shockwave-flash">
-										<param value="colorType=blue&amp;viewNum={$status->comment_count}" name="flashVars"/>
+									<object title="{htmlspecialchars($status->comment_count)}" height="60" width="226" align="middle" name="count_blue" class="F1239845427590201480_undefined" data="{getUrl()}modules/textyle/tpl/swf/count.swf" type="application/x-shockwave-flash">
+										<param value="colorType=blue&amp;viewNum={htmlspecialchars($status->comment_count)}" name="flashVars"/>
 										<param value="transparent" name="wmode"/>
-                                        {$status->comment_count}
+                                        {htmlspecialchars($status->comment_count)}
 									</object>
 									<!--> <![endif]-->
 								</object>
@@ -78,7 +78,7 @@
 						<dl class="trackback">
                             <dt>{$lang->today_trackbacks}</dt>
 							<dd>
-								<object title="{$status->trackback_count}" height="60" width="226" align="middle" id="count_gray" class="F1239845427590201480_undefined" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000">
+								<object title="{htmlspecialchars($status->trackback_count)}" height="60" width="226" align="middle" id="count_gray" class="F1239845427590201480_undefined" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000">
 									<param value="{getUrl()}modules/textyle/tpl/swf/count.swf" name="movie"/>
 									<param value="high" name="quality"/>
 									<param value="#FFFFFF" name="bgColor"/>
@@ -86,12 +86,12 @@
 									<param value="transparent" name="wmode"/>
 									<param value="false" name="menu"/>
 									<param value="true" name="allowFullScreen"/>
-									<param value="colorType=gray&amp;viewNum={$status->trackback_count}" name="flashVars"/>
+									<param value="colorType=gray&amp;viewNum={htmlspecialchars($status->trackback_count)}" name="flashVars"/>
 									<!--[if !IE]> <-->
-									<object title="{$status->trackback_count}" height="60" width="226" align="middle" name="count_gray" class="F1239845427590201480_undefined" data="{getUrl()}modules/textyle/tpl/swf/count.swf" type="application/x-shockwave-flash">
-										<param value="colorType=gray&amp;viewNum={$status->trackback_count}" name="flashVars"/>
+									<object title="{htmlspecialchars($status->trackback_count)}" height="60" width="226" align="middle" name="count_gray" class="F1239845427590201480_undefined" data="{getUrl()}modules/textyle/tpl/swf/count.swf" type="application/x-shockwave-flash">
+										<param value="colorType=gray&amp;viewNum={htmlspecialchars($status->trackback_count)}" name="flashVars"/>
 										<param value="transparent" name="wmode"/>
-                                        {$status->trackback_count}
+                                        {htmlspecialchars($status->trackback_count)}
 									</object>
 									<!--> <![endif]-->
 								</object>
@@ -108,18 +108,18 @@
                                     {@$export=$textyle->getPostCount(); $noexport=$textyle->getPostTempCount();}
 								<tr>
 									<th scope="row">{$lang->posts}</th>
-									<td><strong>{$export+$noexport}</strong>{$lang->item_unit}<span class="description">({$lang->published} <strong>{$export}</strong>, {$lang->saved} <strong>{$noexport}</strong>)</span></td>
+									<td><strong>{htmlspecialchars($export+$noexport)}</strong>{$lang->item_unit}<span class="description">({$lang->published} <strong>{htmlspecialchars($export)}</strong>, {$lang->saved} <strong>{htmlspecialchars($noexport)}</strong>)</span></td>
 
 								</tr>
 								<tr>
 									<th scope="row">{$lang->comment}</th>
-									<td><strong>{$textyle->getCommentAllCount()}</strong>{$lang->item_unit}</td>
-								
+									<td><strong>{htmlspecialchars($textyle->getCommentAllCount())}</strong>{$lang->item_unit}</td>
+
 								</tr>
 								<tr>
 									<th scope="row">{$lang->trackback}</th>
 
-									<td><strong>{$textyle->getTrackbackAllCount()}</strong>{$lang->item_unit}</td>
+									<td><strong>{htmlspecialchars($textyle->getTrackbackAllCount())}</strong>{$lang->item_unit}</td>
 								</tr>
 							</table>
 						</div>
@@ -160,7 +160,7 @@
 											{@$_target=" target=\"_blank\"";}
 											<!--@end-->
 
-										<p class="title"><a href="{$_url}" {$_target}>{$val->getTitle()}</a><span class="date">{$val->getRegdate("Y.m.d")}</span></p>
+										<p class="title"><a href="{$_url}" {$_target}>{htmlspecialchars($val->getTitle())}</a><span class="date">{$val->getRegdate("Y.m.d")}</span></p>
 										<p class="state">
 											<!--@if($val->get('module_srl') == $logged_info->member_srl)-->
 												<strong class="publishState draft"><span>{$lang->temp}</span></strong>
@@ -170,10 +170,10 @@
 												<strong class="publishState out"><span>{$lang->publish}</span></strong>
 											<!--@end-->
                                             <!--@if($val->getCommentCount())-->
-                                            <span class="reply">{$lang->comment} <strong>{$val->getCommentCount()}</strong></span> 
+                                            <span class="reply">{$lang->comment} <strong>{htmlspecialchars($val->getCommentCount())}</strong></span>
                                             <!--@end-->
                                             <!--@if($val->getTrackbackCount())-->
-                                            <span class="trackback">{$lang->trackback} <strong>{$val->getTrackbackCount()}</strong></span>
+                                            <span class="trackback">{$lang->trackback} <strong>{htmlspecialchars($val->getTrackbackCount())}</strong></span>
                                             <!--@end-->
                                         </p>
 									</li>
@@ -202,11 +202,11 @@
 									<li>
 										<!--@if($v->profile_image)-->
 
-										<img src="{$v->profile_image}" alt="{$v->nick_name}" class="author" />
+										<img src="{htmlspecialchars($v->profile_image)}" alt="{htmlspecialchars($v->nick_name)}" class="author" />
 										<!--@else-->
 										<img height="39" width="39" alt="" src="img/iconEmoticonDefault.gif" class="author"/>
 										<!--@end-->
-										<p class="member_{$v->member_srl} content"><strong>{$v->nick_name}</strong> <a href="{getUrl('','mid',$mid,'act','dispTextyleToolCommunicationGuestbookReply','textyle_guestbook_srl',$v->textyle_guestbook_srl)}">{strip_tags($v->content)}</a> <button type="button" class="delete" onclick="deleteGuestbookItem({$v->textyle_guestbook_srl},1)"><span>{$lang->cmd_delete}</span></button></p>
+										<p class="member_{$v->member_srl} content"><strong>{htmlspecialchars($v->nick_name)}</strong> <a href="{getUrl('','mid',$mid,'act','dispTextyleToolCommunicationGuestbookReply','textyle_guestbook_srl',$v->textyle_guestbook_srl)}">{strip_tags($v->content)}</a> <button type="button" class="delete" onclick="deleteGuestbookItem({$v->textyle_guestbook_srl},1)"><span>{$lang->cmd_delete}</span></button></p>
 									</li>
                                     <!--@end-->
 								</ul>
@@ -232,11 +232,11 @@
                                     {@$_profile_image = $val->getProfileImage()}
 									<li>
                                         <!--@if($_profile_image)-->
-										<img src="{$_profile_image}" alt="{htmlspecialchars($val->getNickName())}" class="author" />
+										<img src="{htmlspecialchars($_profile_image)}" alt="{htmlspecialchars($val->getNickName())}" class="author" />
                                         <!--@else-->
 										<img height="39" width="39" alt="" src="img/iconEmoticonDefault.gif" class="author"/>
                                         <!--@end-->
-										<p class="content"><span class="member_{$val->get('member_srl')}"><strong>{$val->getNickName()}</strong></span> <a href="{$val->getPermanentUrl()}">{$val->getSummary(200)}</a> <button type="button" class="delete" onclick="deleteCommentItem({$val->comment_srl},1)"><span>{$lang->cmd_delete}</span></button></p>
+										<p class="content"><span class="member_{$val->get('member_srl')}"><strong>{htmlspecialchars($val->getNickName())}</strong></span> <a href="{$val->getPermanentUrl()}">{$val->getSummary(200)}</a> <button type="button" class="delete" onclick="deleteCommentItem({$val->comment_srl},1)"><span>{$lang->cmd_delete}</span></button></p>
 									</li>
                                     <!--@end-->
 								</ul>
@@ -283,20 +283,20 @@
 											<param value="transparent" name="wmode"/>
 											{$status->visitor}
 										</object>
-									</object-->								
+									</object-->
 <!--@if($flash)-->
 	<script type="text/javascript">
 		displayMultimedia('{getUrl()}modules/textyle/tpl/swf/MainContainer.swf','100%','170',{
 				'menu':'false',
 				'wmode':'transparent',
-				'flashvars':"width=350&dSet=02&baseURL=modules/textyle/tpl/swf/common/flash/statistics/&total={$detail_status->total}&base64Code="+encodeURIComponent('{$xml}')
+				'flashvars':"width=350&dSet=02&baseURL=modules/textyle/tpl/swf/common/flash/statistics/&total={htmlspecialchars($detail_status->total)}&base64Code="+encodeURIComponent('{htmlspecialchars($xml)}')
 				});
 	</script>
 <!--@else-->
-									
+
                                     <!--@foreach($status->week as $key => $val)-->
 									<dl>
-										<dt>{$key}</dt>
+										<dt>{htmlspecialchars($key)}</dt>
 										<dd class="past" style="height:{$val->last/$status->week_max * 100}%" title="{$lang->last_week}:{number_format($val->last)}"><span>{$lang->last_week}:{number_format($val->last)}</span></dd>
 										<dd class="today" style="height:{$val->this/$status->week_max * 100}%" title="{$lang->this_week}:{number_format($val->this)}"><span>{$lang->this_week}:{number_format($val->this)}</span></dd>
 

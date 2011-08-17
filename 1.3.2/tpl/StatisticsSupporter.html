@@ -4,13 +4,13 @@
 
 			<!-- Content -->
 			<div id="content">
-				
+
 				<!-- contentHeader -->
 				<div class="contentHeader suporterHeader">
 					<h3 class="h3">{$lang->textyle_second_menus[3]['dispTextyleToolStatisticsSupporter']}</h3>
 				</div>
 				<!-- /contentHeader -->
-				
+
 				<!-- contentNavigation -->
 				<div class="contentNavigation">
 					<ul class="sortDefault">
@@ -50,13 +50,13 @@
 					</div>
 				</div>
 				<!-- /contentNavigation -->
-				
+
 				<!-- listHeader -->
 				<div class="listHeader">
 					<p class="info">{$lang->about_supporter}</p>
 				</div>
 				<!-- /listHeader -->
-				
+
 				<!-- Table Data -->
 				<table border="1" cellspacing="0" summary="{$lang->supporter_rank}" class="tableData">
 					<thead>
@@ -70,7 +70,7 @@
 						</tr>
 					</thead>
 
-					<!--@if(count($supporter_list)==0)-->								
+					<!--@if(count($supporter_list)==0)-->
 					<tbody>
 						<tr>
 							<td class="noData" colspan="6"><p>{$lang->no_supporter}</p></td>
@@ -90,9 +90,9 @@
 							<td class="rank">{$_item_count+1}</td>
 							<td class="user">
 								<!--@if($v->profile_image)-->
-								<img src="{$v->profile_image}" alt="{htmlspeciachars($v->nick_name}" class="thumb member_{$v->member_srl}" />{$v->nick_name}</a>
+								<img src="{htmlspecialchars($v->profile_image)}" alt="{htmlspeciachars($v->nick_name}" class="thumb member_{$v->member_srl}" />{htmlspecialchars($v->nick_name)}</a>
 								<!--@else-->
-									<span class="member_{$v->member_srl}">{$v->nick_name}</span>
+									<span class="member_{$v->member_srl}">{htmlspecialchars($v->nick_name)}</span>
 								<!--@end-->
 							</td>
 							<td class="small<!--@if($sort_index=='comment_count')--> sum<!--@end-->">{$v->comment_count}</td>
@@ -107,11 +107,11 @@
 					<!--@end-->
 				</table>
 				<!-- /Table Data -->
-				
+
 			</div>
 			<hr />
 			<!-- /Content -->
-			
+
 			<!-- Extension -->
 				<!--#include("_tool_menu.html")-->
 			<!-- Extension -->

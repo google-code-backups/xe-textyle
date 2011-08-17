@@ -2,19 +2,19 @@
 <!--%import("css/calendar.css",optimized=false)-->
 			<!-- Content -->
 			<div id="content">
-				
+
 				<!-- contentHeader -->
 				<div class="contentHeader skinHeader">
 					<h3 class="h3">{$lang->textyle_second_menus[4]['dispTextyleToolLayoutConfigMobileSkin']}</h3>
 				</div>
 				<!-- /contentHeader -->
-				
+
 			<!--@if($module_info->mskin)-->
 				<!-- mySkin -->
 				<div class="section mySkin">
 					<div class="container">
 						<div class="thumb">
-							<img src="{$cur_skin->large_screenshot}" width="260" height="195" alt="{htmlspecialchars($cur_skin->title)}" />
+							<img src="{htmlspecialchars($cur_skin->large_screenshot)}" width="260" height="195" alt="{htmlspecialchars($cur_skin->title)}" />
 						</div>
 						<p class="using"><img src="img/iconUsing.png" width="57" height="58" alt="{$lang->cmd_use_ing}" /></p>
 						<div class="summary">
@@ -22,7 +22,7 @@
 								<h4 class="h4">{htmlspecialchars($cur_skin->title)}</h4>
 							</div>
 							<p class="contributor">by {$cur_skin->author}</p>
-							<p class="description">{$cur_skin->description}</p>
+							<p class="description">{htmlspecialchars($cur_skin->description)}</p>
 						</div>
 					</div>
 					<span class="outline ml"></span>
@@ -67,10 +67,10 @@
                         <!--@foreach($skins as $key => $val)-->
 						<li>
 							<dl>
-								<dt>{$val->title}</dt>
-								<dd class="thumb"><img src="{$val->small_screenshot}" width="138" height="87" alt="{htmlspecialchars($val->title)}" /></dd>
+								<dt>{htmlspecialchars($val->title)}</dt>
+								<dd class="thumb"><img src="{htmlspecialchars($val->small_screenshot)}" width="138" height="87" alt="{htmlspecialchars($val->title)}" /></dd>
 								<dd class="download">
-									<span class="buttonGray small"><button type="button" onclick="if(confirm('{$lang->msg_select_skin}')) doSelectMobileSkin('{$key}'); return false;">{$lang->cmd_select_skin}</button></span>
+									<span class="buttonGray small"><button type="button" onclick="if(confirm('{$lang->msg_select_skin}')) doSelectMobileSkin('{htmlspecialchars($key)}'); return false;">{$lang->cmd_select_skin}</button></span>
 								</dd>
 							</dl>
 						</li>
@@ -82,7 +82,7 @@
 			</div>
 			<hr />
 			<!-- /Content -->
-			
+
 
 			<!-- Extension -->
 				<!--#include("_tool_menu.html")-->

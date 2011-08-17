@@ -3,30 +3,30 @@
 
 			<!-- Content -->
 			<div id="content">
-				
+
 				<!-- contentHeader -->
 				<div class="contentHeader replyHeader lineBottom">
 					<h3 class="h3">{$lang->textyle_second_menus[2]['dispTextyleToolCommunicationComment']}</h3>
 				</div>
 				<!-- /contentHeader -->
-				
+
 				<!-- listHeader -->
 				<div class="listHeader">
 					<p class="info"> <!--@if($search_keyword)-->{sprintf($lang->search_result_count,$page_navigation->total_count)}<!--@else-->{sprintf($lang->total_result_count,$page_navigation->total_count)}<!--@end--></p>
 					<fieldset class="search">
 						<legend>{$lang->cmd_search}</legend>
 						<form action="{Context::getRequestUri()}">
-							<input type="hidden" name="act" value="{$act}" />
-							<input type="hidden" name="mid" value="{$mid}" />
-							<input type="hidden" name="vid" value="{$vid}" />
+							<input type="hidden" name="act" value="{htmlspecialchars($act)}" />
+							<input type="hidden" name="mid" value="{htmlspecialchars($mid)}" />
+							<input type="hidden" name="vid" value="{htmlspecialchars($vid)}" />
 							<input type="hidden" name="search_target" value="content" />
-							<input name="search_keyword" type="text" value="{$search_keyword}" title="{$lang->cmd_search}" class="inputText" />
+							<input name="search_keyword" type="text" value="{htmlspecialchars($search_keyword)}" title="{htmlspecialchars($lang->cmd_search)}" class="inputText" />
 							<span class="buttonGray medium"><input type="submit" value="{$lang->cmd_search}" /></span>
 						</form>
 					</fieldset>
 				</div>
 				<!-- /listHeader -->
-				
+
 				<!-- Table Data -->
 				<fieldset>
 					<legend>{$lang->manage_comment}</legend>
@@ -58,7 +58,7 @@
 									</td>
 									<td class="thumb">
                                         <!--@if($_profile_image)-->
-										<img src="{$_profile_image}" alt="{htmlspecialchars($val->getNickName())}" />
+										<img src="{htmlspecialchars($_profile_image)}" alt="{htmlspecialchars($val->getNickName())}" />
                                         <!--@else-->
                                         <img height="39" width="39" alt="" src="img/iconEmoticonDefault.gif" />
                                         <!--@end-->
@@ -66,14 +66,14 @@
 									<td class="replyArea">
 										<dl>
 											<dt>
-                                                <span class="member_{$val->get('member_srl')}"><strong>{$val->getNickName()}</strong></span>
+                                                <span class="member_{$val->get('member_srl')}"><strong>{htmlspecialchars($val->getNickName())}</strong></span>
                                                 <span class="yymmdd">{$val->getRegdate("Y.m.d")}</span> <span class="hhmm">{$val->getRegdate("H:i")}</span>
                                             </dt>
 											<dd>{$val->getContent(false,false)}</dd>
 										</dl>
 									</td>
-									<td class="email">{$val->email_address}&nbsp;</td>
-									<td class="ipAddress">{$val->ipaddress}</td>
+									<td class="email">{htmlspecialchars($val->email_address)}&nbsp;</td>
+									<td class="ipAddress">{htmlspecialchars($val->ipaddress)}</td>
 									<td class="state"><!--@if($val->is_secret=='Y')--><em>{$lang->secret}</em><!--@else-->{$lang->public}<!--@end--></td>
 								</tr>
 								<tr class="buttonArea">
@@ -82,11 +82,11 @@
 									<td colspan="4">
 										<div class="reAction">
 											<span class="buttonGray small"><a href="{getUrl('act','dispTextyleToolCommunicationCommentReply','comment_srl',$val->comment_srl,'document_srl',$val->document_srl)}" >{$lang->cmd_reply_comment}</a></span>
-											<span class="buttonGray small"><a href="{$val->getPermanentUrl()}">{$lang->cmd_move}</a></span> 
+											<span class="buttonGray small"><a href="{$val->getPermanentUrl()}">{$lang->cmd_move}</a></span>
 										</div>
 										<div class="control">
-											<span class="buttonGray small"><button type="button" onclick="updateCommentItemSetSecret({$val->comment_srl},'<!--@if($val->is_secret=='Y')-->N<!--@else-->Y<!--@end-->',{$page},{$val->module_srl})"><!--@if($val->is_secret=='Y')-->{$lang->public}<!--@else-->{$lang->private}<!--@end--></button></span> 
-											<span class="buttonGray small"><button type="button" onclick="openLayerAddDenyItem('{$val->comment_srl}','_addDenyCommentList')">{$lang->cmd_deny}</button></span> 
+											<span class="buttonGray small"><button type="button" onclick="updateCommentItemSetSecret({$val->comment_srl},'<!--@if($val->is_secret=='Y')-->N<!--@else-->Y<!--@end-->',{$page},{$val->module_srl})"><!--@if($val->is_secret=='Y')-->{$lang->public}<!--@else-->{$lang->private}<!--@end--></button></span>
+											<span class="buttonGray small"><button type="button" onclick="openLayerAddDenyItem('{$val->comment_srl}','_addDenyCommentList')">{$lang->cmd_deny}</button></span>
 											<span class="buttonGray small"><button type="button" onclick="if(confirm('{$lang->confirm_delete}')) deleteCommentItem({$val->comment_srl},{$page}); return false;">{$lang->cmd_delete}</button></span>
 										</div>
 									</td>
@@ -95,41 +95,41 @@
 								<!--@end-->
 							</tbody>
 						</table>
-						
+
 						<div class="listFooter">
-							
+
 							<!-- Change-->
 							<div class="change">
 								<p class="p1">{$lang->selected_articles}</p>
-								
+
 								<span class="buttonGray large"><button type="button" onclick="openLayerAddDeny('_addDenyCommentList')">{$lang->cmd_deny}</button></span>
 								<span class="buttonGray large"><button type="button" onclick="deleteCommentItems({$page})"><img src="img/buttonTableDataX.gif" width="7" height="7" alt="" class="icon" />{$lang->cmd_delete}</button></span>
-								
+
 							</div>
 							<!-- /Change -->
-							
+
 							<!-- Pagination -->
 							<div class="pagination">
 								<a href="{getUrl('page','','mid',$mid)}" class="prev"><span>{$lang->first_page}</span></a>
 
 								<!--@while($page_no = $page_navigation->getNextPage())-->
 									<!--@if($page == $page_no)-->
-										<strong>{$page_no}</strong> 
+										<strong>{$page_no}</strong>
 									<!--@else-->
-										<a href="{getUrl('page',$page_no,'mid',$mid)}">{$page_no}</a> 
+										<a href="{getUrl('page',$page_no,'mid',$mid)}">{$page_no}</a>
 									<!--@end-->
 								<!--@end-->
 
 								<a href="{getUrl('page',$page_navigation->last_page,'module_srl','')}" class="next"><span>{$lang->last_page}</span></a>
 							</div>
 							<!-- /Pagination -->
-							
+
 						</div>
-						
+
 					</form>
 				</fieldset>
 				<!-- /Table Data -->
-				
+
 			</div>
 			<hr />
 			<!-- /Content -->

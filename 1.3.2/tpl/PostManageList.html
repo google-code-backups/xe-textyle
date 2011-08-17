@@ -8,7 +8,7 @@
 					<h3 class="h3">{$lang->textyle_second_menus[1]['dispTextyleToolPostManageList']}</h3>
 				</div>
 				<!-- /contentHeader -->
-				
+
 				<!-- contentNavigation -->
 				<div class="contentNavigation">
 					<ul class="sortDefault">
@@ -18,26 +18,26 @@
 					</ul>
 				</div>
 				<!-- /contentNavigation -->
-				
+
 				<!-- listHeader -->
 				<div class="listHeader">
 					<p class="info"> <!--@if($search_keyword)-->{sprintf($lang->search_result_count,$page_navigation->total_count)}<!--@else-->{sprintf($lang->total_result_count,$page_navigation->total_count)}<!--@end--></p>
 					<fieldset class="search">
 						<legend>{$lang->cmd_search}</legend>
 						<form action="{Context::getRequestUri()}">
-							<input type="hidden" name="published" value="{$published}" />
-							<input type="hidden" name="vid" value="{$vid}" />
-							<input type="hidden" name="act" value="{$act}" />
-							<input type="hidden" name="mid" value="{$mid}" />
+							<input type="hidden" name="published" value="{htmlspecialchars($published)}" />
+							<input type="hidden" name="vid" value="{htmlspecialchars($vid)}" />
+							<input type="hidden" name="act" value="{htmlspecialchars($act)}" />
+							<input type="hidden" name="mid" value="{htmlspecialchars($mid)}" />
 							<select name="search_category_srl">
 								<!--@foreach($category_list as $key => $val)-->
-								<option value="{$val->category_srl}" <!--@if($search_category_srl==$val->category_srl)-->selected="selected"<!--@end-->>{$val->title}</option>
+								<option value="{$val->category_srl}" <!--@if($search_category_srl==$val->category_srl)-->selected="selected"<!--@end-->>{htmlspecialchars($val->title)}</option>
 								<!--@end-->
 							</select>
 
 							<select name="search_target">
 								<!--@foreach($search_option as $key => $val)-->
-								<option value="{$key}" <!--@if($search_target==$key)-->selected="selected"<!--@end-->>{$val}</option>
+								<option value="{htmlspecialchars($key)}" <!--@if($search_target==$key)-->selected="selected"<!--@end-->>{htmlspecialchars($val)}</option>
 								<!--@end-->
 							</select>
 							<input name="search_keyword" type="text" title="{$lang->cmd_search}" class="inputText" value="{htmlspecialchars($search_keyword)}"/>
@@ -46,7 +46,7 @@
 					</fieldset>
 				</div>
 				<!-- /listHeader -->
-				
+
 				<!-- Table Data -->
 				<fieldset>
 					<legend>{$lang->my_document_management}</legend>
@@ -69,7 +69,7 @@
 							</thead>
 							<tbody>
 
-								<!--@if(count($post_list)==0)-->								
+								<!--@if(count($post_list)==0)-->
 								<tr>
 									<td class="noData" colspan="9"><p>{sprintf($lang->no_post,getUrl('','act','dispTextyleToolPostManageWrite'))}</p></td>
 								</tr>
@@ -94,13 +94,13 @@
 												<strong class="publishState out"><span>{$lang->publish}</span></strong>
 											<!--@end-->
 										</td>
-										<td class="title"><a href="{$_url}" class="postTitle" title="Tag : {$post->get('tags')}">{$post->getTitle()}</a>
+										<td class="title"><a href="{$_url}" class="postTitle" title="Tag : {htmlspecialchars($post->get('tags'))}">{htmlspecialchars($post->getTitle())}</a>
 										{$post->printExtraImages()}
 
 										</td>
 										<td class="small">{$post->getCommentCount()}</td>
 										<td class="small">{$post->getTrackbackCount()}</td>
-										<td>{$category_list[$post->get('category_srl')]->title}&nbsp;</td>
+										<td>{htmlspecialchars($category_list[$post->get('category_srl')]->title)}&nbsp;</td>
 										<td class="small">{zdate($post->get('last_update'),'Y.m.d')}</td>
 										<td>
 											<span class="buttonGray small"><a href="{getUrl('act','dispTextyleToolPostManageWrite','document_srl',$post->document_srl,'page',$page)}">{$lang->cmd_edit}</a></span>
@@ -123,18 +123,18 @@
 
 							</tbody>
 						</table>
-						
+
 						<div class="listFooter">
-							
+
 							<!-- Change-->
 							<div class="change">
 								<p class="p1">{$lang->selected_articles}</p>
-								
+
 								<!-- Category -->
 								<div class="select">
 									<span class="buttonSelect"><button type="button" onclick="jQuery('ul.category_list').toggleClass('open')">{$lang->cmd_change_category}</button></span>
 
-									
+
 									<ul class="category_list">
 									<!-- ul class="" | ul class="open" -->
 										<!--@foreach($category_list as $key => $val)-->
@@ -146,7 +146,7 @@
 													<!--@end-->
 													{@ $_pDepth = $val->depth}
 												<!--@end-->
-												<li><button type="button" onclick="updatePostItemsCategory('{$mid}',{$val->category_srl},{$page})">{$val->text}</button> 
+												<li><button type="button" onclick="updatePostItemsCategory('{htmlspecialchars($mid)}',{$val->category_srl},{$page})">{$val->text}</button>
 													<!--@if($val->child_count)-->
 														{@$_pDepth++}
 														<ul>
@@ -160,7 +160,7 @@
 
 								</div>
 								<!-- /Category -->
-								
+
 								<!-- opening -->
 								<div class="select">
 									<span class="buttonSelect"><button type="button" onclick="jQuery('ul.secret_list').toggleClass('open')">{$lang->set_publish}</button></span>
@@ -170,35 +170,35 @@
 									</ul>
 								</div>
 								<!-- /opening -->
-								
+
 								<span class="buttonGray large"><button type="button" onclick="openLayerCommuicationConfig()">{$lang->comm_management}</button></span>
 								<span class="buttonGray large"><button type="button" onclick="trashPostItems({$page})"><img src="img/buttonTableDataX.gif" width="7" height="7" alt="" class="icon" />{$lang->cmd_delete}</button></span>
-								
+
 							</div>
 							<!-- /Change -->
-							
+
 							<!-- Pagination -->
 							<div class="pagination">
 								<a href="{getUrl('page','','mid',$mid)}" class="prev"><span>{$lang->first_page}</span></a>
 
 								<!--@while($page_no = $page_navigation->getNextPage())-->
 									<!--@if($page == $page_no)-->
-										<strong>{$page_no}</strong> 
+										<strong>{$page_no}</strong>
 									<!--@else-->
-										<a href="{getUrl('page',$page_no,'mid',$mid)}">{$page_no}</a> 
+										<a href="{getUrl('page',$page_no,'mid',$mid)}">{$page_no}</a>
 									<!--@end-->
 								<!--@end-->
 
 								<a href="{getUrl('page',$page_navigation->last_page,'module_srl','')}" class="next"><span>{$lang->last_page}</span></a>
 								</div>
 							<!-- /Pagination -->
-							
+
 						</div>
-						
+
 					</form>
 				</fieldset>
 				<!-- /Table Data -->
-				
+
 			</div>
 			<hr />
 			<!-- /Content -->
