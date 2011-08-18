@@ -15,9 +15,9 @@
             <!--@if($v->category == 'service' && $v->default_index_act)-->
 			<tr>
             <td class="row">
-                {htmlspecialchars($v->title)}
+                {$v->title} 
 			</td>
-			<td><input type="text" name="allow_service_{htmlspecialchars($v->module)}" value="{$config->allow_service[$v->module]}" class="inputTypeText w80" />
+			<td><input type="text" name="allow_service_{$v->module}" value="{$config->allow_service[$v->module]}" class="inputTypeText w80" />
             </td>
 			</tr>
             <!--@end-->

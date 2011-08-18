@@ -2,8 +2,8 @@
 <!--#include("./header.html")-->
 
 <form action="./" method="get">
-    <input type="hidden" value="{htmlspecialchars($module)}" name="module"/>
-    <input type="hidden" value="{htmlspecialchars($act)}" name="act"/>
+    <input type="hidden" value="{$module}" name="module"/>
+    <input type="hidden" value="{$act}" name="act"/>
     <fieldset>
         <select name="search_target">
             <option value="user_id" <!--@if($search_target == 'user_id')-->selected="selected"<!--@end-->>{$lang->user_id}</option>
@@ -12,7 +12,7 @@
             <option value="domain" <!--@if($search_target == 'domain')-->selected="selected"<!--@end-->>{$lang->domain}</option>
             <option value="regdate" <!--@if($search_target == 'regdate')-->selected="selected"<!--@end-->>{$lang->regdate}</option>
         </select>
-        <input type="text" name="search_keyword" value="{htmlspecialchars($search_keyword)}" />
+        <input type="text" name="search_keyword" value="{$search_keyword}" />
         <span class="button"><input type="submit" value="{$lang->cmd_search}" /></span>
     </fieldset>
 </form>
@@ -33,18 +33,18 @@
     <!--@foreach($textyle_list as $no => $val)-->
     <tr class="row{$cycle_idx}">
         <td>{$no}</td>
-        <td class="wide"><a href="{getSiteUrl($val->domain)}" onclick="window.open(this.href); return false;" title="{htmlspecialchars($lang->cmd_view)}">{htmlspecialchars($val->getBrowserTitle())}</a></td>
-        <td><a href="{getSiteUrl($val->domain)}" onclick="window.open(this.href);return false;">{htmlspecialchars($val->domain)}</a></td>
+        <td class="wide"><a href="{getSiteUrl($val->domain)}" onclick="window.open(this.href); return false;" title="{htmlspecialchars($lang->cmd_view)}">{$val->getBrowserTitle()}</a></td>
+        <td><a href="{getSiteUrl($val->domain)}" onclick="window.open(this.href);return false;">{$val->domain}</a></td>
         <td class="nowrap">
 			<!--@if($val->getUserId())-->
-			<span class="member_{$val->getMemberSrl()}">{htmlspecialchars($val->getUserId())}({htmlspecialchars($val->getNickName())})</span>
+			<span class="member_{$val->getMemberSrl()}">{$val->getUserId()}({$val->getNickName()})</span>
 			<!--@else-->
 			-
 			<!--@end-->
 		</td>
         <td class="nowrap">{zdate($val->get('regdate'),"Y-m-d")}</td>
         <td class="nowrap">
-            <a href="{getUrl('act','dispTextyleAdminInsert','module_srl',$val->getModuleSrl())}" class="buttonSet buttonSetting"><span>{$lang->cmd_setup}</span></a>
+            <a href="{getUrl('act','dispTextyleAdminInsert','module_srl',$val->getModuleSrl())}" class="buttonSet buttonSetting"><span>{$lang->cmd_setup}</span></a> 
             <a href="{getUrl('act','dispTextyleAdminDelete','module_srl',$val->getModuleSrl())}" title="{htmlspecialchars($lang->cmd_delete)}" class="buttonSet buttonDelete"><span>{$lang->cmd_delete}</span></a>
         </td>
     </tr>
@@ -54,12 +54,12 @@
 
 <!-- 페이지 네비게이션 -->
 <div class="pagination a1">
-    <a href="{getUrl('page','','module_srl','')}" class="prevEnd">{$lang->first_page}</a>
+    <a href="{getUrl('page','','module_srl','')}" class="prevEnd">{$lang->first_page}</a> 
     <!--@while($page_no = $page_navigation->getNextPage())-->
         <!--@if($page == $page_no)-->
-            <strong>{$page_no}</strong>
+            <strong>{$page_no}</strong> 
         <!--@else-->
-            <a href="{getUrl('page',$page_no,'module_srl','')}">{$page_no}</a>
+            <a href="{getUrl('page',$page_no,'module_srl','')}">{$page_no}</a> 
         <!--@end-->
     <!--@end-->
     <a href="{getUrl('page',$page_navigation->last_page,'module_srl','')}" class="nextEnd">{$lang->last_page}</a>

@@ -31,29 +31,29 @@
 						<tbody>
                             <!--@foreach($addon_list as $key => $val)-->
 							<tr>
-								<th scope="row"><span title="{$val->addon}">{htmlspecialchars($val->title)} <em>ver.{htmlspecialchars($val->version)}</em></span>
+								<th scope="row"><span title="{$val->addon}">{$val->title} <em>ver.{$val->version}</em></span>
                                 </th>
 								<td scope="row">
                                     <!--@foreach($val->author as $author)-->
-                                    <a href="{htmlspecialchars($author->homepage)}" onclick="window.open(this.href);return false;">{htmlspecialchars($author->name)}</a>
+                                    <a href="{$author->homepage}" onclick="window.open(this.href);return false;">{$author->name}</a>
                                     <!--@endforeach-->
                                 </td>
-								<td class="title">{nl2br(htmlspecialchars($val->description))}&nbsp;</td>
+								<td class="title">{nl2br($val->description)}&nbsp;</td>
 								<td>
 									<span class="buttonGray small"><a href="{getUrl('','module','addon','act','dispAddonAdminSetup','selected_addon',$val->addon)}" onclick="popopen(this.href,'addon_info');return false" title="{htmlspecialchars($lang->cmd_setup)}">{$lang->cmd_setup}</a></span>
 								</td>
 								<td>
                                     <!--@if($val->activated)-->
-									<span class="activeState turnOn"><button type="button" onclick="doToggleAddon('{htmlspecialchars($val->addon)}');return false;" title="{htmlspecialchars($lang->use)}">{$lang->addon_using}</button></span>
+									<span class="activeState turnOn"><button type="button" onclick="doToggleAddon('{$val->addon}');return false;" title="{htmlspecialchars($lang->use)}">{$lang->addon_using}</button></span>
                                     <!--@else-->
-									<span class="activeState turnOff"><button type="button" onclick="doToggleAddon('{htmlspecialchars($val->addon)}');return false;" title="{htmlspecialchars($lang->notuse)}">{$lang->notuse}</button></span>
+									<span class="activeState turnOff"><button type="button" onclick="doToggleAddon('{$val->addon}');return false;" title="{htmlspecialchars($lang->notuse)}">{$lang->notuse}</button></span>
                                     <!--@end-->
                                 </td>
                                 <td>
                                     <!--@if($val->mactivated)-->
-                                    <span class="activeState turnOn"><button type="button" onclick="doToggleAddon('{htmlspecialchars($val->addon)}','mobile');return false;" title="{htmlspecialchars($lang->use)}">{$lang->addon_using}</button></span>
+                                    <span class="activeState turnOn"><button type="button" onclick="doToggleAddon('{$val->addon}','mobile');return false;" title="{htmlspecialchars($lang->use)}">{$lang->addon_using}</button></span>
                                     <!--@else-->
-                                    <span class="activeState turnOff"><button type="button" onclick="doToggleAddon('{htmlspecialchars($val->addon)}','mobile');return false;" title="{htmlspecialchars($lang->notuse)}">{$lang->notuse}</button></span>
+                                    <span class="activeState turnOff"><button type="button" onclick="doToggleAddon('{$val->addon}','mobile');return false;" title="{htmlspecialchars($lang->notuse)}">{$lang->notuse}</button></span>
                                     <!--@end-->
                                 </td>
 							</tr>

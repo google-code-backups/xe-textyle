@@ -7,7 +7,7 @@
 <!--%import("css/calendar.css")-->
 
 <div id="textyleAdmin" class="textyleAdmin hybrid">
-	<div id="container" class="<!--@if($containerClassName)-->{htmlspecialchars($containerClassName)}<!--@else-->ec<!--@end-->">
+	<div id="container" class="<!--@if($containerClassName)-->{$containerClassName}<!--@else-->ec<!--@end-->">
 
 		<!-- Header -->
 		<div id="header">
@@ -26,8 +26,8 @@
 			</div>
 
 			<div class="title">
-				<h2>{htmlspecialchars($textyle->getTextyleTitle())}</h2>
-				<span class="buttonGray large"><a href="{htmlspecialchars(getSiteUrl($textyle->domain))}">{$lang->cmd_go_blog}</a></span>
+				<h2>{$textyle->getTextyleTitle()}</h2>
+				<span class="buttonGray large"><a href="{getSiteUrl($textyle->domain)}">{$lang->cmd_go_blog}</a></span>
 				<div class="approach">
 					<span class="buttonNewPost"><a href="{getUrl('','act','dispTextyleToolPostManageWrite')}">{$lang->cmd_new_post}</a></span>
 				</div>
