@@ -4,7 +4,7 @@
 
 			<!-- Content -->
 			<div id="content">
-
+				
 				<!-- contentHeader -->
 				<div class="contentHeader depositHeader">
 					<h3 class="h3">{$lang->textyle_second_menus[1]['dispTextyleToolPostManageDeposit']}</h3>
@@ -16,14 +16,14 @@
 				<!--@else-->
 					<!--#include('PostManageDepositHelp.html')-->
 				<!--@end-->
-
+				
 			</div>
 			<hr />
 			<!-- /Content -->
-
+			
 			<!-- Extension -->
 			<!--#include("_tool_menu.html")-->
-
+		
 			<div class="extension e2">
 				<div class="section bookmarklet">
 					<h3>{$lang->bookmarklet_install}</h3>
@@ -35,7 +35,7 @@
 					<ul>
 					{@$_i=1}
                         <!--@foreach($lang->about_use_bookmarklet_item as $v)-->
-						<li class="item{$_i++}">{htmlspecialchars($v)}</li>
+						<li class="item{$_i++}">{$v}</li>
                         <!--@end-->
 					</ul>
 				</div>

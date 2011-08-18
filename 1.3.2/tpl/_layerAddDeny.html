@@ -5,8 +5,8 @@
 	<div class="layer">
 		<h4 class="h4"><img src="img/iconCheck.gif" alt="" class="icon" width="26" height="20">{$lang->add_denylist}</h4>
 			<form action="" method="post" onsubmit="return procFilter(this, insert_denylist)">
-				<input type="hidden" name="vid" value="{htmlspecialchars($vid)}" />
-				<input type="hidden" name="mid" value="{htmlspecialchars($mid)}" />
+				<input type="hidden" name="vid" value="{$vid}" />
+				<input type="hidden" name="mid" value="{$mid}" />
 			<fieldset>
 				<ul>
 					<li><input name="homepage" value="" class="inputCheck" id="url" checked="checked" type="checkbox"> <label for="url">{$lang->homepage}</label></li>
@@ -21,7 +21,7 @@
 			</fieldset>
 		</form>
 		<button type="button" class="buttonCloseLayer" onclick="hideLayerAddDeny()"><span>{$lang->cmd_close}</span></button>
-	</div>
+	</div> 
 	<!-- /Layer -->
 </div>
 <script type="text/javascript">

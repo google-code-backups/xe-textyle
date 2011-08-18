@@ -4,13 +4,13 @@
 
 			<!-- Content -->
 			<div id="content">
-
+				
 				<!-- contentHeader -->
 				<div class="contentHeader popularHeader">
 					<h3 class="h3">{$lang->textyle_second_menus[3]['dispTextyleToolStatisticsPopular']}</h3>
 				</div>
 				<!-- /contentHeader -->
-
+				
 				<!-- contentNavigation -->
 				<div class="contentNavigation">
 					<ul class="sortDefault">
@@ -50,13 +50,13 @@
 					</div>
 				</div>
 				<!-- /contentNavigation -->
-
+				
 				<!-- listHeader -->
 				<div class="listHeader">
 					<p class="info">{$lang->about_popular}</p>
 				</div>
 				<!-- /listHeader -->
-
+				
 				<!-- Table Data -->
 				<table border="1" cellspacing="0" summary="{$lang->popular_rank}" class="tableData">
 					<thead>
@@ -70,7 +70,7 @@
 						</tr>
 					</thead>
 
-					<!--@if(count($post_list)==0)-->
+					<!--@if(count($post_list)==0)-->								
 					<tbody>
 						<tr>
 							<td class="noData" colspan="6"><p>{$lang->no_popular}</p></td>
@@ -86,7 +86,7 @@
 							<!--@end-->
 						<tr>
 							<td class="rank">{$_item_count+1}</td>
-							<td class="title postTitle"><a href="{$post->getPermanentUrl()}" onclick="window.open(this.href); return false;">{htmlspecialchars($post->getTitle())}</a></td>
+							<td class="title postTitle"><a href="{$post->getPermanentUrl()}" onclick="window.open(this.href); return false;">{$post->getTitle()}</a></td> 
 							<td class="small<!--@if($sort_index=='comment_count')--> sum<!--@end-->">{$post->getCommentCount()}</td>
 							<td class="small<!--@if($sort_index=='trackback_count')--> sum<!--@end-->">{$post->getTrackbackCount()}</td>
 							<td class="small<!--@if($sort_index=='readed_count')--> sum<!--@end-->">{$post->get('readed_count')}</td>
@@ -100,11 +100,11 @@
 					<!--@end-->
 				</table>
 				<!-- /Table Data -->
-
+				
 			</div>
 			<hr />
 			<!-- /Content -->
-
+	
 			<!-- Extension -->
 				<!--#include("_tool_menu.html")-->
 			<!-- Extension -->

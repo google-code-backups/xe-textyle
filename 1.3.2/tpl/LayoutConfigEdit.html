@@ -3,7 +3,7 @@
 
 			<!-- Content -->
 			<div id="content">
-
+				
 				<!-- contentHeader -->
 				<div class="contentHeader editHeader">
 					<h3 class="h3">{$lang->textyle_second_menus[4]['dispTextyleToolLayoutConfigEdit']}</h3>
@@ -14,25 +14,25 @@
 				function tab(i){
 					var tab = i.parentNode.className;
 					document.getElementById('codeEdit').className='codeEdit'+' '+tab;
-				}
+				} 
 				</script>
-
+				
 				<form action="./" method="post" id="codeEdit" class="codeEdit" onsubmit="return procFilter(this,insert_layout_edit);">
 					<span class="buttonGray medium widgetCreator"><a href="{getUrl('','module','widget','act','dispWidgetGenerateCode')}" onclick="popopen(this.href); return false">{$lang->cmd_generate_widget_code}</a></span>
-					<input type="hidden" name="mid" value="{htmlspecialchars($mid)}" />
-					<input type="hidden" name="vid" value="{htmlspecialchars($vid)}" />
-
+					<input type="hidden" name="mid" value="{$mid}" />
+					<input type="hidden" name="vid" value="{$vid}" />
+					
 					<ul>
 						{@$i=0;}
 						<!--@foreach($skin_file_content as $file => $content)-->
 						<li class="s{$i}">
-							<a href="#" onclick="tab(this)">{htmlspecialchars($file)}</a>
-							<textarea name="{htmlspecialchars($file)}" cols="50" rows="10">{htmlspecialchars($content)}</textarea>
+							<a href="#" onclick="tab(this)">{$file}</a>
+							<textarea name="{$file}" cols="50" rows="10">{htmlspecialchars($content)}</textarea>
 						</li>
-						{@$i++;}
+						{@$i++;}						
 						<!--@end-->
 					</ul>
-
+	
 					<!-- Button Area -->
 					<div class="buttonArea aCenter">
 						<span class="buttonAction actionBlue"><input type="submit" value="{$lang->cmd_save}" /></span>
@@ -45,8 +45,8 @@
 
 <form action="{Context::getRequestUri()}" class="userImage" target="hidden_iframe" method="post" onsubmit="return checkUserImage(this,'{$lang->msg_check_userimage}')" enctype="multipart/form-data">
 	<h4>{$lang->textyle_skin_userimage}</h4>
-    <input type="hidden" name="mid" value="{htmlspecialchars($mid)}" />
-    <input type="hidden" name="vid" value="{htmlspecialchars($vid)}" />
+    <input type="hidden" name="mid" value="{$mid}" />
+    <input type="hidden" name="vid" value="{$vid}" />
     <input type="hidden" name="act" value="procTextyleToolUserImageUpload" />
 	<p class="upload"><input name="user_image" type="file" /> <em>{$lang->msg_check_userimage}</em> <span class="buttonGray medium"><button type="submit">{$lang->cmd_save}</button></span></p>
 	<!--@if($user_image_list)-->
@@ -57,14 +57,14 @@
 			<div class="thumb">
 				<!--@if($ext=='swf'||$ext=='flv')-->
 				<script type="text/javascript">//<![CDATA[
-				displayMultimedia('{getUrl('')}{htmlspecialchars($user_image_path)}{htmlspecialchars($file)}', '100%', '100%');
+				displayMultimedia('{getUrl('')}{$user_image_path}{$file}', '100%', '100%');
 				//]]></script>
 				<!--@elseif(in_array($ext,array('gif','png','jpg','jpeg')))-->
-					<img src="{getUrl('')}{htmlspecialchars($user_image_path)}{htmlspecialchars($file)}" alt="User Upload Image" />
+					<img src="{getUrl('')}{$user_image_path}{$file}" alt="User Upload Image" />
 				<!--@end-->
 			</div>
-			<p class="path">{htmlspecialchars($user_image_path)}{htmlspecialchars($file)}</p>
-			<button type="button" onclick="deleteUserImage('{htmlspecialchars($file)}')" class="delete"><span>{$lang->cmd_delete}</span></button>
+			<p class="path">{$user_image_path}{$file}</p>
+			<button type="button" onclick="deleteUserImage('{$file}')" class="delete"><span>{$lang->cmd_delete}</span></button>
 		</li>
 		<!--@end-->
 	</ul>
@@ -82,11 +82,11 @@
 		<form action="{getUrl('')}" method="post" enctype="multipart/form-data" target="hidden_iframe" class="upload">
 			<input type="hidden" name="module" value="layout" />
 			<input type="hidden" name="act" value="procTextyleToolUserSkinImport" />
-			<input type="hidden" name="mid" value="{htmlspecialchars($mid)}" />
-			<input type="hidden" name="vid" value="{htmlspecialchars($vid)}" />
+			<input type="hidden" name="mid" value="{$mid}" />
+			<input type="hidden" name="vid" value="{$vid}" />
 			<input type="file" name="file" /> <em>{$lang->about_textyle_skin_import}</em>
 			<span class="buttonGray medium"><button type="submit">{$lang->cmd_submit}</button></span>
-		</form>
+		</form>	
 	</div>
 </div>
 

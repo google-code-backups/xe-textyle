@@ -5,8 +5,8 @@
 		<div class="layer">
 			<h4 class="h4"><img src="img/iconCheck.gif" width="26" height="20" alt="" class="icon" />{$lang->comm_management}</h4>
 			<form action="" method="post" onsubmit="return procFilter(this, update_allow)">
-				<input type="hidden" name="vid" value="{htmlspecialchars($vid)}" />
-				<input type="hidden" name="mid" value="{htmlspecialchars($mid)}" />
+				<input type="hidden" name="vid" value="{$vid}" />
+				<input type="hidden" name="mid" value="{$mid}" />
 				<input type="hidden" name="document_srl" value="" />
 				<fieldset>
 
@@ -21,7 +21,7 @@
 				</fieldset>
 			</form>
 			<button type="button" class="buttonCloseLayer" onclick="hideLayerCommuicationConfig()"><span>{$lang->cmd_close}</span></button>
-		</div>
+		</div> 
 		<!-- /Layer -->
 	</div>
 	<!-- /Layer Container -->
