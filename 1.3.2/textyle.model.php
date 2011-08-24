@@ -399,6 +399,10 @@
             $srl = Context::get('textyle_blogapi_services_srl');
             if($srl) $args->textyle_blogapi_services_srl = $srl;
             $output = executeQueryArray('textyle.getBlogApiServices',$args);
+
+			$security = new Security($output);
+			$output = $security->encodeHTML('data..');
+
             if($srl) $this->add('services',$output->data);
             return $output;
         }
@@ -410,7 +414,7 @@
 			$config = $oModuleModel->getModuleConfig('textyle');
 			if(!$config || !$config->allow_service) {
 				$config->allow_service = array('board'=>1,'page'=>1);
-			} 
+			}
 
 			if($module_srl){
 				$part_config = $oModuleModel->getModulePartConfig('textyle', $module_srl);

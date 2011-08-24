@@ -39,6 +39,10 @@
             Context::set('page_navigation', $output->page_navigation);
 
             $this->setTemplateFile('list');
+
+			$security = new Security();
+			$security->encodeHTML('textyle_list..', 'textyle_list..variables..');
+
         }
 
         function dispTextyleAdminInsert() {
@@ -65,6 +69,9 @@
             Context::set('skin_list',$skin_list);
 
             $this->setTemplateFile('insert');
+
+			$security = new Security();
+			$security->encodeHTML('textyle.', 'textyle.variables..', 'site_admin');
         }
 
         function dispTextyleAdminDelete() {
@@ -78,10 +85,12 @@
             $oDocumentModel = &getModel('document');
             $document_count = $oDocumentModel->getDocumentCount($textyle_info->module_srl);
             $textyle_info->document_count = $document_count;
-
             Context::set('textyle_info',$textyle_info);
 
             $this->setTemplateFile('textyle_delete');
+
+			$security = new Security();
+			$security->encodeHTML('textyle_info.');
         }
 
         function dispTextyleAdminCustomMenu() {
@@ -90,6 +99,9 @@
             Context::set('custom_menu', $custom_menu);
 
             $this->setTemplateFile('textyle_custom_menu');
+
+			$security = new Security();
+			$security->encodeHTML('custom_menu...');
         }
 
         function dispTextyleAdminBlogApiConfig(){
@@ -113,10 +125,13 @@
 
         function dispTextyleAdminExportList(){
 			$args->page = Context::get('page');
-			$output = executeQueryArray('textyle.getExportList',$args);			
+			$output = executeQueryArray('textyle.getExportList',$args);
 			Context::set('export_list',$output->data);
 			Context::set('page_navigation',$output->page_navigation);
             $this->setTemplateFile('textyle_export_list');
+
+			$security = new Security();
+			$security->encodeHTML('export_list..');
         }
 
 		function dispTextyleAdminExtraMenu(){
@@ -135,6 +150,9 @@
             }
             Context::set('service_modules', $service_modules);
             $this->setTemplateFile('textyle_extra_menu_config');
+
+			$security = new Security();
+			$security->encodeHTML('config.allow_service.', 'service_modules..', 'service_modules..author..');
 		}
     }
 ?>

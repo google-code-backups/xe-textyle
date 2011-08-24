@@ -125,6 +125,9 @@
 
             // browser title 지정
             Context::setBrowserTitle($textyle->get('browser_title') . ' - admin');
+
+			$security = new Security();
+			$security->encodeHTML('custom_menu...');
         }
 
         /**
@@ -333,7 +336,6 @@
             $args->regdate = date("Ymd");
             $output = executeQuery('textyle.getTodayTrackbackCount', $args);
             $status->trackback_count = $output->data->count;
-
             Context::set('status', $status);
 
             // 최근글 추출
@@ -359,6 +361,9 @@
 
             $output = $oTextyleModel->getTextyleGuestbookList($args);
             Context::set('guestbook_list',$output->data);
+
+			$security = new Security();
+			$security->encodeHTML('news..', 'guestbook_list..nick_name');
         }
 
         /**
@@ -457,6 +462,9 @@
                 }
             }
             Context::set('permalink',$permalink);
+
+			$security = new Security();
+			$security->encodeHTML('category_list..', 'tag_list..', '$permalink');
         }
 
         /**
@@ -495,6 +503,9 @@
             Context::set('category_list', $oDocumentModel->getCategoryList($this->module_srl));
 
             Context::addJsFilter($this->module_path.'tpl/filter', 'publish_post.xml');
+
+			$security = new Security();
+			$security->encodeHTML('alias', 'category_list..');
         }
 
         /**
@@ -552,6 +563,9 @@
             Context::set('search_option', $search_option);
 
             Context::addJsFilter($this->module_path.'tpl/filter', 'update_allow.xml');
+
+			$security = new Security();
+			$security->encodeHTML('category_list..');
         }
 
         /**
@@ -590,6 +604,9 @@
             Context::set('module_srl',$this->module_srl);
             Context::set('category_content', $catgegory_content);
             Context::set('module_info', $this->module_info);
+
+			$security = new Security();
+			$security->encodeHTML('module_info.');
         }
 
         /**
@@ -617,6 +634,9 @@
                 $output = $oTagModel->getTagWithUsedList($args);
                 Context::set('with_used_tag_list',$output->data);
             }
+
+			$security = new Security();
+			$security->encodeHTML('tag_list..', 'tag_recent_list..', 'with_used_tag_list..');
         }
 
         /**
@@ -755,6 +775,9 @@
             Context::set('page_navigation',$output->page_navigation);
 
             Context::addJsFilter($this->module_path.'tpl/filter', 'insert_denylist.xml');
+
+			$security = new Security();
+			$security->encodeHTML('trackback_list..');
         }
 
         /**
@@ -766,6 +789,9 @@
             Context::set('deny_list',$deny_list);
 
             Context::addJsFilter($this->module_path.'tpl/filter', 'insert_deny.xml');
+
+			$security = new Security();
+			$security->encodeHTML('deny_list..');
         }
 
         /**
@@ -1026,6 +1052,9 @@
             Context::set('disp_selected_date',date("Y.m",strtotime($selected_date)));
             Context::set('before_url',getUrl('selected_date',date("Ymd",strtotime($selected_date)-60*60*24*30)));
             Context::set('after_url',getUrl('selected_date',date("Ymd",strtotime($selected_date)+60*60*24*30)));
+
+			$security = new Security();
+			$security->encodeHTML('supporter_list..');
         }
 
         /**
@@ -1085,6 +1114,9 @@
             }
             Context::set('skins', $output);
             Context::set('cur_skin', $output[$this->module_info->skin]);
+
+			$security = new Security();
+			$security->encodeHTML('skins..title', 'skins..description');
         }
 
         function dispTextyleToolLayoutConfigMobileSkin() {
@@ -1118,6 +1150,9 @@
             }
             Context::set('skins', $output);
             Context::set('cur_skin', $output[$this->module_info->mskin]);
+
+			$security = new Security();
+			$security->encodeHTML('skins..title', 'skins..description');
         }
 
 
@@ -1213,6 +1248,9 @@
             $component_list = $oEditorModel->getComponentList(false, $site_srl);
 
             Context::set('component_list', $component_list);
+
+			$security = new Security();
+			$security->encodeHTML('component_list..', 'component_list..author..');
         }
 
         function dispTextyleToolConfigCommunication(){
@@ -1263,6 +1301,9 @@
 
             foreach($this->search_option as $opt) $search_option[$opt] = Context::getLang($opt);
             Context::set('search_option', $search_option);
+
+			$security = new Security();
+			$security->encodeHTML('category_list..');
         }
 
         function dispTextyleToolConfigAddon() {
@@ -1271,6 +1312,9 @@
             $oAdminView= &getAdminView('admin');
             $addon_list = $oAddonModel->getAddonList($this->site_srl);
             Context::set('addon_list', $addon_list);
+
+			$security = new Security();
+			$security->encodeHTML('addon_list..', 'addon_list..author..');
         }
 
         function dispTextyleToolConfigData() {
@@ -1632,6 +1676,9 @@
 			$output = executeQueryArray('textyle.getExtraMenus',$args);
 			if(!$output->toBool()) return $output;
 			Context::set('extra_menu_list',$output);
+
+			$security = new Security();
+			$security->encodeHTML('extra_menu_list.data..');
 
 		}
 
