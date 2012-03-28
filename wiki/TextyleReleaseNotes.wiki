@@ -1,0 +1,11 @@
+#summary XE Textyle module 1.3.4.3 Release notes
+
+== Enhancements == 
+ * Added possibility to add text pages and other module pages in extra menu (r617)
+ * Added comments approval system (r95)
+
+== Bug fixes ==
+ * Fixed a bug regarding log-in mode in Textyle - Issue 50
+ * Fixed a bug regarding publishing post within a category - Issue 43
+ * Fixed a bug regarding remote blogging - Issue 35
+ * Fixed a bug for mobile publishing (r601)
