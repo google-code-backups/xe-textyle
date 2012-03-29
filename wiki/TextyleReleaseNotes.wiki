@@ -9,3 +9,4 @@
  * Fixed a bug regarding publishing post within a category - Issue 43
  * Fixed a bug regarding remote blogging - Issue 35
  * Fixed a bug for mobile publishing (r601)
+ * Fixed a bug regarding category count issue - Issue 61
