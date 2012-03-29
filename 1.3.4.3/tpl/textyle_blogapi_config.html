@@ -1,0 +1,70 @@
+<!--%import("js/textle.js")-->
+<!--%import("filter/insert_blogapi_service.xml")-->
+<!--#include("header.html")-->
+
+<form action="./" method="post" onsubmit="return procFilter(this, insert_blogapi_service);" >
+<input type="hidden" name="textyle_blogapi_services_srl" value="{$service->textyle_blogapi_services_srl}" />
+<table cellspacing="0" class="rowTable">
+<tbody>
+<tr>
+	<th>{$lang->service_name}</th>
+	<td><input type="text" name="service_name" value="{$service->service_name}"  class="iText lang_code" id="service_name" /></td>
+</tr>
+<tr>
+	<th>{$lang->api_type}</th>
+	<td><select name="api_type" >
+		<option value="metaweblog">metaweblog</option>
+		<option value="movalbletype">movalbletype</option>
+		<option value="blogger">blogger</option>
+	</select></td>
+</tr>
+<tr>
+	<th>{$lang->url_description}</th>
+	<td><input type="text" name="url_description" value="{$service->url_description}"  class="iText lang_code" id="url_description" /></td>
+</tr>
+<tr>
+	<th>{$lang->id_description}</th>
+	<td><input type="text" name="id_description" value="{$service->id_description}" class="iText lang_code" id="id_description" /></td>
+</tr>
+<tr>
+	<th>{$lang->password_description}</th>
+	<td><input type="text" name="password_description" value="{$service->password_description}" class="iText lang_code" id="password_description" /></td>
+</tr>
+<tr>
+	<td colspan="2" style="text-align:center"> <span class="btn"><button type="submit">{$lang->cmd_insert}</button></span> </td>
+</tr>
+</tbody>
+</table>
+
+</form>
+<!--@if(!$textyle_blogapi_services_srl)-->
+<table cellspacing="0" class="rowTable">
+<thead>
+    <tr>
+        <th scope="col">{$lang->service_name}</th>
+        <th scope="col">{$lang->api_type}</th>
+        <th scope="col">{$lang->url_description}</th>
+        <th scope="col">{$lang->id_description}</th>
+        <th scope="col">{$lang->password_description}</th>
+        <th scope="col">&nbsp;</th>
+    </tr>
+</thead>
+<tbody>
+<!--@if($blogapi_services_list)-->
+    <!--@foreach($blogapi_services_list as $no => $val)-->
+    <tr>
+        <td>{$val->service_name}</td>
+        <td>{$val->api_type}</td>
+        <td class="nowr">{$val->url_description}</td>
+        <td class="nowr">{$val->id_description}</td>
+        <td class="nowr">{$val->password_description}</td>
+        <td class="nowr">
+			<a href="{getUrl('textyle_blogapi_services_srl',$val->textyle_blogapi_services_srl)}">{$lang->cmd_modify}...</a>
+			<button onclick="deleteBlogApiService({$val->textyle_blogapi_services_srl})" class="text">{$lang->cmd_delete}</button>
+		</td>
+    </tr>
+    <!--@end-->
+<!--@end-->
+</tbody>
+</table>
+<!--@end-->
