@@ -59,19 +59,18 @@
 								</tr>
 								<!--@else-->
 									<!--@foreach($trash_list as $no => $post)-->
-
 								<tr>
 									<td>
 										<input type="checkbox" name="document_srl" value="{$post->document_srl}" class="inputCheck boxlist" />
 									</td>
 
-									<td class="title"><a href="#" class="postTitle">{$post->getTitle()}</a></td>
-									<td>{$category_list[$post->get('category_srl')]->title}</td>
-									<td class="small">{$post->getCommentCount()}</td>
-									<td class="small">{$post->getTrackbackCount()}</td>
-									<td class="small">{zdate($post->get('last_update'),'Y.m.d')}</td>
-									<td><span class="btnGray small"><button type="button" onclick="restorePostItem({$post->document_srl},{$page})">{$lang->cmd_restore}</button></span></td>
-									<td><button type="button" class="btnTableData" onclick="deletePostItem({$post->document_srl},{$page})"><span>{$lang->cmd_empty}</span></button></td>
+									<td class="title"><a href="#" class="postTitle">{$post['title']}</a></td>
+									<td>{$category_list[$post['category_srl']]->title}</td>
+									<td class="small">{$post['comment_count']}</td>
+									<td class="small">{$post['trackback_count']}</td>
+									<td class="small">{zdate($post['last_update'],'Y.m.d')}</td>
+									<td><span class="btnGray small"><button type="button" onclick="restorePostItem({$post['document_srl']},{$page})">{$lang->cmd_restore}</button></span></td>
+									<td><button type="button" class="btnTableData" onclick="deletePostItem({$post['document_srl']},{$page})"><span>{$lang->cmd_empty}</span></button></td>
 								</tr>
 									<!--@end-->
 								<!--@end-->
