@@ -1208,7 +1208,9 @@
         function dispTextyleToolPostManageBasket(){
             $oDocumentModel = &getModel('document');
             $oDocumentAdminModel = &getAdminModel('document');
+            $oTrashModel = &getModel('trash');
 
+            $args = new stdClass();
             $args->page = Context::get('page');
             if(!$args->page) $args->page = 1;
             Context::set('page',$args->page);
@@ -1216,8 +1218,12 @@
             $args->search_target = Context::get('search_target');
             $args->search_keyword = Context::get('search_keyword');
             $args->module_srl = $this->module_srl;
-            $output = $oDocumentAdminModel->getDocumentTrashList($args);
-            Context::set('trash_list',$output->data);
+            $output = $oTrashModel->getTrashList($args);
+            foreach($output->data as $trashVO){
+                $args = unserialize($trashVO->serializedObject);
+                $trashedDocuments[] = $args;
+            }
+            Context::set('trash_list',$trashedDocuments);
             Context::set('page_navigation', $output->page_navigation);
 
             $category_list = $oDocumentModel->getCategoryList($this->module_srl);
