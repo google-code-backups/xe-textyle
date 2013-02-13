@@ -4,7 +4,7 @@
 
 <form action="./" method="post" onsubmit="return procFilter(this, insert_blogapi_service);" >
 <input type="hidden" name="textyle_blogapi_services_srl" value="{$service->textyle_blogapi_services_srl}" />
-<table cellspacing="0" class="rowTable">
+<table cellspacing="0" class="rowTable x_table x_table-striped x_table-hover">
 <tbody>
 <tr>
 	<th>{$lang->service_name}</th>
@@ -37,7 +37,7 @@
 </div>
 </form>
 <!--@if(!$textyle_blogapi_services_srl)-->
-<table cellspacing="0" class="rowTable">
+<table cellspacing="0" class="rowTable x_table x_table-striped x_table-hover">
 <thead>
     <tr>
         <th scope="col">{$lang->service_name}</th>
